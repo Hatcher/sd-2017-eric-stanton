@@ -1,0 +1,169 @@
+@(passage: models.passages.Passage)
+
+@views.html.passages.main("Passages", true) {
+
+	<style type="text/css">
+	.sticky {
+	position: relative;
+	top: 0;
+	}
+
+	.tabs.vertical {
+	width:100%
+	}
+
+	.heading .title {
+	font-weight: bold;
+	font-size: 1.4rem;
+	font-family: 'Source Sans Pro', sans-serif;
+	}
+
+	.heading .description {
+	padding-top: 10px;
+	font-size: 0.9rem;
+	font-family: sans-serif;
+	}
+
+	.text-panel {
+	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05) ;
+	-webkit-border-top-left-radius: 3px ;
+	-webkit-border-top-right-radius: 3px ;
+	-moz-border-radius-topleft: 3px ;
+	-moz-border-radius-topright: 3px ;
+	border-top-left-radius: 3px ;
+	border-top-right-radius: 3px ;
+	border: 1px solid #e1e1e1 ;
+	border-top: 0px ;
+	background: #fff;
+	padding: 10px;
+	}
+
+	.left {
+	float:left;
+	}
+
+	.source {
+	font-size:0.9rem;
+	color: #999999;
+	}
+
+		#myTags {
+			margin-left:0;
+		}
+	</style>
+
+
+	<div class="row align-center">
+		<div class="large-11 medium-11 small-11 columns main">
+			<div class="heading">
+				<a class="title">@passage.title</a>
+			</div>
+
+		</div>
+	</div>
+
+
+	<div class="row align-center align-stretch">
+		<div class="large-2 medium-2 small-2 columns text-panel">
+			<div class="source">Source: @passage.source</div><br>
+			<div class="source">@passage.textType</div><br>
+
+			<ul id="myTags">
+			@if(passage.tags.size() > 0) {
+				Tags: @for(tag <- passage.tags) { @tag.name,  }
+			}
+			</ul>
+		</div>
+		<div class="large-9 medium-9 small-9 columns text-panel">
+			<ul class="tabs" id="example-vert-tabs" data-tabs>
+				<li class="tabs-title is-active"><a href="#panel1v" aria-selected="true">Passage Text</a></li>
+				<li class="tabs-title"><a href="#panel2v"><span class="label">@models.passages.Blank.getAllBlanksForPassage(passage.id).size()</span> Fill-in-the-Blank</a></li>
+				<li class="tabs-title"><a href="#panel3v"><span class="label secondary">0</span> Sentence Reorder</a></li>
+				<li class="tabs-title"><a href="#panel4v"><span class="label secondary">0</span> Cause/Effect Phrases</a></li>
+				<li class="tabs-title"><a href="#panel5v"><span class="label secondary">0</span> Comprehension Questions</a></li>
+			</ul>
+
+			<div class="tabs-content vertical" data-tabs-content="example-vert-tabs">
+				<div class="tabs-panel is-active" id="panel1v">
+					<p>
+						<!--Wrap sentence text with @Html so that the linebreaks encoded as <br><br> display properly-->
+						@Html(passage.text)
+					</p>
+				</div>
+				<div class="tabs-panel" id="panel2v">
+				@for(blank <- models.passages.Blank.getAllBlanksForPassage(passage.id)) {
+					<p>@models.passages.Blank.getTextForBlank(blank)</p>
+				}
+				</div>
+				<div class="tabs-panel" id="panel3v">
+					<p>SR</p>
+				</div>
+				<div class="tabs-panel" id="panel4v">
+					<p>C/E</p>
+				</div>
+				<div class="tabs-panel" id="panel5v">
+					<p>CQ</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<script>
+			$(document).foundation();
+	</script>
+
+	<script>
+			$('.back-button').on('click', function () {
+				if ($("#panel11").is(':visible')) {
+					$('#panel11').toggle();
+				}
+				$('#panel01').toggle();
+			});
+	</script>
+
+
+	<script>
+			var stickySidebar = $('.sticky');
+
+			if (stickySidebar.length > 0) {
+				var stickyHeight = stickySidebar.height(),
+						sidebarTop = stickySidebar.offset().top;
+			}
+
+			// on scroll move the sidebar
+			$(window).scroll(function () {
+				if (stickySidebar.length > 0) {
+					var scrollTop = $(window).scrollTop();
+
+					if (sidebarTop < scrollTop) {
+						stickySidebar.css('top', scrollTop - sidebarTop);
+
+						// stop the sticky sidebar at the footer to avoid overlapping
+						var sidebarBottom = stickySidebar.offset().top + stickyHeight,
+								stickyStop = $('.main-content').offset().top + $('.main-content').height();
+						if (stickyStop < sidebarBottom) {
+							var stopPosition = $('.main-content').height() - stickyHeight;
+							stickySidebar.css('top', stopPosition);
+						}
+					}
+					else {
+						stickySidebar.css('top', '0');
+					}
+				}
+			});
+
+			$(window).resize(function () {
+				if (stickySidebar.length > 0) {
+					stickyHeight = stickySidebar.height();
+				}
+			});
+
+
+
+			//				$("#myTags").tagit({
+			//					readOnly: true
+			//				});
+	</script>
+}

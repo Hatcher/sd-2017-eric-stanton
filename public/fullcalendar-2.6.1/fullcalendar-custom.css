@@ -1,0 +1,66 @@
+.cell-dim {
+    opacity: 0.6;
+    background-color: #DDDDDD;
+}
+.cell-event {
+    background-color: #1f83bd;
+}
+
+.cell-event .fc-day-number {
+    color:white;
+}
+
+#calendar td {
+    vertical-align: middle !important;
+    border:none;
+}
+#calendar th {
+    border:none;
+}
+
+.fc-border-separate {
+    border:none;
+}
+
+.fc-day-header {
+    color: #1f83bd;
+    background-color:white;
+    margin-bottom:5px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.fc-header {
+    background-color: #1f83bd;
+    margin-bottom:5px;
+    padding:10px;
+}
+.fc table {
+    border-collapse:separate;
+}
+.fc-header-center {
+    text-align:center;
+    width:98%;
+}
+
+span h2 {
+    font-size:2em;
+    color:white;
+}
+.fc-day-number {
+    text-align:center;
+    color:#000;
+    opacity: 0.5;
+}
+.fc-day:first-child > div:first-child {
+    position: relative;
+}
+.fc-day:first-child > div:first-child .fc-day-number {
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+    margin-top: -.5em;
+    line-height: 1em;
+}

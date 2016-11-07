@@ -1,0 +1,125 @@
+@(institution: models.common.Institution)
+@main(institution.name + ": All Students", true) {
+
+
+	<div class="large-12 medium-12 small-12 columns light-grey-bg-pattern">
+
+		<ul class="breadcrumbs">
+			<li><a href="/">Home</a></li>
+			<li class="current">Instructors</li>
+		</ul>
+
+		<div class="large-12 medium-12 small-12 columns">
+			<h1>Instructors</h1>
+		</div>
+
+		<div class="row">
+			<div class="large-9 medium-4 small-4 columns">
+				@if(institution.canControlAllInstructors(models.common.User.byId(session.get("userId")))) {
+					<a href="@routes.UserController.showCreateInstructorPage()" class="button small radius">Register a new Instructor at @institution.name</a>
+				}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="large-12 medium-12 small-12 columns">
+				<div class="custom-panel-body">
+
+					<div class="row">
+						<div class="large-4 medium-4 small-4 columns">
+							<input type="text" placeholder="Search for the User">
+						</div>
+					</div>
+
+					<table>
+						<thead>
+							<tr>
+								<th width="300">Instructor Name</th>
+								<th width="300">Username</th>
+								<th width="240">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+						@for(instructor <- models.common.User.getAllInstructorsForInstitution(institution.id)) {
+							<tr>
+								<td><a href="@routes.UserController.showInstructorProfilePage(instructor.username)" class="tableLink">@instructor.getFullName()</a></td>
+								<td>@instructor.username</td>
+								@if(institution.canControlAllInstructors(models.common.User.byId(session.get("userId")))) {
+
+									<td><a href="@routes.UserController.showEditInstructorPage(instructor.username)" class="button">Edit</a>
+										<a type="button" data-reveal-id="allInstructorsDeleteModal-@instructor.id" class="button alert radius">Delete</a>
+									</td>
+								}
+
+								<div id="allInstructorsDeleteModal-@instructor.id" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" type="dialog">
+									<h2 id="modalTitle">Are you sure you want to delete Instructor @instructor.getFullName()?</h2>
+									<p class="lead">This cannot be undone.</p>
+									<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+
+									<button class="button close-all-instructors-delete-modal-@instructor.id">Cancel</button>
+									<button class="button alert deleteBtn" data-reveal-id="allInstructorsDeleteModalHandleCourses-@instructor.id">Delete</button>
+								</div>
+
+								<div id="allInstructorsDeleteModalHandleCourses-@instructor.id" class="reveal-modal" data-reveal aria-labelledby-"modalTitle" aria-hidden="true" type="dialog">
+								<h2>What do you want to do with @instructor.getFullName()'s courses?</h2>
+								<p class="lead">Do you want to reassign them to other instructors, or delete them?</p>
+								<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+
+								<button class="button deleteReassignBtn">Reassign</button>
+								<button id="deleteinstructor-@instructor.id" class="button alert deleteDeleteBtn">Delete</button>
+				</div>
+
+				<script>
+						$(".deleteDeleteBtn").on("click", function() {
+							var id = $(this).attr('id').split("-")[1];
+
+							jsRoutes.controllers.UserController.deleteInstructor(id).ajax({
+								success : function(data) {
+									window.location.reload();
+								},
+								error : function(err) {
+								}
+							});
+
+							jsRoutes.controllers.UserController.deleteAllCoursesForInstructor(id).ajax({
+								success : function(data) {
+									window.location.reload();
+								},
+								error : function(err) {
+								}
+							});
+						});
+
+						$(".deleteReassignBtn").on("click", function() {
+							// This code deletes the instructor only. I have it commented out so the button doesn't do anything and it's obvious we need to implement it.
+
+							// var id = $(this).attr('id').split("-")[1];
+
+							// jsRoutes.controllers.UserController.deleteInstructor(id).ajax({
+							// 	success : function(data) {
+							// 		window.location.reload();
+							// 	},
+							// 	error : function(err) {
+							// 	}
+							// });
+						});
+
+						$(".close-all-instructors-delete-modal-@instructor.id").on("click", function() {
+							$("#allInstructorsDeleteModal-@instructor.id").foundation("reveal", "close");
+						});
+				</script>
+				</tr>
+				}
+
+				</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script src="js/vendor/jquery.js"></script>
+	<script src="js/foundation.min.js"></script>
+	<script>
+			$(document).foundation();
+	</script>
+
+}

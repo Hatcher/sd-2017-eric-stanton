@@ -1,0 +1,13 @@
+GET         /javascriptRoutesCommon             controllers.common.Application.javascriptRoutesCommon
+
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file                       controllers.Assets.versioned(path="/public/lib/common", file: Asset)
+
+#POST        /newQuestion                controllers.common.QuestionController.createQuestionFromJSON(json: String)
+
+
+# LOGIN CONTROLLER
+GET         /login                              @controllers.common.LoginController.showLoginPage()
+POST        /login                              controllers.common.LoginController.login
+GET         /register                           controllers.common.LoginController.showRegisterInstructorPage()
+POST        /register                           controllers.common.LoginController.registerInstructor()

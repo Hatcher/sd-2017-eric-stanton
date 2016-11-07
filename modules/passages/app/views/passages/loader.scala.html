@@ -1,0 +1,34 @@
+@(id: String)
+	@views.html.passages.main("Loading...") {
+
+	<script type="text/javascript">
+
+			function getPercentage() {
+				$.ajax({
+					type: "GET",
+					url: "/status/@id",
+					dataType: "html",
+					success: function(html) {
+						//TODO: send + display progress out of total value
+//						$('#status').html(html);
+
+						//redirect when complete
+						if (html == "") {
+							window.location = "@controllers.passages.routes.Application.showIndexPage()";
+						}
+					}
+				});
+			}
+
+			$(document).ready(function() {
+				setInterval("getPercentage()",500);
+			});
+
+
+
+	</script>
+		<div id="status" style="padding:30px;">
+			<img src='@routes.Assets.versioned("../../modules/common/public/images/spin.gif")'>
+		</div>
+
+}

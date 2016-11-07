@@ -1,0 +1,115 @@
+@(institution: models.common.Institution)
+@main(institution.name + ": All Students", true) {
+
+
+	<div class="large-12 medium-12 small-12 columns light-grey-bg-pattern">
+
+		<ul class="breadcrumbs">
+			<li><a href="/">Home</a></li>
+			<li class="current">Students</li>
+		</ul>
+
+
+		<div class="large-12 medium-12 small-12 columns">
+			<h1>Students</h1>
+			<h4>@institution.name</h4>
+		</div>
+
+		<div class="row">
+			<div class="large-12 medium-12 small-12 columns">
+				<div class="custom-panel-body">
+					<div class="row">
+
+						<div class="large-4 medium-4 small-4 columns">
+							<input type="text" placeholder="Search for the User">
+						</div>
+					</div>
+					<table>
+						<thead>
+							<tr>
+								<th width="300">Student Name</th>
+								<th width="300">Email</th>
+								<th>Username</th>
+								<th width="240">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+						@for(student <- models.common.User.getAllStudentsForInstitution(institution.id)) {
+							<tr>
+								<td><a href="@routes.UserController.showStudentProfilePage(student.username)" class="tableLink">@student.getFullName()</a></td>
+								<td>@student.email</td>
+								<td>@student.username</td>
+								<td><a href="@routes.UserController.showEditStudentPage(student.username)" class="button">Edit</a>
+									<a type="button" data-reveal-id="allStudentsDeleteModal-@student.id" class="button alert semiround">Delete</a>
+								</td>
+
+								<div id="allStudentsDeleteModal-@student.id" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" type="dialog">
+									<h2 id="modalTitle">Are you sure you want to delete Student getFullName()?</h2>
+									<p class="lead">This cannot be undone.</p>
+									<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+
+									<button class="button close-all-students-delete-modal-@student.id">Cancel</button>
+									<button id="deletestudent-@student.id" class="button alert deleteBtn">Delete</button>
+								</div>
+
+								<script>
+											$(".deleteBtn").on("click", function() {
+												var id = $(this).attr('id').split("-")[1];
+
+												jsRoutes.controllers.UserController.deleteStudent(id).ajax({
+													success : function(data) {
+														window.location.reload();
+													},
+													error : function(err) {
+													}
+												});
+											});
+
+											$(".close-all-students-delete-modal-@student.id").on("click", function() {
+												$("#allStudentsDeleteModal-@student.id").foundation("reveal", "close");
+											});
+										</script>
+							</tr>
+
+
+
+							<div id="allStudentsDeleteModal-@student.id" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" type="dialog">
+								<h2 id="modalTitle">Are you sure you want to delete Student getFullName()?</h2>
+								<p class="lead">This cannot be undone.</p>
+								<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+
+								<button class="button close-all-students-delete-modal-@student.id">Cancel</button>
+								<button id="deletestudent-@student.id" class="button alert deleteBtn">Delete</button>
+							</div>
+
+							<script>
+												$(".deleteBtn").on("click", function() {
+													var id = $(this).attr('id').split("-")[1];
+
+													jsRoutes.controllers.UserController.deleteStudent(id).ajax({
+														success : function(data) {
+															window.location.reload();
+														},
+														error : function(err) {
+														}
+													});
+												});
+
+												$(".close-all-students-delete-modal-@student.id").on("click", function() {
+													$("#allStudentsDeleteModal-@student.id").foundation("reveal", "close");
+												});
+											</script>
+							</tr>
+						}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<script>
+				$(document).foundation();
+		</script>
+		</body>
+		</html>
+}

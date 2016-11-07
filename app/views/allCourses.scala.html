@@ -1,0 +1,91 @@
+@(institution: models.common.Institution)
+	@main(institution.name + ": All Students", true) {
+
+		<div class="large-12 medium-12 small-12 columns">
+
+			<ul class="breadcrumbs">
+				<li><a href="/">Home</a></li>
+				<li class="current">Courses</li>
+			</ul>
+
+
+			<div class="large-12 medium-12 small-12 columns">
+				<h1>Manage All Courses</h1>
+			</div>
+
+			<div class="row">
+				<div class="large-12 medium-12 small-12 columns">
+				@if(institution.canControlAllCourses(models.common.User.byId(session.get("userId")))) {
+					<a href="@routes.CourseController.showCreateCoursePage()" class="button">Create New Course at @institution.name</a>
+				}
+				</div>
+			</div>
+			<div class="row">
+				<div class="large-12 medium-12 small-12 columns">
+					<div class="custom-panel">
+						<div class="custom-panel-body">
+							<table>
+								<thead>
+									<tr>
+										<th>Course Name</th>
+										<th width="200">Instructor Name</th>
+										<th width="150">Students</th>
+										<th width="150">Date</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+
+								@for(course <- Course.getAllCoursesForInstitution(institution.id)) {
+									<tr>
+										<td><a href="@routes.CourseController.showCoursePage(course.id)">@course.name</a></td>
+										<td><a href="@routes.UserController.showInstructorProfilePage(course.instructor.username)">@course.instructor.getFullName()</a></td>
+										<td>@models.common.User.getAllStudentsForCourse(course.id).size()</td>
+										<td>@course.startDate</td>
+										@if(institution.canControlAllCourses(models.common.User.byId(session.get("userId")))) {
+											<td><a href="#" class="button">Edit</a>
+												<a type="button" data-open="deleteCourseModal-@course.id" class="button alert">Delete</a>
+											</td>
+										}
+
+										<div class="reveal confirm" id="deleteCourseModal-@course.id" data-reveal>
+											<h1><span class="icon-trash"></span></h1>
+											<h3 class="title">Are you sure you want to delete <i>@course.name</i>?</h3>
+											<p class="lead">This cannot be undone!</p>
+
+											<button id="delete-@course.id" class="button alert deleteBtn">I'm sure</button>
+											<button class="button secondary" data-close type="button">Cancel</button>
+										</div>
+
+
+										<script>
+											$(".deleteBtn").on("click", function() {
+												var id = $(this).attr('id').split("-")[1];
+
+												jsRoutes.controllers.CourseController.deleteCourse(id).ajax({
+													success : function(data) {
+														window.location.reload();
+													},
+													error : function(err) {
+													}
+												});
+											});
+
+											$(".close-delete-all-course-modal-@course.id").on("click", function() {
+												$("#deleteAllCourseModal-@course.id").foundation("reveal", "close");
+											});
+										</script>
+									</tr>
+								}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<script src="js/vendor/jquery.js"></script>
+			<script src="js/foundation.min.js"></script>
+			<script>
+					$(document).foundation();
+			</script>
+	}

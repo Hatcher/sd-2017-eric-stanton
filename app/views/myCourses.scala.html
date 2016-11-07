@@ -1,0 +1,262 @@
+@(instructor: models.common.User)
+@main("My Courses", true) {
+	<div style="margin-bottom:20px">
+		<ul class="breadcrumbs">
+			<li><a href="/">Home</a></li>
+			<li class="current">My Courses</li>
+		</ul>
+		<h1>My Courses</h1>
+	</div>
+
+
+
+	<div class="row">
+		<h4>Active Courses</h4>
+	</div>
+	<div class="row courses">
+		@for(course <- Course.getAllCoursesForInstructor(instructor.id)) {
+			@if(Course.isInSession(course)) {
+				<div class="large-4 medium-6 small-12 columns">
+
+					<div class="card active">
+						<a href="@routes.CourseController.showCoursePage(course.id)">
+
+							<div class="top-bar">
+								<div class="counts exercise">
+									<div class="count"><span class="icon-exercise"></span> <span class="count-num">@Exercise.getAllExercisesForCourseByType(course.id, "Exercise").size()</span></div>
+									<div class="count"><span class="icon-evaluation"></span> <span class="count-num">@Exercise.getAllExercisesForCourseByType(course.id, "Evaluation").size()</span></div>
+									<div class="count"><span class="icon-survey" ></span> <span class="count-num">@Exercise.getAllExercisesForCourseByType(course.id, "Survey").size()</span></div>
+								</div>
+								<div class="counts student">
+									<span class="icon-group"></span> <span class="count-num">@models.common.User.getAllStudentsForCourse(course.id).size()</span>
+								</div>
+							</div>
+							<div class="card-content">
+
+								<div class="title">@course.name</div>
+
+								<div class="description">Taught by: @course.instructor.getFullName() @for(ci <- models.common.User.getAllCoinstructorsForCourse(course.id)) { , @ci.getFullName() }
+								</div>
+								@if(course.startDate != null  && course.endDate == null) {
+									<div class="date-range">
+										@{val dateFormat = new java.text.SimpleDateFormat("MMM d, yyyy");
+											dateFormat.format(course.startDate);} - NOT SET
+									</div>
+								} else {
+									<div class="date-range">
+										@{val dateFormat = new java.text.SimpleDateFormat("MMM d, yyyy");
+											dateFormat.format(course.startDate);} - @{val dateFormat = new java.text.SimpleDateFormat("MMM d, yyyy");
+										dateFormat.format(course.endDate);}
+									</div>
+								}
+								}
+		}
+
+
+	</div>
+	</a>
+	</div>
+	</div>
+
+
+
+
+
+
+
+
+		<div class="large-4 medium-6 small-12 columns">
+			<a href="@routes.CourseController.showCreateCoursePage()">
+				<div class="card new-course">
+					<div class="card-content">
+						+ New Course
+					</div>
+				</div>
+			</a>
+		</div>
+
+	</div>
+
+	<div class="row">
+		<h4>Inactive Courses</h4>
+	</div>
+	<div class="row courses">
+	@for(course <- Course.getAllCoursesForInstructor(instructor.id)) {
+		@if(!Course.isInSession(course)) {
+			<div class="large-4 medium-6 small-12 columns">
+				<div class="card inactive">
+					<a href="@routes.CourseController.showCoursePage(course.id)">
+
+						<div class="top-bar">
+							<div class="counts exercise">
+								<div class="count"><span class="icon-exercise"></span> <span class="count-num">@Exercise.getAllExercisesForCourseByType(course.id, "Exercise").size()</span></div>
+								<div class="count"><span class="icon-evaluation"></span> <span class="count-num">@Exercise.getAllExercisesForCourseByType(course.id, "Evaluation").size()</span></div>
+								<div class="count"><span class="icon-survey" ></span> <span class="count-num">@Exercise.getAllExercisesForCourseByType(course.id, "Survey").size()</span></div>
+							</div>
+							<div class="counts student">
+								<span class="icon-group"></span> <span class="count-num">@models.common.User.getAllStudentsForCourse(course.id).size()</span>
+							</div>
+						</div>
+						<div class="card-content">
+
+							<div class="title">@course.name</div>
+
+							<div class="description">Taught by: @course.instructor.getFullName() @for(ci <- models.common.User.getAllCoinstructorsForCourse(course.id)) { , @ci.getFullName() }
+							</div>
+
+							@if(course.startDate != null  && course.endDate != null) {
+								<div class="date-range">
+									@{val dateFormat = new java.text.SimpleDateFormat("MMM d, yyyy");
+										dateFormat.format(course.startDate);} - @{val dateFormat = new java.text.SimpleDateFormat("MMM d, yyyy");
+									dateFormat.format(course.endDate);}
+								</div>
+								<br>
+								<form action="@routes.CourseController.editCourse(course.id)" method="post" onsubmit="setCoInstructors();" enctype="multipart/form-data">
+										<!--change value of the start and end date to NULL when the "Unstage Course" button is pressed-->
+									<input type="hidden" name="start" id="start" value="NULL">
+									<input type="hidden" name="end" id="end" value="@{val dateFormat = new java.text.SimpleDateFormat("MM/dd/yyyy");
+										dateFormat.format(course.endDate);}">
+
+									<input type="hidden" name="coInstructors" id="coInstructors">
+									<input type="hidden" name="institutionId" id="institutionId" value="@course.institution.id">
+									<input type="hidden" name="instructorId" id="instructorId" value="@course.instructor.id">
+									<input type="hidden" name="name" id="name" value="@course.name">
+									<input type="hidden" name="description" id="description" value="@course.description">
+									<input type="hidden" name="isShared" id="isShared" value="@course.isShared">
+
+									<button type="submit" class="button semiround alert">Unstage for Release</button>
+								</form>
+							}
+
+							@if(course.startDate != null  && course.endDate == null) {
+								<div class="date-range">
+									@{val dateFormat = new java.text.SimpleDateFormat("MMM d, yyyy");
+										dateFormat.format(course.startDate);} - NOT SET
+								</div>
+								<br>
+								<form action="@routes.CourseController.editCourse(course.id)" method="post" onsubmit="setCoInstructors();" enctype="multipart/form-data">
+										<!--change value of the start date to NULL when the "Unstage Course" button is pressed-->
+									<input type="hidden" name="start" id="start" value="NULL">
+									<input type="hidden" name="end" id="end" value="NULL">
+
+									<input type="hidden" name="coInstructors" id="coInstructors">
+									<input type="hidden" name="institutionId" id="institutionId" value="@course.institution.id">
+									<input type="hidden" name="instructorId" id="instructorId" value="@course.instructor.id">
+									<input type="hidden" name="name" id="name" value="@course.name">
+									<input type="hidden" name="description" id="description" value="@course.description">
+									<input type="hidden" name="isShared" id="isShared" value="@course.isShared">
+
+									<button type="submit" class="button semiround alert">Unstage for Release</button>
+								</form>
+							}
+
+							@if(course.startDate == null  && course.endDate != null) {
+								<div class="date-range">
+									NOT SET - @{val dateFormat = new java.text.SimpleDateFormat("MMM d, yyyy");
+									dateFormat.format(course.endDate);}
+								</div>
+								<br>
+								<a href="@routes.CourseController.editCourse(course.id)" type="submit" class="button success sss">Stage for Release</a>
+							}
+
+							@if(course.startDate == null && course.endDate == null) {
+								<div class="date-range">
+									NOT SET - NOT SET
+								</div>
+								<br>
+								<a href="@routes.CourseController.editCourse(course.id)" type="submit" class="button success sss">Stage for Release</a>
+							}
+
+
+						</div>
+					</a>
+				</div>
+			</div>
+
+
+			<div id="deleteCourseModal-@course.id" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" type="dialog">
+			@if(Course.isInSession(course)) {
+				<h2 id="modalTitle">You cannot delete a course that is in session.</h2>
+				<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+			}else{
+				<h2 id="modalTitle">Are you sure you want to delete course "@course.name"?</h2>
+				<p class="lead">This cannot be undone.</p>
+				<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+
+				<button class="button close-delete-course-modal-@course.id">Cancel</button>
+				<button id="delete-@course.id" class="button alert deleteBtn">Delete</button>
+			}
+			</div>
+
+
+				<!--When the form is submitted, set coInstructor field to correct value-->
+			<script>
+					function setCoInstructors() {
+						var coInstructors = @course.coInstructors
+						var coInstructorIds = [];
+						var count = 1;
+
+
+						for(i = 0; i < coInstructors.size; i++) {
+							coInstructorIds.push(coInstructors[i].id);
+							console.log(coInstructors[i].id);
+							window.alert("works?");
+						}
+
+						$('#coInstructors').val(coInstructorIds.toString());
+
+					}
+			</script>
+
+
+
+			<script>
+					$(".deleteBtn").on("click", function() {
+						var id = $(this).attr('id').split("-")[1];
+
+						jsRoutes.controllers.CourseController.deleteCourse(id).ajax({
+							success : function(data) {
+								window.location.reload();
+							},
+							error : function(err) {
+							}
+						});
+					});
+
+
+					$(document).foundation();
+
+					$('.side-nav #sidenav-mycourses').addClass("active");
+			</script>
+
+			<script>
+					$('a#deleteCourse').click(function() {
+						console.log('ok');
+
+						var button = $(this);
+						button.toggleClass('active');
+
+						var courseData = $(this).attr('name').split(":|:");
+						var courseId = courseData[0];
+						var courseName = courseData[1];
+
+						bootbox.confirm("Are you sure you want to delete course '" + courseName + "'? This cannot be undone.", function(result) {
+							if (result) {
+								button.prop("disabled", true);
+								jsRoutes.controllers.CourseController.delete(courseId).ajax({
+									success : function(data) {
+										window.location.reload();
+									},
+									error : function(err) {
+										console.log("welp");
+									}
+								});
+							} else {
+								button.toggleClass('active');
+							}
+						});
+					});
+			</script>
+}
+}
+}

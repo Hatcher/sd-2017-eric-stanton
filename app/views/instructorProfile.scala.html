@@ -1,0 +1,70 @@
+@(instructor: models.common.User)
+
+@main("Profile: " + instructor.getFullName(), true) {
+
+	<div class="large-12 medium-12 small-12 columns light-grey-bg-pattern">
+
+			<div class="row">
+				<div class="large-12 medium-12 small-12 columns"><br>
+					<h1>@instructor.getFullName()</h1>
+
+					@if(instructor.institution.canControlAllInstructors(models.common.User.byId(session.get("userId")))) {
+						<a href="@routes.UserController.showEditInstructorPage(instructor.username)" class="button medium semiround">
+						@if(instructor.id == session.get("userId").toLong) {
+							Edit My Profile
+						} else {
+							Edit Instructor
+						}
+					}
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="large-5 medium-5 small-5 columns">
+					<img src="../img/cookie_monster.jpg">
+				</div>
+				<br>
+				<div class="large-7 medium-7 small-7 columns custom-panel-body text-bottom">
+					<table class="full-width">
+						<tr>
+							<th>First Name</th>
+							<td>@instructor.firstName</td>
+						</tr>
+						<tr>
+							<th>Last Name</th>
+							<td>@instructor.lastName</td>
+						</tr>
+						<tr>
+							<th>Email</th>
+							<td>@instructor.email</td>
+						</tr>
+						<tr>
+							<th>Username</th>
+							<td>@instructor.username</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="large-12 medium-12 small-12 columns">
+					<div class="custom-panel-body">
+						<h3>Current Courses</h3>
+						<ul class="no-bullet">
+						@for(course <- Course.getAllCoursesForInstructor(instructor.id)) {
+							<li>
+								@* only link to the course page if the user can view it, otherwise just display the name *@
+								@if(course.canViewCourse(instructor)) {
+									<a href="@routes.CourseController.showCoursePage(course.id)">
+								}
+								@course.name</a>
+							</li>
+						}
+						</ul>
+					</div>
+				</div>
+			</div>
+			</body>
+			</html>
+
+}

@@ -1,0 +1,3 @@
+GET        /               controllers.words.Application.getIndex()
+GET        /test1               controllers.words.subfolder.Application.test1()
+GET        /test2               controllers.words.subfolder.Application.test2()

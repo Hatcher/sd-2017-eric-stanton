@@ -1,0 +1,69 @@
+@(form: Form[forms.ExerciseForm], exercise: Exercise)
+	@main("Create a New Exercise") {
+		<div class="large-12 medium-12 small-12 columns light-grey-bg-pattern">
+
+			<div class="row">
+				<div class="large-12 medium-12 small-12"><br>
+					<h1>Edit Exercise</h1>
+					<h4>@exercise.name</h4>
+				</div>
+			</div>
+
+			<form action="@routes.ExerciseController.editExercise(exercise.id)"
+			method="post"
+			enctype="multipart/form-data">
+				<div class="large-4 medium-4 small-4 small-centered columns"><br>
+					<input type="hidden" name="creatorId" value='@session.get("userId")'>
+					<input type="hidden" name="start" id="start">
+
+					Name
+					<input type="text" name="name" id="name" value='@form("name").value'>
+
+					Description
+					<textarea name="description" placeholder="Description" value='@form("description").value'></textarea>
+					Release Date
+					<div id="calendar">
+						<input type="text" class="span2" value="@form("start").value" id="datepicker">
+					</div>
+					<div class="text-center">
+						<button type="submit" class="button medium radius">Submit</button>
+					</div>
+				</div>
+
+				<script>
+						$(document).foundation();
+						// Date picker code
+						function isValidDate(date, boundingDate) {
+							// any date greater than now is certainly after today
+							if (date.valueOf() > boundingDate.valueOf()) {
+								return true;
+								// today is still a valid date (can't compare today using milliseconds--have to use the year, month, and day)
+							} else if ((date.getFullYear() == boundingDate.getFullYear()) && (date.getMonth() == boundingDate.getMonth()) && (date.getDate() + 1 == boundingDate.getDate()))  {
+								return true;
+							} else {
+								return false;
+							}
+						};
+
+						var nowTemp = new Date();
+						var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+						// Either display dates starting today or on the course's start date, whichever comes last
+						var boundingDate = now;
+						if (@Course.getCourseForExercise(exercise.id).startDate.getTime() > now.valueOf()) {
+							boundingDate = new Date(@Course.getCourseForExercise(exercise.id).startDate.getTime());
+						}
+
+						var checkin = $('#datepicker').fdatepicker({
+							// only allow dates today or later to be selected as the start date
+							onRender: function (date) {
+								return isValidDate(date, boundingDate) ? '' : 'disabled';
+							}
+						}).on('changeDate', function (ev) {
+							checkin.hide();
+
+							// set the form "start" value to the chosen day
+							$("#start").val($("#datepicker").val());
+						}).data('datepicker');
+				</script>
+	}

@@ -1,0 +1,81 @@
+@(title: String, shouldShowLoggedInContent: Boolean = true)(content: Html)
+
+<!DOCTYPE html>
+
+<!doctype html>
+<html class="no-js" lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link href='https://fonts.googleapis.com/css?family=Source Sans Pro' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet' type='text/css'>
+
+		<link rel="stylesheet" href='@routes.Assets.versioned("foundation/css/foundation.css")' />
+		<link rel="stylesheet" href='@routes.Assets.versioned("foundation-datepicker.css")' />
+
+
+		<script src='@routes.Assets.versioned("foundation/js/vendor/jquery.js")'></script>
+		<script src='@routes.Assets.versioned("foundation/js/vendor/what-input.js")'></script>
+		<script src='@routes.Assets.versioned("foundation/js/vendor/foundation.js")'></script>
+		<script src='@routes.Assets.versioned("foundation/js/app.js")'></script>
+
+
+		@*TAGIT*@
+		@*<link rel="stylesheet" href='@routes.Assets.versioned("tag-it-master/css/jquery.tagit.css")' />*@
+		@*<link rel="stylesheet" href='@routes.Assets.versioned("tag-it-master/css/tagit.ui-zendesk.css")' />*@
+		@*<script src='@routes.Assets.versioned("tag-it-master/js/tag-it.js")'></script>*@
+
+
+		<script src='@routes.Assets.versioned("foundation-datepicker.js")'></script>
+
+		@*TODO: phase out font-awesome and replace with icomoon*@
+		<link rel="stylesheet" href='@routes.Assets.versioned("font-awesome-4.4.0/css/font-awesome.min.css")'>
+		<link rel="stylesheet" href='@routes.Assets.versioned("icomoon/style.css")'>
+
+		<link rel='stylesheet' href='@routes.Assets.versioned("fullcalendar-2.6.1/fullcalendar.css")' />
+		<link rel='stylesheet' href='@routes.Assets.versioned("fullcalendar-2.6.1/fullcalendar-custom.css")' />
+		<script src='@routes.Assets.versioned("fullcalendar-2.6.1/fullcalendar.min.js")'></script>
+		<script src='@routes.Assets.versioned("moment.min.js")'></script>
+
+		<link rel="stylesheet" href='@routes.Assets.versioned("css/adminstyle.css")' />
+		<link rel="stylesheet" href='@routes.Assets.versioned("css/normalize.css")' />
+
+
+
+		<link rel="stylesheet" href='@routes.Assets.versioned("css/passages.css")' />
+
+	</head>
+	<body>
+		@if(shouldShowLoggedInContent) {
+			<div class="title-bar" data-responsive-toggle="main-menu" data-hide-for="medium">
+				<button class="menu-icon" type="button" data-toggle></button>
+				<div class="title-bar-title">Menu</div>
+			</div>
+
+			<div class="top-bar" id="main-menu">
+				<div class="top-bar-left">
+					<ul class="dropdown menu" data-dropdown-menu>
+						<li class="menu-text"><img src='@controllers.routes.Assets.versioned("images/logo_w_text.png")' alt="picture" style="height:2rem;"/></li>
+					</ul>
+				</div>
+				<div class="top-bar">
+					<ul class="menu" style="display:inherit" data-responsive-menu="drilldown medium-dropdown">
+						<li><a href="/passages">My Library</a></li>
+						<li><a href="/passages/search">Browse</a></li>
+						<li><a href="/">Return to reMind</a></li>
+					</ul>
+				</div>
+			</div>
+		}
+
+	<div id="dashboard">
+		@content
+	</div>
+
+
+	<script>
+			$(document).foundation();
+	</script>
+
+	</body>
+</html>

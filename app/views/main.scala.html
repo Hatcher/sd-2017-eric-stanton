@@ -1,0 +1,182 @@
+@(title: String, shouldShowLoggedInContent: Boolean = true)(content: Html)
+
+<head>
+	<script type="text/javascript" src='@routes.Application.javascriptRoutes()'></script>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	@* FONTS *@
+	<link href='https://fonts.googleapis.com/css?family=Source Sans Pro' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet' type='text/css'>
+	@*TODO: phase out font-awesome and replace with icomoon*@
+	<link rel="stylesheet" href='@routes.Assets.versioned("font-awesome-4.4.0/css/font-awesome.min.css")'>
+	<link rel="stylesheet" href='@routes.Assets.versioned("icomoon/style.css")'>
+
+	@* FOUNDATION *@
+	<script src='@routes.Assets.versioned("foundation/js/vendor/jquery.js")'></script>
+	<script src='@routes.Assets.versioned("foundation/js/vendor/what-input.js")'></script>
+	<script src='@routes.Assets.versioned("foundation/js/vendor/foundation.js")'></script>
+	<script src='@routes.Assets.versioned("foundation/js/app.js")'></script>
+	<link rel="stylesheet" href='@routes.Assets.versioned("foundation/css/foundation.css")' />
+
+	@* TAG-IT *@
+	<script   src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"   integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="   crossorigin="anonymous"></script>
+	<script src='@routes.Assets.versioned("tag-it/js/tag-it.js")'></script>
+
+
+	<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+	<link rel="stylesheet" href='@routes.Assets.versioned("tag-it/css/jquery.tagit.css")'>
+
+	@* DATE PICKER *@
+	<script src='@routes.Assets.versioned("foundation-datepicker.js")'></script>
+	<link rel="stylesheet" href='@routes.Assets.versioned("foundation-datepicker.css")' />
+
+	@* FULL CALENDAR *@
+	<link rel='stylesheet' href='@routes.Assets.versioned("fullcalendar-2.6.1/fullcalendar.css")' />
+	<link rel='stylesheet' href='@routes.Assets.versioned("fullcalendar-2.6.1/fullcalendar-custom.css")' />
+	<script src='@routes.Assets.versioned("fullcalendar-2.6.1/fullcalendar.min.js")'></script>
+	<script src='@routes.Assets.versioned("moment.min.js")'></script>
+
+
+	@* CUSTOM STYLESHEETS *@
+	<link rel="stylesheet" href='@routes.Assets.versioned("css/adminstyle.css")' />
+	<link rel="stylesheet" href='@routes.Assets.versioned("css/normalize.css")' />
+
+
+
+
+</head>
+<body>
+	@if(shouldShowLoggedInContent) {
+
+		<div class="row full-width wrapper">
+			<div class="large-12 columns content-bg">
+				<div class="row align-justify header-banner" style="
+				height: 4rem;
+				">
+					<div class="columns">
+						<h2 style="
+						color: white;
+						font-weight: bold;
+						padding-left: 11px;
+						margin-top: 10;
+						">REMind</h2>
+					</div>
+					<div class="columns">
+						<a class="sidenav-user" data-toggle="user-dropdown">
+							<div class="right"><img src='/assets/images/users/@session.get("userId")&#46;png' /> @models.common.User.byId(session.get("userId")).firstName</div>
+						</a>
+					</div>
+				</div>
+
+
+
+				<div class="row top-menu">
+					<section class="column align-self-middle top-nav-link">
+					@models.common.User.byId(session.get("userId")).institution.name
+					</section>
+				</div>
+			</div>
+		</div>
+
+
+		<div id="wrapper">
+				<!-- Sidebar -->
+			<div id="sidebar-wrapper">
+				<ul class="sidebar-nav">
+
+
+					<ul class="dropdown-pane top" id="user-dropdown" data-dropdown>
+						<li style="width:100%"><a href='/editInstructor/@models.common.User.byId(session.get("userId")).username'>Edit Profile</a></li>
+						<li style="width:100%"><a href="/logout">Logout</a></li>
+					</ul>
+
+					<li><a href="@routes.Application.showIndexPage()">
+						<i class="fa fa-dashboard nav"></i>
+						<div class="title">Dashboard <span class="icon-dashboard fi-clipboard-notes"></span></div>
+					</a></li>
+					<li class="sidenav-choice"><a href="@routes.CourseController.showMyCoursesPage()">
+						<i class="fa fa-mortar-board nav"></i>
+						<div class="title">Courses <span class="icon-mortar-board fi-clipboard-notes"></span></div>
+					</a></li>
+					<li class="sidenav-choice"><a href="@routes.Application.showInboxPage()">
+						<i class="fa fa-envelope nav"></i>
+						<div class="title">Inbox <span class="icon-envelope fi-clipboard-notes"></span></div>
+					</a></li>
+					@if(session.get("userRole") == "ADMIN") {
+						<ul class="vertical menu" data-accordion-menu>
+							<li class="sidenav-choice admin"><a href="#">
+								<i class="fa fa-gears nav"></i> ADMIN</a>
+								<ul class="menu vertical nested">
+									<li class="sidenav-choice admin"><a href="@routes.CourseController.showAllCoursesPage()">
+										<i class="fa fa-mortar-board nav"></i>
+										<div class="title">
+											All Courses <span class="icon-mortar-board fi-clipboard-notes"></span>
+										</div></a>
+									</li>
+									<li class="sidenav-choice admin"><a href="@routes.UserController.showAllInstructorsPage()">
+										<span class="fa icon-teacher nav"></span>
+										<div class="title">
+											All Instructors <span class="icon-teacher fi-clipboard-notes"></span>
+										</div></a>
+									</li>
+									<li class="sidenav-choice admin"><a href="@routes.UserController.showAllStudentsPage()">
+										<i class="fa fa-group nav"></i>
+										<div class="title">
+											All Students <span class="icon-group fi-clipboard-notes"></span>
+										</div></a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					}
+
+					<hr>
+
+					<li class="sidenav-choice"><a href="@controllers.passages.routes.Application.showIndexPage()">
+						<i class="fa fa-rocket nav"></i>
+						<div class="title">CAPITAL Passages</div>
+					</a></li>
+
+				</ul>
+			</div>
+
+			<div id="page-content-wrapper">
+				<div class="row align-center">
+
+					<div class="large-11 medium-11 small-12 columns">
+						<div id="dashboard">
+
+						@content
+						</div>
+					</div>
+				</div>
+
+			</div>
+		} else {
+		<div class="row align-center">
+
+			<div class="large-12 medium-12 small-12 columns">
+				<div id="dashboard">
+
+				@content
+				</div>
+			</div>
+			}
+
+</div>
+</div>
+</body>
+
+<script>
+		$("#menu-toggle").click(function(e) {
+			e.preventDefault();
+			$("#page-content-wrapper").toggleClass("toggled");
+			$("#sidebar-wrapper").toggleClass("toggled");
+			$(".sidebar-nav").toggleClass("toggled");
+			$("#wrapper").toggleClass("toggled");
+		});
+
+
+</script>
+</style>

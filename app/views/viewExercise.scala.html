@@ -1,0 +1,504 @@
+@( exercise: Exercise)
+@main("Add Questions to Exercise", true) {
+
+	<style type="text/css">
+	fieldset ul {
+	margin-bottom:0;
+	padding:1rem;
+	}
+
+	.postfix {
+	border:0 !important;
+	background:transparent !important;
+	}
+
+	.modal-container {
+	margin-bottom:1rem;
+	height:20rem;
+	}
+
+	.input-group-button a {
+	position: absolute;
+	transform: translateY(75%);
+	}
+
+	.fieldset {
+	width:100%;
+	}
+
+	.dropbtn {
+	margin-left:5px;
+	}
+
+	ul.question table {
+	margin-bottom:0;
+	}
+
+	ul.question table th, ul.question table tr, ul.question table td {
+	font-size:0.75rem;
+	}
+
+	.accordion-expand {
+	float:right;
+	margin-right:1.5rem;
+	color:#aaaaaa;
+	font-weight:normal;
+	}
+
+	.accordion.question {
+	cursor:move;
+	}
+
+	.accordion-content tbody, .accordion-content tr, .accordion-content tr:nth-child(even) {
+	background-color:transparent;
+	border:0;
+	}
+
+	.button.edit {
+	background-color: rgba(95, 158, 160, 0.23);
+	border: 0;
+	color: #508486;
+	}
+
+	.question-type [class^='icon-'] {
+	float: left;
+	width: 1.5rem;
+	line-height: 1rem;
+	vertical-align: middle;
+	}
+
+	.required.missing {
+	border-color: red;
+	background-color: #fdd0d0;
+	}
+
+
+	#release-btn {
+	position: absolute;
+	bottom: 5%;
+	left: 50%;
+	transform: translateX(-50%);
+	}
+	</style>
+
+	<input id="exercise-id" type="hidden" value="@exercise.id">
+
+	<div class="row">
+		<div>
+			<ul class="breadcrumbs">
+				<li><a href="/">Home</a></li>
+				<li><a href="/myCourses">My Courses</a></li>
+				<li><a href="/course/@Course.getCourseForExercise(exercise.id).id">@Course.getCourseForExercise(exercise.id).name</a></li>
+				<li class="current">Exercise @exercise.orderIndex: @exercise.name</li>
+			</ul>
+		</div>
+	</div>
+
+	<div id="questions-row" class="row">
+		<div id="view-div" class="large-12 columns panel container">
+			<div style="padding: 1rem 0 1rem 0;">
+				<h4>
+					Exercise @exercise.orderIndex: @exercise.name
+					<button class="button secondary right" data-open="releaseDateModal">Stage for Release</button>
+				</h4>
+			</div>
+
+			<div class="reveal confirm" id="releaseDateModal" data-reveal>
+				<div class="modal-container row align-center">
+					<div class="columns">
+						<div><h5>Schedule for Release</h5></div>
+						<div id="datepicker"></div>
+						<div><button class="button" id="release-btn">Set Release Date</button></div>
+					</div>
+
+				</div>
+			</div>
+
+
+			<script type="text/javascript">
+					$( function() {
+						$( "#stbl" ).sortable();
+					} );
+
+					$('#datepicker').fdatepicker().data('datepicker');
+
+					// hack to center the datepicker dynamically
+					$('.datepicker').css('position', 'absolute');
+					$('.datepicker').css('left', '50%');
+					$('.datepicker').css('transform', 'translateX(-50%)');
+
+			</script>
+
+			<div style="padding-bottom: 1rem;">
+				<h5>Questions (<span id="num-questions">@models.common.Question.getAllQuestionsForExercise(exercise.id).size()</span>)
+					<div class="dropdown right">
+						<button onclick="showCreateDropdown()" class="dropbtn button create">Create Question</button>
+						<div id="createDropdown" class="dropdown-content"></div>
+					</div>
+					<div class="dropdown right">
+						<button onclick="showImportDropdown()" class="dropbtn button import">Import Question</button>
+						<div id="importDropdown" class="dropdown-content"></div>
+					</div>
+				</h5>
+			</div>
+
+
+
+			@* QUESTION CREATION MODAL *@
+			<div class="reveal large confirm" id="createModal" data-reveal>
+				<div class="modal-container">
+					<h5>New <span id="question-type-header"></span> Question</h5>
+					<form data-abide novalidate>
+
+						<div class="row">
+							<div class="small-1 columns">
+								<label class="text-right middle">Prompt</label>
+							</div>
+							<div class="columns">
+								<input type="text" class="required" id="prompt" placeholder="e.g. What is the capital of Japan?">
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="small-1 columns">
+								<label id="parts-label" class="text-right middle"></label>
+							</div>
+							<div class="columns" id="question-parts-div">
+								@*TO BE FILLED*@
+							</div>
+						</div>
+
+						<div class='center'>
+							<button class='button submit'>
+								<span class='icon-check'></span> Save Question
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+
+			@* QUESTION IMPORT MODAL *@
+			<div class="reveal large confirm" id="importModal" data-reveal>
+				<div class="large-12 columns">
+					<div>Question selected: <span class="num-questions">0</span></div>
+					<div class="row">
+						<div class="large-3 columns panel">
+							<ul class="accordion" data-multi-expand="true" data-accordion>
+								<li id="exercise-nav" class="accordion-item is-active" data-accordion-item>
+								@for(course <- Course.getAllCoursesForInstructor(session.get("userId").toLong)) {
+									<a class="accordion-title" href="#panel@course.id">@course.name</a>
+									@for(otherExercise <- Exercise.getAllExercisesForCourse(course.id)) {
+										@if(otherExercise.id != exercise.id) {
+											<div id="panel@course.id" class="accordion-content" data-tab-content>
+												<a href="#" class="open-exercise" id="@otherExercise.id">@otherExercise.exerciseType.toString(): @otherExercise.name</a>
+											</div>
+										}
+									}
+								}
+								</li>
+							</ul>
+
+						</div>
+						<div class="columns">
+							<div id="q-import" class="panel">
+								<h4 class="course"></h4>
+								<h5 class="exercise"></h5>
+								<table id="q-table">
+									<tbody></tbody>
+								</table>
+							</div>
+							<a class="button" id="import-button" disabled><span class="icon-check"></span> Import (<span class="num-questions">0</span> questions)</a>
+						</div>
+					</div>
+				</div>
+				<button class="close-button" data-close aria-label="Close modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+
+
+
+			<script>
+					/* When the user clicks on the button,
+					 toggle between hiding and showing the dropdown content */
+					function showCreateDropdown() {
+						$("#createDropdown").toggleClass("show");
+					}
+
+					function showImportDropdown() {
+						$("#importDropdown").toggleClass("show");
+					}
+
+					// Close the dropdown menu if the user clicks outside of it
+					window.onclick = function(event) {
+						if (!event.target.matches('.dropbtn')) {
+
+							var dropdowns = document.getElementsByClassName("dropdown-content");
+							var i;
+							for (i = 0; i < dropdowns.length; i++) {
+								var openDropdown = dropdowns[i];
+								if (openDropdown.classList.contains('show')) {
+									openDropdown.classList.remove('show');
+								}
+							}
+						}
+					}
+			</script>
+
+
+			<ul id="stbl"></ul>
+		</div>
+
+
+
+
+
+		<script>
+				$(document).foundation();
+
+
+				function getNumChoicesForQuestion() {
+					return $(".choice").length;
+				}
+
+
+				$(document).on('closed.zf.reveal', function () {
+					$('#question-parts-div').empty();
+					$("#createModal .prompt").val("");
+				});
+
+				function closeModal() {
+					$('#createModal').foundation('close');
+				}
+
+
+
+				function getIconForQuestionType(type) {
+					if (type == "fr") {
+						return "icon-i-cursor";
+					} else if (type == "mc") {
+						return "icon-dot-circle-o";
+					} else if (type == "matching") {
+						return "icon-columns-tall";
+					} else if (type == "fitb") {
+						return "icon-edit";
+					} else if (type == "sr") {
+						return "icon-sort-numeric-asc";
+					}
+				}
+
+
+				function addQTypeButton(type) {
+					$("#createDropdown").append(
+							'<a class="button question-type" data-open="createModal" data-type="'+type+'">' +
+							'<div class="'+getIconForQuestionType(type)+'"></div>' +
+							'<div>'+getFullNameForQuestionType(type)+'</div>' +
+							'</a>'
+					);
+				}
+
+
+				@if(exercise.canEditExercise(models.common.User.byId(session.get("userId")))) {
+					addQTypeButton("fr");
+					addQTypeButton("mc");
+					addQTypeButton("matching");
+					addQTypeButton("fitb");
+					addQTypeButton("sr");
+
+					$("#importDropdown").append(
+							'<a class="button question-type" data-open="importModal">From Exercise</a>' +
+							'<a class="button question-type" data-open="">From Subproject</a>'
+					);
+				}
+
+
+				$(document).on('click', '.button.question-type', function() {
+					// set header text to display the question type
+					$("#question-type-header").text($(this).text());
+
+					var exerciseId = @exercise.id;
+					var type = $(this).data('type');
+
+					// add submit button to the modal and attach the question type to it
+					$("#createModal").find(".button").attr('id', 'submit-'+type);
+				});
+
+
+
+
+				$(document).ready(function() {
+					getAllQuestions(@exercise.id, $('#stbl'));
+				});
+
+
+				function getAllQuestions(exerciseId, panel) {
+					jsRoutes.controllers.MainQuestionController.getAllQuestionsForExercise(exerciseId).ajax({
+						success : function(data) {
+							$.each(data.questions, function(index, q) {
+								addQuestionToList(q);
+							});
+
+							//re-initialize the panel, otherwise the dynamically-added accordions won't work
+							panel.foundation();
+						}
+					});
+				}
+
+
+				function getFullNameForQuestionType(type) {
+					if (type == "fr") {
+						return "Free Response";
+					} else if (type == "mc") {
+						return "Multiple Choice";
+					} else if (type == "matching") {
+						return "Matching";
+					} else if (type == "fitb") {
+						return "Fill in the Blank";
+					} else if (type == "sr") {
+						return "Sentence Reorder";
+					}
+				}
+
+
+				function addQuestionAccordion(q) {
+					var numChoices = 0;
+					$.each(q.questionParts, function(index, part) {
+						numChoices += part.choices.length;
+					});
+
+					if (numChoices < 2) {
+						numChoices += " choice";
+					} else {
+						numChoices += " choices";
+					}
+
+					$("#stbl").append(
+							'<ul class="accordion question type-' + q.type + '" id="' + q.id + '" data-accordion data-allow-all-closed="true" data-multi-expand="true">' +
+							'<li class="accordion-item is-active" data-accordion-item>' +
+							'<a href="#" class="accordion-title"><span class="'+getIconForQuestionType(q.type)+'"></span>'+q.prompt+'<div class="accordion-expand">('+numChoices+')</div></a> ' +
+							'<div class="accordion-content row" data-tab-content>' +
+							'<div class="columns">' +
+							'<table></table>' +
+							'</div>' +
+							'<div class="columns large-1 medium-1 small-1">' +
+							'<button class="button edit">Edit</button>' +
+							'</div>' +
+							'</div>' +
+							'</li>' +
+							'</ul>' +
+							'</div>'
+					);
+				}
+
+		</script>
+
+
+
+
+
+		<script>
+				function newQuestion(exerciseId, type) {
+					var questionObject = {};
+
+					questionObject.exercise = exerciseId;
+					questionObject.type = type;
+
+					return questionObject;
+				}
+
+				function newQuestionPart(prompt, choices) {
+					var questionPartObject = {};
+
+					questionPartObject.prompt = prompt;
+					questionPartObject.choices = choices;
+
+					return questionPartObject;
+				}
+
+				function newChoice(choice, isCorrect) {
+					var choicesObject = {};
+
+					choicesObject.choice = choice;
+					choicesObject.correct = isCorrect;
+
+					return choicesObject;
+				}
+
+
+				function submitQuestionToDatabase(question) {
+					var question2 = JSON.parse(JSON.stringify(question));
+					question2.type = getFullNameForQuestionType(question.type);
+					var jsonMsg = JSON.stringify(question2);
+					console.log(jsonMsg);
+
+					jsRoutes.controllers.MainQuestionController.createQuestionFromJSON(jsonMsg).ajax({
+						type : 'POST',
+						dataType : 'json',
+						contentType : 'application/json; charset=utf-8',
+						data : jsonMsg,
+						success : function(response) {
+							parent.closeModal();
+							question.id = response;
+							addQuestionToList(question);
+
+							//increment the counter for number of questions in the exercise
+							$("#num-questions").html(parseInt($("#num-questions").text())+1)
+
+							//re-initialize the panel, otherwise the dynamically-added accordions won't work
+							$("#stbl").foundation();
+						}
+					});
+				}
+
+
+				function addQuestionToList(question) {
+					switch(question.type) {
+						case "fr":
+							formatFRQuestion(question);
+							break;
+						case "mc":
+							formatMCQuestion(question);
+							break;
+						case "matching":
+							formatMatchingQuestion(question);
+							break;
+						case "fitb":
+							formatFITBQuestion(question);
+							break;
+						case "sr":
+							formatSRQuestion(question);
+							break;
+					}
+				}
+
+
+
+				function validateForm() {
+					var v = true;
+					$(".required").each(function() {
+						if (!$(this).val()) {
+							$(this).addClass('missing');
+							v = false;
+						} else {
+							$(this).removeClass('missing');
+						}
+					});
+					return v;
+				}
+		</script>
+
+
+
+		@* individual question type javascript files *@
+		<script src='@routes.Assets.versioned("js/question-types/fr.js")'></script>
+		<script src='@routes.Assets.versioned("js/question-types/mc.js")'></script>
+		<script src='@routes.Assets.versioned("js/question-types/matching.js")'></script>
+		<script src='@routes.Assets.versioned("js/question-types/fitb.js")'></script>
+		<script src='@routes.Assets.versioned("js/question-types/sr.js")'></script>
+
+
+		@*sticky sidebar*@
+		<script src='@routes.Assets.versioned("js/components/sticky_sidebar.js")'></script>
+}

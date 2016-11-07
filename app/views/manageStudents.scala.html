@@ -1,0 +1,132 @@
+@(course: Course)
+
+@main("Student Enrollment" , true) {
+
+	<div>
+		<h2> @course.name </h2>
+	</div>
+
+	<div class="row align-center">
+		<div class="columns">
+			<ul class="tabs" data-tabs id="example-tabs">
+				<li class="tabs-title is-active"><a href="#enrolled-panel" aria-selected="true">Enrolled Students</a></li>
+				<li class="tabs-title"><a href="#other-panel">Others</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="row align-center">
+		<div class="columns">
+
+			<div id="datatable_wrapper" class="dataTables_wrapper no-footer">
+					<!-- show all students enrolled in the course -->
+				<div class="tabs-content" data-tabs-content="example-tabs">
+					<div class="tabs-panel is-active" id="enrolled-panel">
+						<table id="enrolled_table" class="display">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Email Address</th>
+									<th>Username</th>
+									<th>Enrollment</th>
+								</tr>
+							</thead>
+							<tbody>
+							@for(enrolledStudent <- models.common.User.getAllStudentsForCourse(course.id)) {
+								<tr>
+									<td> @enrolledStudent.firstName @enrolledStudent.lastName </td>
+									<td> @enrolledStudent.email </td>
+									<td> @enrolledStudent.username </td>
+									<td> <button id="@enrolledStudent.id" class="button alert">Unenroll</button> </td>
+								</tr>
+							}
+							</tbody>
+						</table>
+					</div>
+
+					<div class="tabs-panel" id="other-panel">
+						<table id="other_table" class="display">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Email Address</th>
+									<th>Username</th>
+									<th> Enrollment </th>
+								</tr>
+							</thead>
+							<tbody>
+							@for(otherStudent <- models.common.User.getAllStudentsForInstitutionNotInCourse(models.common.User.byId(session.get("userId")).institution.id, course.id)) {
+								<tr>
+									<td> @otherStudent.firstName @otherStudent.lastName </td>
+									<td> @otherStudent.email </td>
+									<td> @otherStudent.username </td>
+									<td> <button id="@otherStudent.id" class="button">Enroll</button> </td>
+								</tr>
+							}
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+		<!-- Tabs -->
+	<script>
+		$(document).foundation();
+	</script>
+
+
+		<!-- DataTables -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-2.2.3/dt-1.10.12/af-2.1.2/b-1.2.1/b-colvis-1.2.1/b-flash-1.2.1/b-print-1.2.1/fh-3.1.2/r-2.1.0/sc-1.4.2/se-1.2.0/datatables.min.css"/>
+	<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-2.2.3/dt-1.10.12/af-2.1.2/b-1.2.1/b-colvis-1.2.1/b-flash-1.2.1/b-print-1.2.1/fh-3.1.2/r-2.1.0/sc-1.4.2/se-1.2.0/datatables.min.js"></script>
+
+	<script>
+			$(document).ready( function () {
+				var table = $('#enrolled_table').DataTable( );
+
+				$('#enrolled_table tbody').on( 'click', 'button', function () {
+					var enrolledInfo = table.row( $(this).parents('tr') ).data();
+					var studentId = $(this).attr('id');
+					if(confirm( "Are you sure you want to remove " + enrolledInfo[0] + " from the course?" )) {
+
+						jsRoutes.controllers.CourseController.unenrollStudent(@course.id, studentId).ajax({
+							success : function(data) {
+								alert( "Unenrolled: " + enrolledInfo[0] );
+								window.location.reload();
+							},
+							error : function(err) {
+							}
+						});
+					}
+				} );
+			} );
+	</script>
+
+
+	<script>
+			$(document).ready( function () {
+				var table = $('#other_table').DataTable( );
+
+				$('#other_table tbody').on( 'click', 'button', function () {
+					var otherInfo = table.row( $(this).parents('tr') ).data();
+					var studentId = $(this).attr('id');
+					if(confirm( "Are you sure you want to add " + otherInfo[0] + " to the course?" )) {
+
+						jsRoutes.controllers.CourseController.enrollStudent(@course.id, studentId).ajax({
+							success : function(data) {
+								alert( "Enrolled: " + otherInfo[0] );
+								window.location.reload();
+							},
+							error : function(err) {
+							}
+						});
+					}
+				} );
+			} );
+
+	</script>
+
+}

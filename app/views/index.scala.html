@@ -1,0 +1,237 @@
+@main("Index") {
+
+	<head>		<title>Welcome</title>
+
+
+		<ul id="drop" class="dropdown-pane" data-dropdown data-auto-focus="true"></ul>
+
+
+		<script>
+				$(document).ready(function() {
+					//gets a list of all unique exercise release dates for all of this instructor's courses
+					jsRoutes.controllers.ExerciseController.returnAllExerciseReleaseDates(@session.get("userId").toLong).ajax({
+						type: "GET",
+						dataType: "json",
+						success : function(data) {
+							console.log(data);
+							var events = data;
+							var eventDates = [];
+
+							$.each(events, function(index, element) {
+								console.log("element = " + element);
+								console.log(element);
+
+								for(var key in element) {
+									console.log(key);
+
+									var eventDate = new Date(key);
+									eventDate.setDate(eventDate.getDate()-1); //hack: off by a day???
+									eventDate.setHours(0,0,0,0);
+									eventDates.push(eventDate.valueOf());
+
+								}
+							});
+
+							$("#calendar").fullCalendar({
+								dayClick: function() {
+									if($(this).hasClass("cell-event")) {
+										$('#myModal').foundation('open');
+									}
+								},
+								header: {
+									left: 'prev', center: 'title', right: 'next'
+								},
+								fixedWeekCount: false,
+								dayRender: function (date, cell) {
+									var d = new Date(date);
+									d.setHours(0,0,0,0);
+									d.setDate(d.getDate()-1); //TODO: off by a day???
+									var today = new Date();
+									today.setDate(today.getDate()-2); //TODO: off by 2 days??? WHAT IS HAPPENING
+
+									//dim all past dates
+									if (d < today) {
+										cell.addClass('cell-dim');
+									}
+									//if an exercise is released this day, color it blue
+									if ($.inArray(d.valueOf(), eventDates) != -1) {
+										cell.addClass('cell-event');
+										cell.attr("data-dropdown", "drop");
+
+										d.setDate(d.getDate()+1); //TODO: off by a day???
+
+										jsRoutes.controllers.ExerciseController.returnAllExercisesWithReleaseDate(
+												@session.get("userId").toLong, d.getTime()).ajax({
+											type: "GET",
+											dataType: "json",
+											success : function(data) {
+												console.log(data);
+												$("#drop").html("");
+												$.each(data, function(i, exercise) {
+													$("#drop").append("<a href='/exercise/"+exercise.id+"'>"+exercise.name+"</a> (Course: " +exercise.course+")<br>");
+												});
+											}
+										});
+
+									}
+
+								}
+							});
+
+						},
+						error : function(err) { console.log("ERROR"); }
+					});
+
+				});
+		</script>
+	</head>
+
+
+	<body>
+		<div class="row">
+			<div class="large-3 medium-3 small-12 columns">
+				<div class="stats courses">
+					<div class="left">
+						<span class="header">Courses</span>
+						<h3>@Course.getAllCoursesForInstructor(session.get("userId").toLong).size()</h3>
+					</div>
+					<span class="icon-graduation-cap right"></span>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+			<div class="large-2 medium-2 small-12 columns">
+				<div class="stats exercise">
+					<div class="left">
+						<span class="header">Exercises</span>
+						<h3>
+						@Exercise.getAllExercisesForInstructorByType(session.get("userId").toLong, Exercise.Type.getType("Exercise")).size()
+						</h3>
+					</div>
+					<span class="icon-exercise right"></span>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+			<div class="large-2 medium-2 small-12 columns">
+				<div class="stats evaluation">
+					<div class="left">
+						<span class="header">Evaluations</span>
+						<h3>@Exercise.getAllExercisesForInstructorByType(session.get("userId").toLong, Exercise.Type.getType("Evaluation")).size()</h3>
+					</div>
+					<span class="icon-evaluation right"></span>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+
+			<div class="large-2 medium-2 small-12 columns">
+				<div class="stats survey">
+					<div class="left">
+						<span class="header">Surveys</span>
+						<h3>@Exercise.getAllExercisesForInstructorByType(session.get("userId").toLong, Exercise.Type.getType("Survey")).size()</h3>
+					</div>
+					<span class="icon-survey right"></span>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+
+			<div class="large-3 medium-3 small-12 columns">
+				<div class="stats students">
+					<div class="left">
+						<span class="header">Students</span>
+						<h3>@models.common.User.getAllStudentsForInstructor(session.get("userId").toLong).size()</h3>
+					</div>
+					<span class="icon-group right"></span>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+		<br/>
+		<div class="row">
+			<div class="large-8 columns">
+				<div class="custom-panel">
+					<div class="custom-panel-heading">
+						<span class="header">Recently Completed Evaluations</span>
+					</div>
+
+					<div class="custom-panel-body">
+					@if(ExerciseRecord.getXMostRecentExerciseRecordsOfType(5, "Evaluation").size() == 0) {
+						No evaluations have been completed yet !
+					}else {
+						<table width="100%">
+							<tr>
+								<th>Survey Name</th>
+								<th>Course</th>
+								<th>Score</th>
+								<th>Completed By</th>
+								<th>Date</th>
+							</tr>
+
+							@for(exerciseRecord <- ExerciseRecord.getXMostRecentExerciseRecordsOfType(5, "Evaluation")){
+								<tr>
+									<td><a href="@routes.ExerciseController.showExercisePage(exerciseRecord.exerciseId)" class="tableLink">@Exercise.byId(exerciseRecord.exerciseId).name</a></td>
+									<td><a href="@routes.CourseController.showCoursePage(Course.getCourseForExercise(exerciseRecord.exerciseId).id)" class="tableLink">@Course.getCourseForExercise(exerciseRecord.exerciseId).name</a></td>
+									<td>@ExerciseRecord.getMostRecentScoreForUser(exerciseRecord.exerciseId, exerciseRecord.submitterId)%</td>
+									<td><a href="@routes.UserController.showStudentProfilePage(models.common.User.byId(exerciseRecord.submitterId).username)" class="tableLink">@models.common.User.byId(exerciseRecord.submitterId).getFullName()</a></td>
+									<td>
+									@{val dateFormat = new java.text.SimpleDateFormat("MMMM d, yyyy");
+										dateFormat.format(exerciseRecord.updatedTime);}
+									</td>
+								</tr>
+							}
+						</table>
+					}
+					</div>
+				</div>
+				<div class="custom-panel">
+					<div class="custom-panel-heading">
+						<span class="header">Recently Completed Evaluations</span>
+					</div>
+					<div class="custom-panel-body">
+					@if(ExerciseRecord.getXMostRecentExerciseRecordsOfType(5, "Survey").size() == 0){
+						No surveys have been completed yet !
+					} else {
+						<table width="100%">
+							<tr>
+								<th>Exercise Name</th>
+								<th>Course</th>
+								<th>Completed By</th>
+								<th>Date</th>
+							</tr>
+
+							@for(exerciseRecord <- ExerciseRecord.getXMostRecentExerciseRecordsOfType(5, "Survey")) {
+								<tr>
+									<td><a href="@routes.ExerciseController.showExercisePage(exerciseRecord.exerciseId)" class="tableLink">@Exercise.byId(exerciseRecord.exerciseId).name</a></td>
+									<td><a href="@routes.CourseController.showCoursePage(Course.getCourseForExercise(exerciseRecord.exerciseId).id)" class="tableLink">@Course.getCourseForExercise(exerciseRecord.exerciseId).name</a></td>
+									<td><a href="@routes.UserController.showStudentProfilePage(models.common.User.byId(exerciseRecord.submitterId).username)" class="tableLink">@models.common.User.byId(exerciseRecord.submitterId).getFullName()</a></td>
+									<td>
+									@{val dateFormat = new java.text.SimpleDateFormat("MMMM d, yyyy");
+										dateFormat.format(exerciseRecord.updatedTime);}
+									</td>
+								</tr>
+							}
+						</table>
+					}
+					</div>
+				</div>
+			</div >
+			<div class="large-4 columns">
+				<div class="custom-panel">
+					<div class="custom-panel-heading">
+						<span class="header">Upcoming Releases</span>
+					</div>
+
+					<div class="custom-panel-body">
+						<div id='calendar'></div>
+					</div>
+				</div>
+			</div>
+		</ div >
+		<br/>
+	</ div >
+</ div >
+
+	<script>
+			$('.side-nav #sidenav-dashboard').addClass("active");
+	</script>
+</ body >
+</ html >
+}

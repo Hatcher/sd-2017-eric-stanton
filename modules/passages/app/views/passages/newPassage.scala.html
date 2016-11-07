@@ -1,0 +1,82 @@
+@(form: Form[forms.passages.PassageForm])
+@main("Upload a New Passage") {
+	<head>
+		<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+		<script>tinymce.init({ selector:'#text' });</script>
+
+	</head>
+
+
+	<div class="row align-center">
+		<form action="@controllers.passages.routes.PassageController.createPassage()" method="post" enctype="multipart/form-data">
+			<div class="large-8 medium-8 small-8 columns">
+				<input type="hidden" name="uploaderId" value='@session.get("userId")'>
+				<input type="hidden" name="start" id="start">
+
+				<label>Title
+					<input type="text" id="middle-label" maxlength="255" name="title" id="title" value='@form("title").value'>
+				</label>
+
+				<label>Source
+					<input type="text" maxlength="255" name="source" id="source" value='@form("source").value'>
+				</label>
+
+				<label>Source
+					<textarea class="text" name="text" placeholder="Enter passage text" value='@form("text").value'></textarea>
+				</label>
+
+				<label>Tags
+					<input type="text" name="tags" id="singleFieldTags2" value='@form("tags").value'>
+				</label>
+
+				<label>Description
+					<textarea name="description" maxlength="255" placeholder="Enter description" value='@form("description").value'></textarea>
+				</label>
+
+				<label>Grade Level
+					<input type="number" id="level" name="level" min="1" max="12" value='@form("level").value'>
+				</label>
+
+				<label>Passage Type
+					<select name="type" value='@form("type").value'>
+						<option value="informational">Informational</option>
+						<option value="literary">Literary</option>
+						<option value="news">News</option>
+					</select>
+				</label>
+
+
+				Upload this passage as global so that others can use it?
+				<input type="checkbox" name="isGlobal" id="isGlobal"  @if(form("isGlobal").valueOr("false") == "true"){checked="checked"}>
+				<input type="hidden" name="isGlobal" value="false">
+
+
+				<div class="text-center">
+					<button type="submit" class="button medium radius">Submit</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+
+	<script type="text/javascript">
+			tinymce.init({
+				selector: 'textarea.text',
+				height: '300',
+				toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent',
+				menubar: false,
+				statusbar: false,
+				setup: function (editor) {
+					editor.addButton('mybutton', {
+						text: 'My button',
+						icon: false,
+						onclick: function () {
+							editor.insertContent('&nbsp;<b>It\'s my button!</b>&nbsp;');
+						}
+					});
+				}
+			});
+
+	</script>
+
+}

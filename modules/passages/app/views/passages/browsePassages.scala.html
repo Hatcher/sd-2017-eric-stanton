@@ -1,0 +1,88 @@
+@(currentPage: com.avaje.ebean.PagedList[models.passages.Passage])
+
+
+
+@main("Index") {
+
+	<style type="text/css">
+	p {
+	font-size: 0.9em;
+	font-weight: normal;
+	line-height: 1.6;
+	margin-bottom:0px;
+	}
+
+	article {
+	max-height: 13.5rem;
+	overflow: hidden;
+	padding: 0.5rem;
+	font-size: 0.85rem;
+	line-height: 1rem;
+	}
+
+		.text-preview {
+			margin-top:0.8rem;
+		}
+
+	.button.save {
+	border: 2px solid #5da423;
+	background-color: transparent;
+	color: #5da423;
+	}
+
+	.button.saved {
+	border: 2px solid #5da423;
+	background-color: #5da423;
+	color: white;
+	}
+
+	.header a {
+	color: cadetblue;
+	font-size:1rem;
+	font-weight:bold;
+	letter-spacing:0.05rem;
+	text-transform:uppercase;
+	}
+	</style>
+
+
+	<div class="row align-center">
+		<div class="large-2 columns">
+			SEARCH FILTERS
+		</div>
+		<div class="large-9 columns">
+			<div class="search-results">
+			@for(passage <- currentPage.getList) {
+				<article class="row custom-panel custom-panel-body">
+					<div class="columns">
+						<div class="header">
+							<a href="@controllers.passages.routes.PassageController.showPassagePage(passage.id)">@passage.title</a><br>
+						</div>
+						<div>
+							<span class="uploader">Uploaded by: @passage.uploader.getFullName()</span>
+						</div>
+						<div class="text-preview">
+						@Html(passage.text + " " )
+						</div>
+					</div>
+					<div class="large-1 medium-1 small-1 columns">
+						<a class="button save"><span class="icon-plus-circle"></span> Save</a>
+					</div>
+				</article>
+			}
+			</div>
+			<ul class="pagination" type="menubar" aria-label="Pagination">
+				<li class="arrow unavailable" aria-disabled="true"><a href="">&laquo; Previous</a></li>
+				@for(page <- 0 until currentPage.getTotalPageCount) {
+					@if(page == currentPage.getPageIndex) {
+						<li class="current">
+					} else {
+						<li>
+						}
+					<a href="@controllers.passages.routes.PassageController.showBrowsePassagesPage(page)">@page</a></li>
+				}
+				<li class="arrow"><a href="@controllers.passages.routes.PassageController.showBrowsePassagesPage(currentPage.getPageIndex+1)">Next &raquo;</a></li>
+			</ul>
+		</div>
+	</div>
+}

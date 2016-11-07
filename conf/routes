@@ -1,0 +1,108 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Include other route files
+->         /passages                  passages.Routes
+->         /words                     words.Routes
+->         /math                     math.Routes
+->         /common                    common.Routes
+
+
+## Map static resources from the /public folder to the /assets URL path
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET         /                         @controllers.Application.showIndexPage
+GET         /javascriptRoutes         controllers.Application.javascriptRoutes
+GET         /populate                 @controllers.Application.populate
+
+
+# APPLICATION
+GET         /login                              @controllers.common.LoginController.showLoginPage()
+POST        /login                              controllers.common.LoginController.login
+GET         /logout                             controllers.common.LoginController.logout
+GET         /register                           controllers.common.LoginController.showRegisterInstructorPage()
+POST        /register                           controllers.common.LoginController.registerInstructor()
+
+
+
+# USER CONTROLLER
+GET         /student/:username                  @controllers.UserController.showStudentProfilePage(username: String)
+GET         /instructor/:username            	@controllers.UserController.showInstructorProfilePage(username: String)
+GET         /allInstructors                  	@controllers.UserController.showAllInstructorsPage
+GET         /allStudents                     	@controllers.UserController.showAllStudentsPage
+POST 		/deleteInstructor/:userId		 	controllers.UserController.deleteInstructor(userId: Long)
+POST 		/deleteStudent/:userId		 	 	controllers.UserController.deleteStudent(userId: Long)
+GET         /newInstructor                   	controllers.UserController.showCreateInstructorPage()
+POST        /newInstructor                   	controllers.UserController.createInstructor()
+GET         /editInstructor/:username        	controllers.UserController.showEditInstructorPage(username: String)
+POST        /editInstructor/:username        	controllers.UserController.modifyInstructor(username: String)
+GET         /editStudent/:username           	controllers.UserController.showEditStudentPage(username: String)
+POST        /editStudent/:username           	controllers.UserController.modifyStudent(username: String)
+
+# COURSE CONTROLLER
+GET         /createCourse                    	controllers.CourseController.showCreateCoursePage()
+POST        /createCourse                    	controllers.CourseController.createCourse()
+GET         /copyCourse                        	controllers.CourseController.copyCourse(courseId: Long)
+POST        /copyCourse                        	controllers.CourseController.copyCourse(courseId: Long)
+GET         /allCourses                      	@controllers.CourseController.showAllCoursesPage
+GET         /myCourses                       	@controllers.CourseController.showMyCoursesPage
+GET         /course/:courseId                	controllers.CourseController.showCoursePage(courseId: Long)
+GET			/editCourse/:courseId			 	controllers.CourseController.showEditCoursePage(courseId: Long)
+POST 		/editCourse/:courseId			 	controllers.CourseController.editCourse(courseId: Long)
+POST 		/deleteCourse/:courseId             controllers.CourseController.deleteCourse(courseId: Long)
+POST 		/deleteCourse/:instructorId         controllers.CourseController.deleteAllCoursesForInstructor(instructorId: Long)
+GET			/manageStudents/:courseId           @controllers.CourseController.showManageStudentsPage(courseId: Long)
+POST 		/course/:courseId/students/enroll		 	controllers.CourseController.enrollStudent(courseId: Long, userId: Long)
+POST 	    /course/:courseId/students/unenroll		 	controllers.CourseController.unenrollStudent(courseId: Long, userId: Long)
+
+# MESSAGE CONTROLLER
+POST        /deleteAnnouncement/:announcementId                 controllers.AnnouncementController.delete(announcementId: Long)
+GET         /createAnnouncement/:courseId                 controllers.AnnouncementController.showCreateAnnouncementPage(courseId: Long)
+POST        /createAnnouncement/:courseId                 controllers.AnnouncementController.createAnnouncement(courseId: Long)
+GET         /canDeleteAnnouncement                        controllers.AnnouncementController.canDeleteAnnouncement(id: String, userId: String)
+#GET         /editAnnouncement/:announcementId                   controllers.AnnouncementController.showEditAnnouncementPage(announcementId: Long)
+#POST        /editAnnouncement/:announcementId                   controllers.AnnouncementController.modifyAnnouncement(announcementId: Long)
+
+# EXERCISE CONTROLLER
+GET         /newExercise                          controllers.ExerciseController.showCreateExercisePage(courseId: Long, exerciseType: String)
+POST        /newExercise                          controllers.ExerciseController.createExercise(courseId: Long, exerciseType: String)
+GET         /exercise/:exerciseId                   controllers.ExerciseController.showExercisePage(exerciseId: Long)
+GET         /getReleaseDates                    controllers.ExerciseController.returnAllExerciseReleaseDates(instructorId: Long)
+GET         /getReleasingExercises                controllers.ExerciseController.returnAllExercisesWithReleaseDate(instructorId: Long, releaseDateTime: Long)
+POST        /deleteExercise                       controllers.ExerciseController.deleteExercise(exerciseId: Long)
+GET			/editExercise/:exerciseId            controllers.ExerciseController.showEditExercisePage(exerciseId: Long)
+POST 		/editExercise/:exerciseId               controllers.ExerciseController.editExercise(exerciseId: Long)
+
+# HACKY MAIN QUESTION CONTROLLER
+POST		/newQuestion		controllers.MainQuestionController.createQuestionFromJSON(json: String)
+#POST		/editQuestion		controllers.MainQuestionController.editQuestionGroupFromJSON(json: String)
+GET        /importQuestions    controllers.MainQuestionController.getAllQuestionsForExercise(exerciseId: Long)
+#GET         /getQuestion        controllers.MainQuestionController.getQuestionGroup(questionId: Long)
+#POST        /reorderQuestions   controllers.MainQuestionController.reorderQuestionGroups(json: String)
+#POST        /addQuestions       controllers.MainQuestionController.importQuestionGroups(groupIds: String, exerciseId: Long)
+
+# TESTING
+#GET         /status/:uuid                       controllers.common.QuestionController.status(uuid: String)
+
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
+
+# MobileController
+GET 	/mobile/getCourses/:studentId            controllers.MobileController.getCoursesforStudent(studentId: Long)
+POST 	/mobile/authenticate                    controllers.MobileController.mobileLogin()
+#GET 	/mobile/getQuestions/:exerciseId           controllers.MobileController.getQuestionsForExercise(exerciseId: Long)
+#GET 	/mobile/getExercises/:courseId/:studentId/:role		controllers.MobileController.getExercisesOfTypeForCourse(courseId: Long, studentId: Long, role: String)
+#POST 	/mobile/submitQuestionRecord			controllers.MobileController.submitQuestionRecord()
+POST 	/mobile/createExerciseRecord	            controllers.MobileController.createExerciseRecord()
+POST 	/mobile/updateExerciseRecord  	        controllers.MobileController.updateExerciseRecord()
+GET 	/mobile/getAnnouncements/:courseId		controllers.MobileController.getAnnouncementsForCourse(courseId: Long)
+GET     /mobile/getCourseIdForExercise/:exerciseId  controllers.MobileController.getCourseIdForExercise(exerciseId: Long)
+GET     /mobile/getCourseImage/:courseId        controllers.MobileController.getCourseImage(courseId: Long)
+
+
+
+GET     /inbox                                  controllers.Application.showInboxPage()

@@ -1,0 +1,699 @@
+@import models.common.Announcement
+@(form: Form[forms.AnnouncementForm], course: Course)
+	@main("Index") {
+
+		<style type="text/css">
+		#course-controls-btn {
+			margin-bottom: 6px;
+		}
+
+		#course-controls-btn .button {
+		padding: 5px 10px;
+		}
+
+
+		.modal-container {
+		margin-bottom:1rem;
+		height:20rem;
+		}
+
+
+		.block {
+		width: 150px;
+		display: inline-block;
+		border:1px solid lightgray;
+		margin-right:5px;
+		background-color:white;
+		margin-bottom: 15px;
+		}
+
+		.instructor {
+		font-size:0.8rem;
+		padding:5px 3px;
+		}
+
+		.card-create{
+		width: 100px;
+		height: 100px;
+		border-radius:100%;
+		display: table-cell;
+		text-align: center;
+		vertical-align: top;
+		overflow: hidden;
+		position: relative;
+		border-width: 0px 5px 0px 5px;
+		border-style: solid;
+		border-color: white;
+		}
+
+		.box-icon {
+		border-radius: 50%;
+		display: table;
+		height: 100px;
+		width: 100px;
+		margin: 5px;
+		font-size: 3rem;
+		float: left;
+		border: 1px solid rgba(0, 0, 0, 0.25);
+		}
+
+		.box-icon span {
+		color: #fff;
+		display: table-cell;
+		text-align: center;
+		vertical-align: middle;
+		text-shadow: 1px 2px rgba(0, 0, 0, 0.25);
+		}
+
+
+		.exercise {
+		color: #87ceeb;
+		}
+
+		.box-icon.exercise {
+		background-color: #87ceeb;
+		}
+
+		.evaluation {
+		color:#f09e9e;
+		}
+
+		.box-icon.evaluation {
+		background-color:#f09e9e;
+
+		}
+
+		.survey {
+		color:#ffc27d;
+		}
+
+		.box-icon.survey {
+		background-color:#ffc27d;
+		}
+
+
+		.card-image {
+		display:list-item;
+		}
+
+		.card-icon {
+		font-size: 80px;
+		display: table;
+		width: 100%;
+		vertical-align: middle;
+		color:black;
+		text-shadow:1px 1px 1px rgba(0, 0, 0, 0.5);
+		}
+
+		.card-create img {
+		width:50%;
+		}
+
+		.card {
+		padding:10px 10px 0px 10px;
+		height:140px
+		}
+
+		.card-label {
+		text-align:center;
+		padding:3px;
+		}
+
+		.exerciseicon {
+		display:block;
+		margin:auto;
+		width:40%
+		}
+
+		.type_label {
+		display: block;
+		text-align: center;
+		width: 100%;
+		background-color: green;
+		}
+
+
+		ol {
+		counter-reset: li; /* Initiate a counter */
+		padding: 0;
+		}
+
+		.exercise-list a{
+		position: relative;
+		display: block;
+		padding: .4em .4em .4em 1.8em;
+		margin: .5em 0;
+		background: #ECECEC;
+		color: #444;
+		text-decoration: none;
+		border-radius: .3em;
+		transition: all .3s ease-out;
+		}
+
+		.exercise-list a:before{
+		content: counter(li);
+		counter-increment: li;
+		position: absolute;
+		left: -1.5em;
+		top: -6%;
+		height: 2.7em;
+		width: 2.7em;
+		line-height: 2.5em;
+		border: .2em solid #fff;
+		text-align: center;
+		font-weight: bold;
+		border-radius: 2em;
+		}
+
+		.exercise a:before {
+		background: #87ceeb;
+		}
+
+		.evaluation a:before {
+		background: #f09e9e;
+		}
+
+		.survey a:before {
+		background: #ffc27d;
+		}
+
+		.announcement {
+		padding:3px;
+		margin-bottom:10px;
+		}
+
+		.announcement .who {
+		font-weight: bold;
+		color: cadetblue;
+		font-size: 0.7rem;
+		}
+
+		.announcement .when {
+		float: right;
+		font-size: 0.7rem;
+		color: gray;
+		}
+
+		.announcement .text {
+		font-size: 0.9rem;
+		}
+
+		#dashboard .tabs-content {
+		background:transparent;
+		border:none;
+		margin: 0 -5px 0 -5px;
+			width:initial;
+		}
+
+
+		.ex-questions {
+			font-size:0.8rem;
+		}
+
+		.ex-date {
+			font-size:0.8rem;
+		}
+
+		table tbody tr:nth-child(even) {
+			background-color:transparent;
+		}
+
+			tr.inactive {
+				background-color:#eeeeee;
+			}
+
+
+		#release-btn {
+		position: absolute;
+		bottom: 5%;
+		left: 50%;
+		transform: translateX(-50%);
+		}
+		</style>
+
+		<div class="row">
+			<div>
+				<ul class="breadcrumbs">
+					<li><a href="/">Home</a></li>
+					<li><a href="/myCourses">My Courses</a></li>
+					<li class="current">@course.name</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="row align-right">
+			<div id="course-controls-btn" class="button-group right">
+				<a data-open="copyCourseModal" class="button"><span class="icon icon-copy"></span> Copy Course</a>
+				<button class="dropdown button arrow-only" data-toggle="actions-dropdown">
+					<span class="show-for-sr">Show menu</span>
+				</button>
+				<div id="actions-dropdown" class="dropdown-pane" data-dropdown data-auto-focus="true">
+					<li><a data-open="copyCourseModal"><span class="icon icon-copy"></span> Copy Course</a></li>
+				</div>
+			</div>
+		</div>
+
+		<div class="row custom-panel custom-panel-body">
+			<div class="page-title columns">
+				<div>
+					<div class="cell title">@course.name</div>
+
+					<div class="cell icon">
+						@if(course.isShared) {
+							<span class="icon icon-globe active" title="Shared"></span>
+						} else {
+							<span class="icon icon-globe" title="Hidden"></span>
+						}
+					</div>
+					<div id='action-div' class="cell action">
+						<button class="button secondary right"  data-open="releaseDateModal">Stage for Release</button>
+					</div>
+				</div>
+
+				<div class="instructor">
+					Instructor: <a href="@routes.UserController.showInstructorProfilePage(course.instructor.username)">@course.instructor.getFullName()</a>
+					<br>
+					@if(course.coInstructors.size() > 0) {
+						Co-Instructors:
+						@for(coinstructor <- course.coInstructors) {
+							<a href="@routes.UserController.showInstructorProfilePage(coinstructor.username)">@coinstructor.getFullName()</a>
+						}
+					}
+				</div>
+
+
+				<div class="reveal confirm" id="releaseDateModal" data-reveal>
+					<div class="modal-container row align-center">
+
+						<div class="columns">
+							<div><h5>Schedule for Release</h5></div>
+							<div id="datepicker"></div>
+							<div><button class="button" id="release-btn">Set Release Date</button></div>
+						</div>
+
+					</div>
+				</div>
+
+
+				<div style="text-align:center">
+
+					<ul class="tabs" data-tabs id="content-tabs" style="display:inline-block">
+						<li class="tabs-title is-active"><a href="#panel21">Content</a></li>
+						<li class="tabs-title"><a href="#panel31">Students (@models.common.User.getAllStudentsForCourse(course.id).size())</a></li>
+					</ul>
+
+				</div>
+
+				<div class="reveal confirm" id="deleteCourseModal" data-reveal>
+					<h1><span class="icon-trash"></span></h1>
+					<h3 class="title">Are you sure you want to delete <i>@course.name</i>?</h3>
+					<p class="lead">This cannot be undone!</p>
+
+					<button class="close-button" data-close aria-label="Close modal" type="button">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+					<button id="deleteall-@course.id" class="button alert deleteBtn">I'm sure</button>
+					<button class="button secondary" data-close type="button">Cancel</button>
+
+				</div>
+
+
+
+				<div class="reveal confirm" id="copyCourseModal" data-reveal>
+					<h1><span class="icon-copy"></span></h1>
+					<h3 id="title">Make a copy of <i>@course.name</i>?</h3>
+					<p class="lead">Copying this course will create a new course blah blah blah</p>
+
+					<button href="@routes.CourseController.copyCourse(course.id)" class="button">Copy</button>
+					<button class="button secondary" data-close type="button">Cancel</button>
+				</div>
+
+
+
+				<script>
+						$(".deleteBtn").on("click", function() {
+							var id = $(this).attr('id').split("-")[1];
+
+							jsRoutes.controllers.CourseController.deleteCourse(id).ajax({
+								success : function(data) {
+									window.location.href = '/myCourses';
+								},
+								error : function(err) {
+								}
+							});
+						});
+				</script>
+			</div>
+		</div>
+
+
+
+
+		<div class="tabs-content" data-tabs-content="content-tabs">
+			<div class="tabs-panel is-active" id="panel21">
+				<div class="row">
+					<div class="large-7 medium-7 small-7 columns">
+						<div class="content custom-panel">
+							<div id="exercises-heading" class="custom-panel-heading">
+								<span class="header">Exercises</span>
+							</div>
+
+							<div class="custom-panel-body">
+								<div class="reveal confirm" id="exerciseModal" data-reveal>
+									<h3 id="title">What type of exercise do you want to create?</h3>
+									<div style="display:inline-block">
+										<a class="box-icon exercise" href="@routes.ExerciseController.showCreateExercisePage(course.id, "Exercise")">
+											<span class="icon-exercise"></span>
+										</a>
+
+										<a class="box-icon evaluation" href="@routes.ExerciseController.showCreateExercisePage(course.id, "Evaluation")">
+											<span class="icon-evaluation"></span>
+										</a>
+
+										<a class="box-icon survey" href="@routes.ExerciseController.showCreateExercisePage(course.id, "Survey")">
+											<span class="icon-survey"></span>
+										</a>
+									</div>
+									<button class="close-button" data-close aria-label="Close modal" type="button">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+
+
+								@if(Exercise.getAllExercisesForCourse(course.id).size() == 0) {
+									There are no Exercises in this course.
+								} else {
+									<table>
+									@for(exercise <- Exercise.getAllExercisesForCourse(course.id)) {
+										@if(!exercise.isInSession()) {
+											<tr class="inactive">
+										} else {
+											<tr>
+										}
+											<td class="ex-icon">
+												<span class="icon-@exercise.exerciseType.toString().toLowerCase() @exercise.exerciseType.toString().toLowerCase()"></span>
+											</td>
+											<td class="ex-name">
+												<a href="@routes.ExerciseController.showExercisePage(exercise.id)">@exercise.name</a>
+											</td>
+											<td class="ex-questions">@exercise.questions.size() questions</td>
+											<td class="ex-status">
+												@if(exercise.isInSession()) {
+													<span class="icon-check-circle" style="color:green;" title="Released"></span>
+												} else {
+													<span class="icon-circle-o" title="Not yet released"></span>
+												}
+											</td>
+											<td class="ex-date">
+												@{val dateFormat = new java.text.SimpleDateFormat("MMM d, yyyy");
+													dateFormat.format(exercise.releaseDate);
+												}
+												@if(!exercise.isInSession()) {
+													<a><span class="icon-pencil"></span></a>
+												}
+											</td>
+										</tr>
+									}
+									</table>
+								}
+								@*<ol class="exercise-list">*@
+								@*@for(exercise <- Exercise.getAllExercisesForCourse(course.id)) {*@
+								@**@
+								@*<li class="@exercise.exerciseType.toString().toLowerCase()"><a href="@routes.ExerciseController.showExercisePage(exercise.id)">@exercise.exerciseType.toString(): @exercise.name <span class="right"><span class="icon-question-circle"></span> @models.common.Question.getAllQuestionsForExercise(exercise.id).size()</span></a></li>*@
+								@*}*@
+								@*</ol>*@
+
+							</div>
+						</div>
+					</div>
+
+					<div class="columns">
+						<div class="content custom-panel">
+							<div id="announcements-heading" class="custom-panel-heading">
+								<span class="header">Announcements</span>
+							</div>
+							<div class="custom-panel-body">
+
+								@*-------------------------*@
+								@*CREATE ANNOUNCEMENT MODAL*@
+								@*-------------------------*@
+								<div class="reveal confirm" id="createAnnouncementModal" data-reveal>
+									<iframe class="iframe" frameborder="0" src="/createAnnouncement/@course.id"  style="width:100%; height:95%"></iframe>
+									<a id="closeModal" class="close-reveal-modal" aria-label="Close">&#215;</a>
+
+									<script>
+											$('#closeModal').foundation('close');
+
+											$(document).on("click", "#closeModal", function(){
+												location.reload(true);
+											});
+									</script>
+								</div>
+
+
+
+								<div class="reveal confirm" id="viewAnnouncementModal" data-reveal>
+									<input type="hidden" class="id">
+									<h1><span class="icon-bullhorn"></span></h1>
+									<p class="lead"></p>
+									<div class="who"></div>
+									<div class="when"></div>
+									<br><br>
+								</div>
+
+								<div class="reveal confirm" id="deleteAnnouncementModal" data-reveal>
+									<h1><span class="icon-trash"></span></h1>
+									<h3 class="title">Are you sure you want to delete this announcement?</h3>
+									<p class="lead">This cannot be undone.</p>
+									<a class="close-reveal-modal" aria-label="Close">&#215;</a>
+
+									<button class="button alert delete-announcement">I'm sure</button>
+									<button class="button secondary" data-close type="button">Cancel</button>
+								</div>
+
+
+								@if(Announcement.getAllAnnouncementsForCourse(course.id).size() == 0) {
+									There are no Announcements in this course.
+								} else {
+									@for(announcement <- Announcement.getAllAnnouncementsForCourse(course.id)) {
+										<a data-open="viewAnnouncementModal">
+											<div class="announcement" id="announcement-@announcement.id">
+												<div class="text">@announcement.prompt.text</div>
+												<div>
+													<span class="who">@announcement.creator.getFullName()</span> <span class="when"></span>
+												</div>
+											</div>
+										</a>
+
+										@* format the announcement date/time using moment.js *@
+										<script>
+												var dog = "@announcement.createdTime";
+												var when = moment(dog).calendar();
+												$("#announcement-@announcement.id .when").html(when);
+											</script>
+									}
+								}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="tabs-panel" id="panel31">
+				<div class="large-12 medium-12 small-12 columns">
+					<div class="content custom-panel">
+						<div id="students-heading" class="custom-panel-heading">
+							<span class="header">Students</span>
+						</div>
+						<div class="custom-panel-body">
+
+						@if(models.common.User.getAllStudentsForCourse(course.id).size() == 0) {
+							This course has no enrolled students.
+						} else {
+							<ul class="tabs" data-tabs id="student-tabs">
+								<li class="tabs-title is-active"><a href="#panel1">Daily Progress</a></li>
+								<li class="tabs-title"><a href="#panel2">Evaluations (@Exercise.getAllExercisesForCourseByType(course.id, Exercise.Type.getType("Evaluation")).size())</a></li>
+								<li class="tabs-title"><a href="#panel3">Surveys (@Exercise.getAllExercisesForCourseByType(course.id, Exercise.Type.getType("Survey")).size())</a></li>
+							</ul>
+							<div class="tabs-content" data-tabs-content="student-tabs">
+								<div class="tabs-panel is-active" id="panel1">
+									<table width="100%">
+										<thead>
+											<tr>
+												<th width="200px">Student</th>
+												<th>Points</th>
+												<th>Level</th>
+												<th>Last Login</th>
+											</tr>
+										</thead>
+										<tbody>
+										@for(student <- models.common.User.getAllStudentsForCourse(course.id)) {
+											<tr>
+												<td><a href="@routes.UserController.showStudentProfilePage(student.username)">@student.getFullName()</a></td>
+												<td>{points}</td>
+												<td>{level}</td>
+												<td>{last login}</td>
+											</tr>
+										}
+										</tbody>
+									</table>
+								</div>
+								<div class="tabs-panel" id="panel2">
+									<table width="100%">
+										<thead>
+											<tr>
+												<th width="200px">Name</th>
+												@for(exercise <- Exercise.getAllExercisesForCourseByType(course.id, Exercise.Type.getType("Evaluation"))) {
+													<th>@exercise.orderIndex</th>
+												}
+											</tr>
+										</thead>
+										<tbody>
+										@if(Exercise.getAllExercisesForCourseByType(course.id, Exercise.Type.getType("Evaluation")).size() <= 0) {
+											<tr><td>(No evaluations for this course)</td></tr>
+										} else {
+											@for(student <- models.common.User.getAllStudentsForCourse(course.id)) {
+												<tr>
+													<td><a href="@routes.UserController.showStudentProfilePage(student.username)">@student.getFullName()</a></td>
+													@for(exercise <- Exercise.getAllExercisesForCourseByType(course.id, Exercise.Type.getType("Evaluation"))) {
+														<td>@ExerciseRecord.getMostRecentScoreForUser(exercise.id, student.id)</td>
+													}
+												</tr>
+											}
+										}
+										</tbody>
+									</table>
+								</div>
+								<div class="tabs-panel" id="panel3">
+									<table width="100%">
+										<thead>
+											<tr>
+												<th width="200px">Name</th>
+												@for(exercise <- Exercise.getAllExercisesForCourseByType(course.id, Exercise.Type.getType("Survey"))) {
+													<th>@exercise.orderIndex</th>
+												}
+											</tr>
+										</thead>
+										<tbody>
+										@if(Exercise.getAllExercisesForCourseByType(course.id, Exercise.Type.getType("Survey")).size() <= 0) {
+											<tr><td>(No surveys for this course)</td></tr>
+										} else {
+											@for(student <- models.common.User.getAllStudentsForCourse(course.id)) {
+												<tr>
+													<td><a href="@routes.UserController.showStudentProfilePage(student.username)">@student.getFullName()</a></td>
+													@for(exercise <- Exercise.getAllExercisesForCourseByType(course.id, Exercise.Type.getType("Survey"))) {
+														<td>@ExerciseRecord.getMostRecentScoreForUser(exercise.id, student.id)</td>
+													}
+												</tr>
+											}
+										}
+										</tbody>
+									</table>
+								</div>
+							</div>
+						}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<script>
+					$(document).foundation();
+			</script>
+
+
+			<script>
+					$('#datepicker').fdatepicker().data('datepicker');
+
+					// hack to center the datepicker dynamically
+					$('.datepicker').css('position', 'absolute');
+					$('.datepicker').css('left', '50%');
+					$('.datepicker').css('transform', 'translateX(-50%)');
+
+
+					$(document).on('click', '.announcement', function() {
+						var id = $(this).attr('id').split("-")[1];
+						var modal = $("#viewAnnouncementModal");
+						modal.find(".confirmBtn").attr('id', 'delete-'+id);
+						modal.find(".lead").html($(this).find('.text').html());
+						modal.find(".who").html("Posted by <a>" + $(this).find('.who').html() + "</a>");
+						modal.find(".when").html($(this).find('.when').html());
+
+						jsRoutes.controllers.AnnouncementController.canDeleteAnnouncement(id, @session.get("userId")).ajax({
+							success : function(data) {
+								modal.remove(".confirmBtn");
+								if (data == "true") {
+									modal.append('<a data-open="deleteAnnouncementModal" class="button alert confirmBtn">Delete</a>');
+								}
+							},
+							error : function(err) {
+								console.log("???");
+							}
+						});
+					});
+
+					$(document).on('click', '.confirmBtn', function() {
+						var modal = $("#deleteAnnouncementModal");
+						modal.find('.delete-announcement').attr('id', $(this).attr('id'));
+					});
+
+
+					$(".delete-announcement").on("click", function() {
+						console.log("trying");
+						var id = $(this).attr('id').split("-")[1];
+						jsRoutes.controllers.AnnouncementController.delete(id).ajax({
+							success : function(data) {
+								window.location.reload();
+							},
+							error : function(err) {
+								console.log("???");
+							}
+						});
+					});
+
+
+					function closeModal(modal) {
+						modal.foundation("close");
+					}
+
+					$(".close-delete-course-modal").on("click", function() {
+						closeModal($("#deleteCourseModal"));
+					});
+
+					$(".close-delete-announcement-modal").on("click", function() {
+						closeModal($("#deleteAnnouncementModal"));
+					});
+
+					$(".close-copy-course-modal").on("click", function() {
+						closeModal($("#copyCourseModal"));
+					});
+
+
+
+					@if(course.canViewCourse(models.common.User.byId(session.get("userId"))) && !course.canEditCourse(models.common.User.byId(session.get("userId"))) && !course.canDeleteCourse(models.common.User.byId(session.get("userId")))) {
+						$("#action-div").append('<a class="button right" href="@routes.CourseController.copyCourse(course.id)">Copy Course</a>');
+					}
+
+					@if(course.canEditCourse(models.common.User.byId(session.get("userId")))) {
+						$("#actions-dropdown").append('<li><a href="@routes.CourseController.showEditCoursePage(course.id)"><span class="icon icon-pencil"></span> Edit Course</a></li>');
+					}
+
+					@if(course.canCreateExercise(models.common.User.byId(session.get("userId")))) {
+					$("#exercises-heading").append('<a data-open="exerciseModal" class="button create">New</a>');
+					}
+
+					@if(course.canCreateAnnouncement(models.common.User.byId(session.get("userId")))) {
+					$("#announcements-heading").append('<a data-open="createAnnouncementModal" class="button create">New</a>');
+					}
+
+					@if(course.canManageStudents(models.common.User.byId(session.get("userId")))) {
+					$("#students-heading").append('<a href="@routes.CourseController.showManageStudentsPage(course.id)" class="button">Manage Enrollment</a>');
+					}
+
+					@if(course.canDeleteCourse(models.common.User.byId(session.get("userId")))) {
+					$("#actions-dropdown").append('<li class="divider"></li><li><a class="delete" data-open="deleteCourseModal"><span class="icon icon-trash"></span> Delete Course</a></li>');
+					}
+
+			</script>
+	}

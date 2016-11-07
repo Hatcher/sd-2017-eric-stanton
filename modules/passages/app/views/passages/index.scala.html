@@ -1,0 +1,56 @@
+@views.html.passages.main("Passages", true) {
+
+<!DOCTYPE html>
+
+	<style type="text/css">
+		td {
+		white-space: nowrap ;
+		}
+	</style>
+
+	<div class="row align-center">
+		<div class="large-11 medium-11 small-11 columns">
+
+			<h1>Welcome</h1>
+
+			<a href="@controllers.passages.routes.PassageController.showUploadPassagePage()" class="button">Upload a New Passage</a> or <a href="@controllers.passages.routes.PassageController.showBrowsePassagesPage()">Browse the library</a>
+
+			<div class="row">
+				<div class="large-12 medium-12 small-12 columns">
+					<table>
+						<tr>
+							<th></th>
+							<th>Passage Title</th>
+							<th>Source</th>
+							<th>Grade</th>
+							<th>Type
+							<th>Exercises</th>
+							<th>Uploaded on</th>
+						</tr>
+
+						@for(passage <- models.passages.Passage.getAllForInstructor(session.get("userId").toLong)) {
+							<tr>
+								<td>
+									@if(passage.isGlobal) {
+										<span class="icon-globe"></span>
+									}
+								</td>
+								<td class="title"><a href="@controllers.passages.routes.PassageController.showPassagePage(passage.id)">@passage.title</a></td>
+								<td>@passage.source</td>
+								<td>@passage.level</td>
+								<td>@passage.textType</td>
+								<td>x</td>
+								<td>
+								@{val dateFormat = new java.text.SimpleDateFormat("MMMM d, yyyy");
+									dateFormat.format(passage.createdTime);}
+								</td>
+							</tr>
+						}
+
+
+					</table>
+
+					</row>
+
+				</div>
+}

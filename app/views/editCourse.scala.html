@@ -1,0 +1,299 @@
+@( form: Form[forms.CourseForm], course: Course)
+
+	@main("Edit Course", true) {
+
+		<ul class="breadcrumbs">
+			<li><a href="/">Home</a></li>
+			<li><a href="/myCourses">My Courses</a></li>
+			<li><a href="/course/"+@course.id>@course.name</a></li>
+			<li class="current">Edit</li>
+		</ul>
+
+		<form action="@routes.CourseController.editCourse(course.id)" method="post" enctype="multipart/form-data">
+			<div class="row align-center">
+				<div class="large-12 medium-12 small-12 columns">
+					<h1>Edit Course: <i>@course.name</i></h1>
+				</div>
+				@if(form.hasGlobalErrors) {
+					<div class="alert alert-danger">
+					@form.globalError.message
+
+					</div>
+				}
+			</div>
+			<div class="row align-center">
+				<div class="large-6 medium-6 small-6 columns">
+					<input type="hidden" name="start" id="start" value="@form("start").value">
+					<input type="hidden" name="end" id="end" value="@form("end").value">
+					<input type="hidden" name="coInstructors" id="coInstructors">
+					<input type="hidden" name="institutionId" value="@form("institutionId").value">
+					<input type="hidden" name="instructorId" id="instructorId" value="@session.get("userId")">
+
+					<div class="row">
+						<div class="small-3 columns">
+							<label for="right-label" class="right inline">Title of Course</label>
+						</div>
+						<div class="small-9 columns">
+							<input type="text" name="name" value="@form("name").value">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="small-3 columns">
+							<label for="right-label" class="right inline">Instructor</label>
+						</div>
+						<div class="small-9 columns">
+							<input type="text" name="name" value='@models.common.User.byId(session.get("userId")).getFullName()' disabled>
+						</div>
+					</div>
+
+
+					<div class="coinstructors"></div>
+
+					<div id="add-coinstructor" class="row">
+						<div class="small-3 columns"></div>
+						<div class="small-9 columns">
+							<a>Add Co-Instructor?</a>
+						</div>
+					</div>
+
+
+					<div class="row">
+						<div class="small-3 columns">
+							<label for="right-label" class="right inline">Description (Optional)</label>
+						</div>
+						<div class="small-9 columns">
+							<textarea name="description" maxlength="255" value="@form("description").value"></textarea>
+						</div>
+					</div>
+
+
+					<div class="row collapse postfix-radius">
+						<div class="small-3 columns">
+							<label for="right-label" class="right inline">Start Date</label>
+						</div>
+						<div class="small-6 columns">
+							<input type="text" class="span2" value="@form("start").value" id="dpd1">
+						</div>
+						<div class="small-3 columns">
+							<span class="postfix"><span class="icon icon-calendar"></span></span>
+						</div>
+					</div>
+
+
+					<div class="row collapse postfix-radius">
+						<div class="small-3 columns">
+							<label for="right-label" class="right inline">End Date</label>
+						</div>
+						<div class="small-6 columns">
+							<input type="text" class="span2" value="@form("end").value" id="dpd2">
+						</div>
+						<div class="small-3 columns">
+							<span class="postfix"><span class="icon icon-calendar"></span></span>
+						</div>
+					</div>
+
+
+					<div class="row">
+						<div class="small-3 columns">
+							<label for="right-label" class="right inline"><span class="icon-globe"></span></label>
+						</div>
+						<div class="small-9 columns radio">
+							<input type="hidden" name="isShared" id="isShared" value="true">
+
+							<input type="checkbox" id="check-shared" @if(form("isShared").value == "true"){checked}>
+							<label>Make this course public to my Institution</label>
+						</div>
+					</div>
+
+
+					<div class="text-center">
+						<button type="submit" class="button success sss">Submit</button>
+					</div>
+				</div>
+		</form>
+
+
+		</div>
+		</body>
+
+		<script>
+				$(document).foundation();
+
+
+				$( document ).ready(function() {
+
+					@for(coinstructor <- models.common.User.getAllCoinstructorsForCourse(course.id)) {
+					var box = addCoinstructorBox();
+
+					console.log(@coinstructor.id);
+					console.log(box);
+					box.val(@coinstructor.id);
+					}
+
+					disableNames();
+				});
+
+
+
+				// for selecting the instructor to teach the current course
+				$(".instructorSelect").on( "click", function() {
+					// mark the correct instructor as selected
+					$('#instructor-dropdown li').removeClass("selected");
+					$(this).addClass("selected");
+
+					// reflect the selection in the visible text and "active" instructor
+					$("#instructorDropdown").text($('#instructor-dropdown li.selected').text());
+					$("#instructorId").val($("#instructor-dropdown li.selected").attr("id"));
+				});
+
+				// Date picker code
+				function isValidDate(date, now) {
+					// any date greater than now is certainly after today
+					if (date.valueOf() > now.valueOf()) {
+						return true;
+						// today is still a valid date (can't compare today using milliseconds--have to use the year, month, and day)
+					} else if ((date.getFullYear() == now.getFullYear()) && (date.getMonth() == now.getMonth()) && (date.getDate() + 1 == now.getDate()))  {
+						return true;
+					} else {
+						return false;
+					}
+				};
+
+				var nowTemp = new Date();
+				var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+				var checkin = $('#dpd1').fdatepicker({
+
+							// only allow dates today or later to be selected as the start date
+							onRender: function (date) {
+								return isValidDate(date, now) ? '' : 'disabled';
+							}
+						}).on('changeDate', function (ev) {
+
+							/* In Slack conversation with Jen, decided that the instructor does not have to specify an end date until after course release */
+							var pattern = /^\d{2}\/\d{2}\/\d{4}$/;
+							var selectedEndDate = $("#dpd2").val();
+							if (ev.date.valueOf() > checkout.date.valueOf() && pattern.test(selectedEndDate)) { //ensuring that we aren't comparing a start date to a null end date,
+																																								//in which case you would not set the end date for the instructor
+								var newDate = new Date(ev.date)
+								newDate.setDate(newDate.getDate() + 1);
+								checkout.update(newDate);
+							}
+							checkin.hide();
+
+					// set the form "start" value to the chosen day
+					$("#start").val($("#dpd1").val());
+
+
+							// "guess" that the user wants the next day to be the end date (when the second calendar comes into focus)
+							//$('#dpd2')[0].focus();
+							//$("#end").val($("#dpd2").val());
+						}).data('datepicker');
+
+
+						var checkout = $('#dpd2').fdatepicker({
+							// only allow dates after the start date to be selected
+							onRender: function (date) {
+								return date.valueOf() > checkin.date.valueOf() ? '' : 'disabled';
+							},
+							showOn: "both"
+						}).on('changeDate', function (ev) {
+							checkout.hide();
+							// overwrite the "guess" made when the user selected a start date with their chosen end date
+							$("#end").val($("#dpd2").val());
+						}).data('datepicker');
+
+
+
+				$(document).on('click', '#add-coinstructor a', function() {
+					addCoinstructorBox();
+					$("#add-coinstructor").hide();
+				});
+
+
+				function addCoinstructorBox() {
+					var num = $(".instructors").length;
+
+
+					var $box = $('<div class="row">' +
+							'<div class="small-3 columns">' +
+							'<label for="right-label" class="right inline">Co-Instructor</label>' +
+							'</div>' +
+							'<div class="small-9 columns">' +
+							'<select class="instructors" name="coinstructor-' + num + '">' +
+							'<option disabled selected value="-1">-- select an instructor --</option>' +
+							'</select>' +
+							'</div>' +
+							'</div>');
+
+					$(".coinstructors").append($box);
+
+					@for(instructor <- models.common.User.getAllInstructorsForInstitution(form("institutionId").value.toLong)) {
+						@if(instructor.id != session.get("userId").toLong) {
+							$("[name=coinstructor-" + num + "]").append('<option value="@instructor.id">@instructor.getFullName()</option>');
+						}
+					}
+
+					return $("[name=coinstructor-" + num + "]");
+				}
+
+
+				/**
+				 * Disable options already selected in other select boxes
+				 */
+				function disableNames() {
+					// start by setting everything to enabled
+					$('select[name*="coinstructor-"] option').attr('disabled',false);
+
+					// loop each select and set the selected value to disabled in all other selects
+					$('select[name*="coinstructor-"]').each(function(){
+						var $this = $(this);
+						$('select[name*="coinstructor-"]').not($this).find('option').each(function(){
+							if($(this).attr('value') == $this.val() && $(this).attr('value') != '-1')
+								$(this).attr('disabled',true);
+						});
+					});
+				}
+
+
+				/**
+				 * Every time a select box is changed, disable all the selected names again;
+				 * If the change assigns no instructor, hide the Add Co-Instructor box
+				 */
+				$(document).on('change', 'select[name*="coinstructor-"]', function(){
+					disableNames();
+					if ($(this).val() != "-1") {
+						$("#add-coinstructor").show();
+					} else {
+						$("#add-coinstructor").hide();
+					}
+				});
+
+
+				/**
+				 * When the form is submitted, get all selected co-instructors from all the select boxes,
+				 * stringify the list of their IDs, and add that to the coInstructors hidden input
+				 */
+				$('form').submit(function() {
+					var allCoInstructors = [];
+
+					$.each($('.instructors option:selected'), function( index, value ) {
+						var coinstructorId = $(this).val();
+						allCoInstructors.push(coinstructorId);
+					});
+
+					$('#coInstructors').val(allCoInstructors.toString());
+				});
+
+
+				/**
+				 * Every time the checkbox is toggled, update the isShared hidden input
+				 */
+				$('#check-shared').change(function() {
+					$("#isShared").val($(this).is(":checked"));
+				});
+
+
+		</script>
+
+	}

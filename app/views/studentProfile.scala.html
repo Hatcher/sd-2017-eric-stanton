@@ -1,0 +1,71 @@
+@(student: models.common.User)
+
+	@main("Profile: " + student.getFullName(), true) {
+
+			<div class="row">
+				<div class="large-12 medium-12 small-12 columns"><br>
+					<h1 class="left">@student.getFullName()</h1>
+					<a href="@routes.UserController.showEditStudentPage(student.username)" class="button">Edit Student</a><br><br><br>
+				</div>
+			</div>
+			<div class="row">
+				<div class="large-5 medium-5 small-5 columns">
+					<img src="@routes.Assets.versioned("../../modules/common/public/images/users/cookiemonster.jpg")">
+				</div>
+				<br>
+				<div class="large-7 medium-7 small-7 columns custom-panel-body text-bottom">
+					<table class="full-width">
+						<tr>
+							<th>First Name</th>
+							<td>@student.firstName</td>
+						</tr>
+						<tr>
+							<th>Last Name</th>
+							<td>@student.lastName</td>
+						</tr>
+						<tr>
+							<th>Email</th>
+							<td>@student.email</td>
+						</tr>
+						<tr>
+							<th>Username</th>
+							<td>@student.username</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<br>
+			<div class="row" data-equalizer>
+				<div class="large-5 medium-5 small-5 columns">
+					<div class="custom-panel-heading">
+						<h3>Institutions</h3>
+					</div>
+					<div class="custom-panel-body" data-equalizer-watch>
+						<ul class="no-bullet">
+						@for(institution <- models.common.Institution.getAllInstitutionsForStudent(student.id)) {
+							<li>@institution.name</li>
+						}
+						</ul>
+					</div>
+				</div>
+				<div class="large-7 medium-7 small-7 columns">
+					<div class="custom-panel-heading">
+						<h3>Current Courses</h3>
+					</div>
+					<div class="custom-panel-body" data-equalizer-watch>
+						<ul class="no-bullet">
+						@for(course <- Course.getAllCoursesForStudent(student.id)) {
+							<li><a href="@routes.CourseController.showCoursePage(course.id)">@course.name</a> (@course.instructor.institution.name)</li>
+						}
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<script>
+					$(document).foundation();
+			</script>
+			</body>
+			</html>
+
+	}

@@ -1,0 +1,19 @@
+@(bean: beans.math.MathBean)
+
+<script>
+alert("start");
+$.ajax({
+    url : "/math/question/generate",
+    success : function(result){
+        alert(result);
+    }
+});
+</script>
+
+   
+	    @for(question <- bean.getIntegers) {
+	    <ol>
+	    	@question
+	    </ol>
+	    }
+

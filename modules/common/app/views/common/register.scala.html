@@ -1,0 +1,92 @@
+@(form: Form[forms.common.UserForm])
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link href='https://fonts.googleapis.com/css?family=Source Sans Pro' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" href='@routes.Assets.versioned("foundation/css/foundation.css")' />
+	<link rel="stylesheet" href='@routes.Assets.versioned("foundation-datepicker.css")' />
+
+	<script src='@routes.Assets.versioned("foundation/js/vendor/jquery.js")'></script>
+	<script src='@routes.Assets.versioned("foundation/js/vendor/what-input.js")'></script>
+	<script src='@routes.Assets.versioned("foundation/js/vendor/foundation.js")'></script>
+	<script src='@routes.Assets.versioned("foundation/js/app.js")'></script>
+
+
+	<script src='@routes.Assets.versioned("foundation-datepicker.js")'></script>
+
+	@*TODO: phase out font-awesome and replace with icomoon*@
+	<link rel="stylesheet" href='@routes.Assets.versioned("font-awesome-4.4.0/css/font-awesome.min.css")'>
+	<link rel="stylesheet" href='@routes.Assets.versioned("icomoon/style.css")'>
+
+	<link rel='stylesheet' href='@routes.Assets.versioned("fullcalendar-2.6.1/fullcalendar.css")' />
+	<link rel='stylesheet' href='@routes.Assets.versioned("fullcalendar-2.6.1/fullcalendar-custom.css")' />
+	<script src='@routes.Assets.versioned("fullcalendar-2.6.1/fullcalendar.min.js")'></script>
+	<script src='@routes.Assets.versioned("moment.min.js")'></script>
+
+	<link rel="stylesheet" href='@routes.Assets.versioned("css/adminstyle.css")' />
+	<link rel="stylesheet" href='@routes.Assets.versioned("css/normalize.css")' />
+
+
+</head>
+
+
+	@if(form.hasGlobalErrors) {
+		<div data-alert class="alert-box alert radius">
+		@form.globalError.message
+		</div>
+	}
+<div class="large-6 medium-6 small-6 small-centered columns"><br>
+	<div class="row">
+		<div class="text-center">
+			<p class="welcome">Register</p>
+			Profile Picture<br>
+			<img src="../img/cookie_monster.jpg" align=''> <br></br>
+			<button type="button" class="button medium semiround">Upload</button>
+		</div>
+	</div>
+</div>
+<form action="@controllers.common.routes.LoginController.registerInstructor()" method="post" enctype="multipart/form-data">
+	<div class="large-4 medium-4 small-4 small-centered columns"><br>
+			<!-- Set creatorId to zero when a new instructor registers himself/herself-->
+		<input type="hidden" name="creatorId" value='0'>
+			<!--<input type="hidden" name="institutionId" value='@session.get("institutionId")'>-->
+
+			First Name
+		<input type="text" name="firstName" placeholder="First Name" value='@form("firstName").value'>
+		Last Name
+		<input type="text" name="lastName" placeholder="Last Name" value='@form("lastName").value'>
+
+
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+		<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+		<link rel="stylesheet" href="/resources/demos/style.css">
+		<script>
+
+						$(function() {
+							var availableTags = [];
+							@for(institution <- models.common.Institution.getAll()) {
+							availableTags.push("@institution.name")
+							}
+							$( "#tags" ).autocomplete({
+								source: availableTags
+							});
+						});
+				</script>
+
+		Institution
+		<input type="text" id="tags" name="institutionName" placeholder="Institution Name" value='@form("institutionName").value'>
+		Email
+		<input type="text" name="email" placeholder="Email" value='@form("email").value'>
+		Username
+		<input type="text" name="username" placeholder="Username" value='@form("username").value'>
+		Password
+		<input type="password" name="password" placeholder="Password" value='@form("password").value'>
+		<input type="password" name="passwordRepeat" placeholder="Confirm Password" value='@form("passwordRepeat").value'>
+		<div class="text-center">
+			<button type="submit" class="button medium semiround">Submit</button>
+		</div>
+	</div>

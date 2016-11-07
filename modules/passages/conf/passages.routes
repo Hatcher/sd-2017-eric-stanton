@@ -1,0 +1,16 @@
+# Landing page
+GET        /                      controllers.passages.Application.showIndexPage()
+
+# New passage form
+GET        /newPassage			controllers.passages.PassageController.showUploadPassagePage()
+POST       /newPassage			controllers.passages.PassageController.createPassage()
+
+# Passage view and question generation
+GET        /passage/:passageId           controllers.passages.PassageController.showPassagePage(passageId: Long)
+POST       /passage           controllers.passages.QuestionController.createQuestionsFromPassage()
+
+# Passage browser
+GET        /search            controllers.passages.PassageController.showBrowsePassagesPage(p:Int ?= 0, s ?= "title", o ?= "asc")
+
+# Test upload passages
+GET        /populate          controllers.passages.PassageController.populatePassages()

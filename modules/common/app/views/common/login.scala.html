@@ -1,0 +1,85 @@
+@(form: Form[forms.common.LoginForm], returnUrl: String = "none")
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link href='https://fonts.googleapis.com/css?family=Source Sans Pro' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" href='@routes.Assets.versioned("foundation/css/foundation.css")' />
+	<link rel="stylesheet" href='@routes.Assets.versioned("foundation-datepicker.css")' />
+
+	<script src='@routes.Assets.versioned("foundation/js/vendor/jquery.js")'></script>
+	<script src='@routes.Assets.versioned("foundation/js/vendor/what-input.js")'></script>
+	<script src='@routes.Assets.versioned("foundation/js/vendor/foundation.js")'></script>
+	<script src='@routes.Assets.versioned("foundation/js/app.js")'></script>
+
+
+	<script src='@routes.Assets.versioned("foundation-datepicker.js")'></script>
+
+	@*TODO: phase out font-awesome and replace with icomoon*@
+	<link rel="stylesheet" href='@routes.Assets.versioned("font-awesome-4.4.0/css/font-awesome.min.css")'>
+	<link rel="stylesheet" href='@routes.Assets.versioned("icomoon/style.css")'>
+
+	<link rel='stylesheet' href='@routes.Assets.versioned("fullcalendar-2.6.1/fullcalendar.css")' />
+	<link rel='stylesheet' href='@routes.Assets.versioned("fullcalendar-2.6.1/fullcalendar-custom.css")' />
+	<script src='@routes.Assets.versioned("fullcalendar-2.6.1/fullcalendar.min.js")'></script>
+	<script src='@routes.Assets.versioned("moment.min.js")'></script>
+
+	<link rel="stylesheet" href='@routes.Assets.versioned("css/adminstyle.css")' />
+	<link rel="stylesheet" href='@routes.Assets.versioned("css/normalize.css")' />
+
+</head>
+
+
+	<form action="@controllers.common.routes.LoginController.login()" method="post" enctype="multipart/form-data">
+
+		@if(form.hasGlobalErrors) {
+			<div data-alert class="alert-box alert radius">
+			@form.globalError.message
+			</div>
+		}
+
+	<div class="row align-center">
+		<div class="large-5 medium-7 small-9 columns">
+			<div class="signup-panel">
+				<p class="welcome">Registered Users</p>
+				<form>
+					<div class="input-group">
+						<span class="input-group-label"><span class="icon icon-user"></span></span>
+						<input class="input-group-field" type="text" name="username" placeholder="username">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-label"><span class="icon icon-lock"></span></span>
+						<input class="input-group-field" type="password" name="password" placeholder="password">
+					</div>
+				</form>
+				<div class="text-center">
+					<button type="submit" class="button success">Log in</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row align-center">
+		<div class="large-6 columns auth-plain">
+			<div class="signup-panel">
+				<div class="text-center">
+					<p class="welcome">New User?</p>
+					<p>Click the link below to create a new instructor account.</p>
+					<a href="@controllers.common.routes.LoginController.showRegisterInstructorPage()" class="button">Sign up</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+</div>
+
+<script src="js/vendor/jquery.js"></script>
+<script src="js/foundation.min.js"></script>
+<script>
+				$(document).foundation();
+		</script>
