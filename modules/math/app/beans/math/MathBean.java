@@ -5,10 +5,25 @@ import java.util.*;
 
 public class MathBean {
 
+	private String chosenType = "";
 	private List<BigInteger> integers = new ArrayList<BigInteger>();
 	private List<String> operators = new ArrayList<String>();
-	private String type = "EQUATION";
+	private Set<String> types = new HashSet<String>();
 
+	
+	
+	public MathBean(){
+		this.types.add("Arithmetic");
+		this.types.add("WordProblem");
+	}
+	
+	public String getChosenType(){
+		return chosenType;
+	}
+	public void setChosenType(String chosenType){
+		this.chosenType=chosenType;
+	}
+	
 	public List<BigInteger> getIntegers() {
 		return integers;
 	}
@@ -17,49 +32,20 @@ public class MathBean {
 		return operators;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
+	public Set<String> getTypes() {
+		return types;
 	}
 
 	public String toString() {
 		String rValue = "";
-		Random random = new Random();
-		boolean appendToEnd = true;
-		for (int i = 0; i < integers.size(); i++) {
-			if (appendToEnd){
-				rValue += " " + integers.get(i);
+		for (int i = 0; i < getOperators().size(); i++) {
+			if (rValue.equals("")){
+				rValue += getIntegers().get(i)+" "+getOperators().get(i)+" "+getIntegers().get(i+1);
 			}
 			else{
-				rValue = integers.get(i)+" "+rValue;
-			}
-			appendToEnd = true;
-			if (i < integers.size() - 1) {
-				if (i > 0) {
-					if ("*".equals(operators.get(i))
-							&& ("+".equals(operators.get(i - 1)) || "-".equals(operators.get(i - 1)))) {
-						
-						if (random.nextInt(2)>0){
-							rValue = "("+rValue+")"+operators.get(i);
-						}
-						else{
-							rValue = operators.get(i)+"("+rValue+")";
-							appendToEnd= false;
-						}
-					} else {
-						rValue += " " + operators.get(i);
-					}
-				}
-				else{
-					rValue += " " + operators.get(i);
-				}
-
+				rValue += getOperators().get(i)+" "+getIntegers().get(i+1);
 			}
 		}
-		return rValue.trim();
-
+		return rValue;
 	}
 }

@@ -1,14 +1,39 @@
-@(title: String)
+@(test: beans.math.TestBean)
 
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <title>@title</title>
-    </head>
-    <body>
-        <h1>Math</h1>
+<head>
+<title>Generated Test</title>
+</head>
+<body>
+	<h1>Categories Generated:</h1>
+	<table width="800px" style="padding: 5px; margin: 5px">
+		<tr>
+			<th style="text-align: left">Originating Equation</th>
+			<th style="text-align: left">Categories</th>
+		</tr>
+		@for(mathBean <- test.getMathBeans) {
+		<tr>
 
-	    <a href="/">HOME</a>
-    </body>
+			<td width="200px" style="vertical-align: top">x =
+				@mathBean.toString()</td>
+
+
+			<td width="600px">
+				<ul>
+					@for(category <- mathBean.getTypes){ 
+						<li>@category</li>
+					}
+
+				</ul>
+
+			</td>
+		</tr>
+		</ol>
+		}
+	</table>
+
+
+</body>
 </html>

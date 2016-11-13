@@ -3,7 +3,6 @@ public/images/users
 project/project
 project/target
 target
-target/
 tmp
 .history
 dist
@@ -11,15 +10,12 @@ dist
 /*.iml
 /out
 /.idea_modules
-*/.classpath
-*/.project
-.project/
+/.classpath
+/.project
 /RUNNING_PID
 /.settings
-.settings/
 /project/*-shim.sbt
 /activator-sbt-atmos-akka-shim.sbt
 /.target
 /activator-sbt-atmos-play-shim.sbt
 /bin
-bin/

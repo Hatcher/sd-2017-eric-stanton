@@ -1,4 +1,4 @@
-package Repositories;
+package repositories;
 
 import com.avaje.ebean.Model.Finder;
 import models.math.Requirement;

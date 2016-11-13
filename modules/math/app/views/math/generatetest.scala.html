@@ -7,7 +7,7 @@
 <title>Generated Test</title>
 </head>
 <body>
-	<h1>Geometry Quiz Generated:</h1>
+	<h1>Quiz Generated:</h1>
 	<table width="800px" style="padding:5px; margin:5px">
 		<tr>
 		<th style="text-align:left">Originating Equation</th>
@@ -23,14 +23,16 @@
 			
 			
 			<td width="600px">
-				
-				@if(mathBean.getType() == "EQUATION"){ 
+			<ul>	
+				@if(mathBean.getChosenType().equals("EQUATION")){ 
+					<li>
 					Solve for x.
-				
+					</li>
 				
 				}
 				
-				@if(mathBean.getType() == "RECTANGLE_AREA"){ 
+				@if(mathBean.getChosenType().equals("AreaDetectorRectangle")){ 
+					<li>
 					Calculate the area of the following rectangle (not drawn to scale):
 					<!-- draw labeled rectangle -->
 					<table>
@@ -42,8 +44,10 @@
 					<td></td><td style="text-align:center">@mathBean.getIntegers().get(1)</td>
 					</tr>
 					</table>
+					</li>
 				}
-				@if(mathBean.getType() == "RECTANGLE_PERIMETER"){ 
+				@if(mathBean.getChosenType().equals("PerimeterDetectorRectangle")){ 
+					<li>
 					Calculate the perimeter of the following rectangle (not drawn to scale):
 					<!-- draw labeled rectangle -->
 					<table>
@@ -62,9 +66,11 @@
 					</td>
 					</tr>
 					</table>
+					</li>
 				}
 
-				@if(mathBean.getType() == "TRIANGLE_AREA"){ 
+				@if(mathBean.getChosenType().equals("AreaDetectorTriangle")){ 
+					<li>
 					Calculate the area of the following right triangle (not drawn to scale):
 					<!-- draw labeled rectangle -->
 					<table>
@@ -76,9 +82,29 @@
 					<td></td><td style="text-align:center">@mathBean.getIntegers().get(1)</td>
 					</tr>
 					</table>
+					</li>
 				}
 
-
+				@if(mathBean.getChosenType().equals("PerimeterDetectorTriangle")){ 
+					<li>
+					Calculate the perimeter of the following right triangle (not drawn to scale):
+					<!-- draw labeled rectangle -->
+					<table>
+					<tr><td>@mathBean.getIntegers().get(0)</td>
+					<td>
+						<img src="/assets/mathresources/triangle_right.jpg" width="70px" height="70px" />
+					</td>
+					<td>
+						@mathBean.getIntegers().get(2)
+					</td> 
+					</tr>
+					<tr>
+					<td></td><td style="text-align:center">@mathBean.getIntegers().get(1)</td>
+					</tr>
+					</table>
+					</li>
+				}
+			</ul>
  
 			</td>
 		</tr>
