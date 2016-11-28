@@ -63,7 +63,7 @@ public abstract class CategoryDetector {
 	
 	protected boolean containsOnlyMultiplication(MathBean mathBean){
 		for (String operator : mathBean.getOperators()){
-			if (!(operator.equalsIgnoreCase(Operators.ADD))){
+			if (!(operator.equalsIgnoreCase(Operators.MULTIPLY))){
 				return false;
 			}
 		}
@@ -78,4 +78,21 @@ public abstract class CategoryDetector {
 		}
 		return true;
 	}
+	protected boolean containsOnlySubtraction(MathBean mathBean){
+		for (String operator : mathBean.getOperators()){
+			if (!(operator.equalsIgnoreCase(Operators.SUBTRACT))){
+				return false;
+			}
+		}
+		return true;
+	}
+	protected boolean containsOnlyDivision(MathBean mathBean){
+		for (String operator : mathBean.getOperators()){
+			if (!(operator.equalsIgnoreCase(Operators.DIVIDE))){
+				return false;
+			}
+		}
+		return true;
+	}
+	
 }

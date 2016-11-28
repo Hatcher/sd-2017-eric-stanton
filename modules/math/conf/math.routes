@@ -1,3 +1,5 @@
 GET		/									@controllers.math.Application.getIndex
 GET		/question/generate					@controllers.math.Application.generateTest
+GET		/skills								@controllers.math.Application.collectSkills
+GET		/skills/choices						@controllers.math.Application.chooseSkills
 GET		/question/generate/rectangle		controllers.math.Application.generateRectangle()

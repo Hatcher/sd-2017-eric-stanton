@@ -2,6 +2,11 @@ package beans.math;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.*;
 
 import net.sourceforge.jeval.EvaluationException;
@@ -9,23 +14,31 @@ import net.sourceforge.jeval.Evaluator;
 import services.equation.Operators;
 
 public class MathBean {
+	private String id="0";
+	private String displayType = "";
 
-	private String chosenType = "";
+
 	private List<BigInteger> integers = new ArrayList<BigInteger>();
 	private List<String> operators = new ArrayList<String>();
 	private Set<String> types = new HashSet<String>();
 
 	public MathBean() {
-		this.types.add("Arithmetic");
-		this.types.add("WordProblem");
 	}
 
-	public String getChosenType() {
-		return chosenType;
+	public String getId() {
+		return id;
 	}
 
-	public void setChosenType(String chosenType) {
-		this.chosenType = chosenType;
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public String getDisplayType() {
+		return displayType;
+	}
+
+	public void setDisplayType(String displayType) {
+		this.displayType = displayType;
 	}
 
 	public List<BigInteger> getIntegers() {
@@ -49,48 +62,70 @@ public class MathBean {
 		}
 	}
 
-	public Set<String> getAnswerChoices(String answer) {
+	public Set<String> getAnswerChoices() {
+
+		// decimal format
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		symbols.setGroupingSeparator(',');
+		symbols.setDecimalSeparator('.');
+		String pattern = "#,##0.0#";
+		DecimalFormat decimalFormat = new DecimalFormat(pattern, symbols);
+		decimalFormat.setParseBigDecimal(true);
+		// ^decimal format
+
 		Set<String> answers = new HashSet<String>();
-		answers.add(answer);
-		Evaluator eval = new Evaluator();
-		Random random = new Random();
-		
-		while (answers.size() < 3) {
-			List<BigInteger> wrongIntegers = cloneIntegers();
-			List<String> wrongOperators = cloneOperators();
+
+		BigDecimal answer;
+		try {
+			answer = (BigDecimal) decimalFormat.parse(getAnswer());
+			answer = answer.setScale(2, RoundingMode.HALF_UP);
 			
-			try {
-				if (random.nextInt(2) >0){
-					wrongIntegers.set(random.nextInt(wrongIntegers.size()), BigInteger.valueOf(random.nextInt(9)+1));
+			answers.add(answer.stripTrailingZeros().toEngineeringString());
+			Evaluator eval = new Evaluator();
+			Random random = new Random();
+
+			while (answers.size() < 4) {
+				MathBean wrongBean = new MathBean();
+
+				wrongBean.getIntegers().addAll(cloneIntegers());
+				wrongBean.getOperators().addAll(cloneOperators());
+
+				if (random.nextInt(2) > 0) {
+					wrongBean.getIntegers().set(random.nextInt(wrongBean.getIntegers().size()),
+							BigInteger.valueOf(random.nextInt(9) + 1));
+				} else {
+					wrongBean.getOperators().set(random.nextInt(wrongBean.getOperators().size()),
+							Operators.ALL_OPERATORS.get(random.nextInt(Operators.ALL_OPERATORS.size())));
 				}
-				else{
-					wrongOperators.set(random.nextInt(wrongOperators.size()), Operators.ALL_OPERATORS.get(random.nextInt(Operators.ALL_OPERATORS.size())));
-				}
-				answers.add(eval.evaluate(this.toString()));
-			} catch (EvaluationException e) {
-				return new HashSet<String>();
+
+				BigDecimal wrongAnswer = (BigDecimal) decimalFormat.parse(wrongBean.getAnswer());
+				wrongAnswer = wrongAnswer.setScale(2, RoundingMode.HALF_UP);
+				answers.add(wrongAnswer.stripTrailingZeros().toEngineeringString());
+
 			}
+		} catch (ParseException e) {
+			return new HashSet<String>();
 		}
 		return answers;
 
 	}
 
-	private List<BigInteger> cloneIntegers(){
+	private List<BigInteger> cloneIntegers() {
 		List<BigInteger> wrongIntegers = new ArrayList<BigInteger>();
-		for (BigInteger tmp : getIntegers()){
+		for (BigInteger tmp : getIntegers()) {
 			wrongIntegers.add(BigInteger.valueOf(tmp.intValue()));
 		}
 		return wrongIntegers;
 	}
 
-	private List<String> cloneOperators(){
+	private List<String> cloneOperators() {
 		List<String> wrongOperators = new ArrayList<String>();
-		for (String tmp : getOperators()){
+		for (String tmp : getOperators()) {
 			wrongOperators.add(tmp);
 		}
 		return wrongOperators;
 	}
-	
+
 	public String toString() {
 		String rValue = "";
 		for (int i = 0; i < getOperators().size(); i++) {

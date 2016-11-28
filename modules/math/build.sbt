@@ -3,6 +3,7 @@ name := "MyApplication-math"
 version := "BUILD"
 
 libraryDependencies ++= Seq(
-// dependencies here
-    )
+    // jeval
+  "net.sourceforge.jeval" % "jeval" % "0.9.4"
+)
 

@@ -5,13 +5,19 @@
 <html>
 <head>
 <title>Generated Test</title>
+	<script src="/assets/treant-js-master/math-skills/drawing/rectangle.js"></script>
+	<script src="/assets/treant-js-master/math-skills/drawing/circle.js"></script>
+	<script src="/assets/treant-js-master/math-skills/drawing/triangle.js"></script>
 </head>
 <body>
+	<a href="/math/skills">restart</a>
 	<h1>Categories Generated:</h1>
 	<table width="800px" style="padding: 5px; margin: 5px">
 		<tr>
 			<th style="text-align: left">Originating Equation</th>
 			<th style="text-align: left">Categories</th>
+			<th style="text-align: left">Question</th>
+			<th style="text-align: left">Answer Choices</th>
 		</tr>
 		@for(mathBean <- test.getMathBeans) {
 		<tr>
@@ -20,14 +26,40 @@
 				@mathBean.toString()</td>
 
 
-			<td width="600px">
+			<td width="200px">
 				<ul>
-					@for(category <- mathBean.getTypes){ 
-						<li>@category</li>
-					}
+					@for(category <- mathBean.getTypes){
+					<li>@category</li> }
 
 				</ul>
+			</td>
+			<td width="300px">Display type: @mathBean.getDisplayType() <!--  question here -->
+				@if(mathBean.getDisplayType().equals("ARITHMETIC")){
+				<p>@mathBean.toString()</p> }
 
+				@if(mathBean.getDisplayType().equals("RECTANGLE")){
+				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
+				<script type="text/javascript">
+          			drawRectangle(@mathBean.getId());
+        		</script> } @if(mathBean.getDisplayType().equals("TRIANGLE")){
+
+
+				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
+				<script type="text/javascript">
+          			drawTriangle(@mathBean.getId());
+        		</script>
+        
+        }
+				@if(mathBean.getDisplayType().equals("CIRCLE")){ CIRCLE }
+
+			</td>
+
+			<td width="200px">
+				<ul>
+					@for(choice <- mathBean.getAnswerChoices){
+					<li>@choice</li> }
+
+				</ul>
 			</td>
 		</tr>
 		</ol>
