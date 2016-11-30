@@ -27,4 +27,16 @@ public class AreaDetectorSquare extends CategoryDetector {
 		}
 		return false;
 	}
+
+	@Override
+	public void label(MathBean mathBean) {
+		mathBean.getLabels().clear();
+		mathBean.getLabels().put("side", mathBean.getIntegers().get(0)+"");
+		
+	}
+
+	@Override
+	public void populateQuestion(MathBean mathBean) {
+		mathBean.setQuestion("Calculate the area of the following square.");
+	}
 }

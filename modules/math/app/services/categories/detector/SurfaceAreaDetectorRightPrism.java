@@ -275,4 +275,16 @@ public class SurfaceAreaDetectorRightPrism extends CategoryDetector {
 		return expression;
 	}
 
+	@Override
+	public void label(MathBean mathBean) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void populateQuestion(MathBean mathBean) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

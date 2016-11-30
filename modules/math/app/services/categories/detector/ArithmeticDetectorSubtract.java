@@ -11,6 +11,18 @@ public class ArithmeticDetectorSubtract extends CategoryDetector {
 	public boolean isCategory(MathBean mathBean) {
 			return containsOnlySubtraction(mathBean);
 	}
+
+	@Override
+	public void label(MathBean mathBean) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void populateQuestion(MathBean mathBean) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

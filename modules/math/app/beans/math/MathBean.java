@@ -16,12 +16,16 @@ import services.equation.Operators;
 public class MathBean {
 	private String id="0";
 	private String displayType = "";
+	private String question = "";
+
 
 
 	private List<BigInteger> integers = new ArrayList<BigInteger>();
 	private List<String> operators = new ArrayList<String>();
 	private Set<String> types = new HashSet<String>();
 
+	private Map<String, String> labels = new HashMap<String, String>();
+	
 	public MathBean() {
 	}
 
@@ -126,6 +130,14 @@ public class MathBean {
 		return wrongOperators;
 	}
 
+	public String getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(String question) {
+		this.question = question;
+	}
+	
 	public String toString() {
 		String rValue = "";
 		for (int i = 0; i < getOperators().size(); i++) {
@@ -137,4 +149,9 @@ public class MathBean {
 		}
 		return rValue;
 	}
+
+	public Map<String, String> getLabels() {
+		return labels;
+	}
+
 }

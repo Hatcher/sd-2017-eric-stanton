@@ -1,6 +1,7 @@
 package services.categories.detector;
 
 import java.math.BigInteger;
+import java.math.BigDecimal;
 
 import beans.math.MathBean;
 import services.equation.Operators;
@@ -62,5 +63,19 @@ public class PerimeterDetectorSquare extends CategoryDetector {
 		}
 		return false;
 	}
+
+	@Override
+	public void label(MathBean mathBean) {
+		if ((mathBean.getOperators().size() == 1)) {
+			mathBean.getLabels().put("side", mathBean.getIntegers().get(0)+"");
+		}
+	}
+
+	@Override
+	public void populateQuestion(MathBean mathBean) {
+		mathBean.setQuestion("Find the perimeter of the following square");
+
+	}
+
 
 }

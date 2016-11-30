@@ -11,6 +11,18 @@ public class ArithmeticDetectorMultiply extends CategoryDetector {
 	public boolean isCategory(MathBean mathBean) {
 			return containsOnlyMultiplication(mathBean);
 	}
+
+	@Override
+	public void label(MathBean mathBean) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void populateQuestion(MathBean mathBean) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

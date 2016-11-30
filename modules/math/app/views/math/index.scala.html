@@ -5,15 +5,27 @@
 <html>
 <head>
 <title>Generated Test</title>
-	<script src="/assets/treant-js-master/math-skills/drawing/rectangle.js"></script>
-	<script src="/assets/treant-js-master/math-skills/drawing/circle.js"></script>
-	<script src="/assets/treant-js-master/math-skills/drawing/triangle.js"></script>
+<script src="/assets/treant-js-master/math-skills/drawing/rectangle.js"></script>
+<script src="/assets/treant-js-master/math-skills/drawing/circle.js"></script>
+<script src="/assets/treant-js-master/math-skills/drawing/triangle.js"></script>
+<script src="/assets/treant-js-master/math-skills/drawing/square.js"></script>
+
+<style>
+th {
+	border-bottom: 1px solid black;
+}
+
+td {
+	border-bottom: 1px solid black;
+}
+</style>
+
 </head>
 <body>
 	<a href="/math/skills">restart</a>
 	<h1>Categories Generated:</h1>
 	<table width="800px" style="padding: 5px; margin: 5px">
-		<tr>
+		<tr style="border-bottom: 1px solid black">
 			<th style="text-align: left">Originating Equation</th>
 			<th style="text-align: left">Categories</th>
 			<th style="text-align: left">Question</th>
@@ -35,22 +47,54 @@
 			</td>
 			<td width="300px">Display type: @mathBean.getDisplayType() <!--  question here -->
 				@if(mathBean.getDisplayType().equals("ARITHMETIC")){
-				<p>@mathBean.toString()</p> }
-
+				<p>
+					<strong>@Html(mathBean.getQuestion())</strong>
+				</p> } 
+				
 				@if(mathBean.getDisplayType().equals("RECTANGLE")){
+
+				<p>
+					<strong>@mathBean.getQuestion()</strong>
+				</p>
 				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
 				<script type="text/javascript">
-          			drawRectangle(@mathBean.getId());
-        		</script> } @if(mathBean.getDisplayType().equals("TRIANGLE")){
-
-
+          			drawRectangle(@mathBean.getId(), '@mathBean.getLabels().get("length")', '@mathBean.getLabels().get("width")');
+        		</script>
+        		
+        		 } 
+        		
+        		@if(mathBean.getDisplayType().equals("SQUARE")){
+				<p>
+					<strong>@mathBean.getQuestion()</strong>
+				</p>
+				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
+				<script type="text/javascript">
+          			drawSquare(@mathBean.getId(), '@mathBean.getLabels().get("side")');
+        		</script> 
+        		
+        		} 
+        		
+        		@if(mathBean.getDisplayType().equals("TRIANGLE")) {
+				<p>
+					<strong>@mathBean.getQuestion()</strong>
+				</p>
+				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
+				<script type="text/javascript">
+          			drawTriangle(@mathBean.getId(), '@mathBean.getLabels().get("base")','@mathBean.getLabels().get("height")', '@mathBean.getLabels().get("hypoteneuse")');
+        		</script>
+				 
+				} 
+				
+				@if(mathBean.getDisplayType().equals("CIRCLE")){ Not coded yet 
+				<p>
+					<strong>@mathBean.getQuestion()</strong>
+				</p>
 				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
 				<script type="text/javascript">
           			drawTriangle(@mathBean.getId());
         		</script>
-        
-        }
-				@if(mathBean.getDisplayType().equals("CIRCLE")){ CIRCLE }
+				
+				}
 
 			</td>
 

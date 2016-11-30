@@ -34,4 +34,16 @@ public class SlopeInterceptDetector extends CategoryDetector {
 	private boolean operatorMultiplyOrDivide(String operator){
 		return Operators.MULTIPLY.equals(operator) || Operators.DIVIDE.equals(operator);
 	}
+
+	@Override
+	public void label(MathBean mathBean) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void populateQuestion(MathBean mathBean) {
+		// TODO Auto-generated method stub
+		
+	}
 }

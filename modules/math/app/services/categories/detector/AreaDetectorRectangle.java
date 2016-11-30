@@ -1,6 +1,8 @@
 package services.categories.detector;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 
 import beans.math.MathBean;
 import services.equation.Operators;
@@ -17,6 +19,33 @@ public class AreaDetectorRectangle extends CategoryDetector {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void label(MathBean mathBean) {
+		mathBean.getLabels().put("width", getLongest(mathBean)+"");
+		mathBean.getLabels().put("length", getShortest(mathBean)+"");
+		
+	}
+
+	@Override
+	public void populateQuestion(MathBean mathBean) {
+		mathBean.setQuestion("Calculate the area of the rectangle.");
+	}
+	
+	private BigDecimal getShortest(MathBean mathBean){
+		BigDecimal shortest = new BigDecimal(mathBean.getIntegers().get(0));
+		if (mathBean.getOperators().get(0).equals(Operators.DIVIDE)){
+			shortest =  BigDecimal.ONE.divide(new BigDecimal(mathBean.getIntegers().get(1)), 2, RoundingMode.HALF_UP);
+		}
+		return shortest;
+	}
+	private BigDecimal getLongest(MathBean mathBean){
+		BigDecimal longest = new BigDecimal(mathBean.getIntegers().get(0));
+		if (!mathBean.getOperators().get(0).equals(Operators.DIVIDE)){
+			longest =  new BigDecimal(mathBean.getIntegers().get(1));
+		}
+		return longest;
 	}
 	
 }

@@ -58,18 +58,28 @@ public class Categorizer {
 				
 				if (type.toUpperCase().startsWith("ARITHMETIC")){
 					mathBean.setDisplayType("ARITHMETIC");
+					detector.label(mathBean);
+					detector.populateQuestion(mathBean);
 				}
 				else if(type.toUpperCase().endsWith("TRIANGLE")){
 					mathBean.setDisplayType("TRIANGLE");
+					detector.label(mathBean);
+					detector.populateQuestion(mathBean);
 				}
 				else if(type.toUpperCase().endsWith("SQUARE")){
 					mathBean.setDisplayType("SQUARE");
+					detector.label(mathBean);
+					detector.populateQuestion(mathBean);
 				}
 				else if(type.toUpperCase().endsWith("RECTANGLE")){ // careful of t
-					mathBean.setDisplayType("RECTANGLE");	
+					mathBean.setDisplayType("RECTANGLE");
+					detector.label(mathBean);
+					detector.populateQuestion(mathBean);
 				}
 				else if(type.toUpperCase().endsWith("CIRCLE")){ // careful of t
 					mathBean.setDisplayType("CIRCLE");	
+					detector.label(mathBean);
+					detector.populateQuestion(mathBean);
 				}
 				
 			}

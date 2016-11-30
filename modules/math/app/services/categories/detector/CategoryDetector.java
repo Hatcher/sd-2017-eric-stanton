@@ -9,6 +9,10 @@ public abstract class CategoryDetector {
 
 	public abstract boolean isCategory(MathBean mathBean);
 	
+	public abstract void label(MathBean mathBean);
+	
+	public abstract void populateQuestion(MathBean mathBean);
+	
 	protected int findDivideBy2Operator(MathBean mathBean){
 		return findDivideByNumberOperator(mathBean, 2);
 	}
