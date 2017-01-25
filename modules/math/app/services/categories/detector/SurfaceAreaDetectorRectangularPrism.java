@@ -1,5 +1,6 @@
 package services.categories.detector;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import beans.math.MathBean;
@@ -44,18 +45,18 @@ public class SurfaceAreaDetectorRectangularPrism extends CategoryDetector {
 					}
 					// final condition is each number has to exist in at least 1
 					// other expression
-					for (BigInteger integer : expression1.getIntegers()) {
+					for (BigDecimal integer : expression1.getIntegers()) {
 						if (!expression2.getIntegers().contains(integer) && !expression3.getIntegers().contains(integer)){
 							return false;
 						}
 					}
-					for (BigInteger integer : expression2.getIntegers()) {
+					for (BigDecimal integer : expression2.getIntegers()) {
 						if (!expression1.getIntegers().contains(integer) && !expression3.getIntegers().contains(integer)){
 							return false;
 						}
 					}
 
-					for (BigInteger integer : expression2.getIntegers()) {
+					for (BigDecimal integer : expression2.getIntegers()) {
 						if (!expression1.getIntegers().contains(integer) && !expression2.getIntegers().contains(integer)){
 							return false;
 						}

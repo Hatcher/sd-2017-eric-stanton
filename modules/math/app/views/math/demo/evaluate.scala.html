@@ -1,4 +1,4 @@
-@(test: beans.math.TestBean)
+@(test: beans.math.TestBean) @main("main"){
 
 <!DOCTYPE html>
 
@@ -23,36 +23,18 @@ td {
 
 </head>
 <body>
-	<a href="/math/skills">restart</a>
-	<h1>Categories Generated:</h1>
+	
+	<a href="/math/demo/menu">>Return to Menu</a>
+	<h1>Math Test:</h1>
 	<table width="800px" style="padding: 5px; margin: 5px">
-		<tr style="border-bottom: 1px solid black">
-			<th style="text-align: left">Originating Equation</th>
-			<th style="text-align: left">Categories</th>
-			<th style="text-align: left">Question</th>
-			<th style="text-align: left">Answer Choices</th>
-		</tr>
 		@for(mathBean <- test.getMathBeans) {
 		<tr>
-
-			<td width="200px" style="vertical-align: top">x =
-				@mathBean.toString()</td>
-
-
-			<td width="200px">
-				<ul>
-					@for(category <- mathBean.getTypes){
-					<li>@category</li> }
-
-				</ul>
-			</td>
-			<td width="300px">Display type: @mathBean.getDisplayType() <!--  question here -->
+			<td width="300px"><!--  question here -->
+			@mathBean.getId)
 				@if(mathBean.getDisplayType().equals("ARITHMETIC")){
 				<p>
 					<strong>@Html(mathBean.getQuestion())</strong>
-				</p> } 
-				
-				@if(mathBean.getDisplayType().equals("RECTANGLE")){
+				</p> } @if(mathBean.getDisplayType().equals("RECTANGLE")){
 
 				<p>
 					<strong>@mathBean.getQuestion()</strong>
@@ -60,72 +42,66 @@ td {
 				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
 				<script type="text/javascript">
           			drawRectangle(@mathBean.getId(), '@mathBean.getLabels().get("length")', '@mathBean.getLabels().get("width")');
-        		</script>
-        		
-        		 } 
-        		
-        		@if(mathBean.getDisplayType().equals("SQUARE")){
+        		</script> } @if(mathBean.getDisplayType().equals("SQUARE")){
 				<p>
 					<strong>@mathBean.getQuestion()</strong>
 				</p>
 				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
 				<script type="text/javascript">
           			drawSquare(@mathBean.getId(), '@mathBean.getLabels().get("side")');
-        		</script> 
-        		
-        		} 
-        		
-        		@if(mathBean.getDisplayType().equals("CUBE")){
+        		</script> } @if(mathBean.getDisplayType().equals("CUBE")){
 				<p>
 					<strong>@mathBean.getQuestion()</strong>
 				</p>
 				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
 				<script type="text/javascript">
           			drawCube(@mathBean.getId(), '@mathBean.getLabels().get("height")', '@mathBean.getLabels().get("width")', '@mathBean.getLabels().get("depth")');
-        		</script> 
-        		
-        		}
-        		
-        		
-        		
-        		@if(mathBean.getDisplayType().equals("TRIANGLE")) {
+        		</script> } @if(mathBean.getDisplayType().equals("TRIANGLE")) {
 				<p>
 					<strong>@mathBean.getQuestion()</strong>
 				</p>
 				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
 				<script type="text/javascript">
           			drawTriangle(@mathBean.getId(), '@mathBean.getLabels().get("base")','@mathBean.getLabels().get("height")', '@mathBean.getLabels().get("hypoteneuse")');
-        		</script>
-				 
-				} 
-				
-				@if(mathBean.getDisplayType().equals("CIRCLE")){  
+        		</script> } @if(mathBean.getDisplayType().equals("CIRCLE")){
 				<p>
 					<strong>@mathBean.getQuestion()</strong>
 				</p>
 				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
 				<script type="text/javascript">
           			drawCircle(@mathBean.getId(), '@mathBean.getLabels().get("radius")', '@mathBean.getLabels().get("diameter")');
-        		</script>
-				
-				
+        		</script> } <br /> Choices <br/>
+				<form>
 
-				}
+					@for(choice <- mathBean.getAnswerChoices){ <input type="radio"
+						name=" @mathBean.getId" checked="checked" disabled="true"/> @choice <br /> }
 
+				</form>
 			</td>
-
-			<td width="200px">
-				<ul>
-					@for(choice <- mathBean.getAnswerChoices){
-					<li>@choice</li> }
-
-				</ul>
+			
+			<td>
+				<div id="correct_@mathBean.getId"><img src="/assets/treant-js-master/math-skills/img/correct.png"/></div>
+				<br/>
+				-- or --
+				<br/>
+				<div id="incorrect_@mathBean.getId"><img src="/assets/treant-js-master/math-skills/img/incorrect.png"/></div>
+				The correct answer was "a."
+				<br/>
+				<br/>
+				To learn why the answer is "a," click here <a href="#">Link opens dialog with steps to answer question.</a>
+				
+		
+			
+						
+				
+				
+				
 			</td>
 		</tr>
-		</ol>
 		}
 	</table>
 
 
 </body>
 </html>
+}

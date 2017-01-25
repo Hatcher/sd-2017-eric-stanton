@@ -20,7 +20,7 @@ public class MathBean {
 
 
 
-	private List<BigInteger> integers = new ArrayList<BigInteger>();
+	private List<BigDecimal> integers = new ArrayList<BigDecimal>();
 	private List<String> operators = new ArrayList<String>();
 	private Set<String> types = new HashSet<String>();
 
@@ -45,7 +45,7 @@ public class MathBean {
 		this.displayType = displayType;
 	}
 
-	public List<BigInteger> getIntegers() {
+	public List<BigDecimal> getIntegers() {
 		return integers;
 	}
 
@@ -96,7 +96,7 @@ public class MathBean {
 
 				if (random.nextInt(2) > 0) {
 					wrongBean.getIntegers().set(random.nextInt(wrongBean.getIntegers().size()),
-							BigInteger.valueOf(random.nextInt(9) + 1));
+							BigDecimal.valueOf(random.nextInt(9) + 1));
 				} else {
 					wrongBean.getOperators().set(random.nextInt(wrongBean.getOperators().size()),
 							Operators.ALL_OPERATORS.get(random.nextInt(Operators.ALL_OPERATORS.size())));
@@ -114,10 +114,10 @@ public class MathBean {
 
 	}
 
-	private List<BigInteger> cloneIntegers() {
-		List<BigInteger> wrongIntegers = new ArrayList<BigInteger>();
-		for (BigInteger tmp : getIntegers()) {
-			wrongIntegers.add(BigInteger.valueOf(tmp.intValue()));
+	private List<BigDecimal> cloneIntegers() {
+		List<BigDecimal> wrongIntegers = new ArrayList<BigDecimal>();
+		for (BigDecimal tmp : getIntegers()) {
+			wrongIntegers.add(BigDecimal.valueOf(tmp.intValue()));
 		}
 		return wrongIntegers;
 	}

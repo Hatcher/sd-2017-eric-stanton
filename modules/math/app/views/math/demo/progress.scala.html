@@ -1,0 +1,30 @@
+@main("main"){
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Progress</title>
+<script src="/assets/treant-js-master/math-skills/chart-config-all-skills.js"></script>
+<script src="/assets/treant-js-master/math-skills/list-skills.js"></script>
+</head>
+<body>
+	<a href="/math/demo/skills">Return to Skill Selection</a>
+		<h1>Progress:</h1>
+		
+		
+	<ul>
+	<script>
+		initAllSkillNames();
+
+		for (var i = 0; i < skillItems.length; i++) {
+		  document.write("<li><a href=\"/math/demo?"+skillItems[i]+"=1\">"+skillItems[i]+" - <strong>100%</strong> competent</li> ");    
+		}
+		
+
+		</script>
+</ul>
+</body>
+</html>
+}
+

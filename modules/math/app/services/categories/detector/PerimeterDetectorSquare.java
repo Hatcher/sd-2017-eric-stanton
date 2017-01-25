@@ -1,6 +1,5 @@
 package services.categories.detector;
 
-import java.math.BigInteger;
 import java.math.BigDecimal;
 
 import beans.math.MathBean;
@@ -16,16 +15,16 @@ public class PerimeterDetectorSquare extends CategoryDetector {
 	public boolean isCategory(MathBean mathBean) {
 		if ((mathBean.getOperators().size() == 1)) {
 			// Perimeter = 4 * side
-			if (mathBean.getIntegers().get(0).equals(BigInteger.valueOf(4))
-					|| mathBean.getIntegers().get(1).equals(BigInteger.valueOf(4))) {
+			if (mathBean.getIntegers().get(0).equals(BigDecimal.valueOf(4))
+					|| mathBean.getIntegers().get(1).equals(BigDecimal.valueOf(4))) {
 				return containsOnlyMultiplicationAndDivision(mathBean);
 			}
 		}
 		if ((mathBean.getOperators().size() == 3)) {
 			if (containsOnlyAddition(mathBean)) {
 				// Perimeter = x + x + x + x
-				BigInteger x = mathBean.getIntegers().get(0);
-				for (BigInteger otherX : mathBean.getIntegers()) {
+				BigDecimal x = mathBean.getIntegers().get(0);
+				for (BigDecimal otherX : mathBean.getIntegers()) {
 					if (!x.equals(otherX)) {
 						return false;
 					}

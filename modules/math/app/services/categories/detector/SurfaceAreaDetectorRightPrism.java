@@ -1,5 +1,6 @@
 package services.categories.detector;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +49,7 @@ public class SurfaceAreaDetectorRightPrism extends CategoryDetector {
 
 					int singlesAllowed = 1; //c
 					boolean first = true;
-					for (BigInteger tern : expression1.getIntegers()) {
+					for (BigDecimal tern : expression1.getIntegers()) {
 						if (first) {
 							if (expression2.getIntegers().contains(tern)) {
 								count1++;
@@ -92,7 +93,7 @@ public class SurfaceAreaDetectorRightPrism extends CategoryDetector {
 					count1 = 1;
 					count2 = 1;
 					first = true;
-					for (BigInteger tern : expression2.getIntegers()) {
+					for (BigDecimal tern : expression2.getIntegers()) {
 						if (first) {
 							if (expression1.getIntegers().contains(tern)) {
 								count1++;
@@ -148,7 +149,7 @@ public class SurfaceAreaDetectorRightPrism extends CategoryDetector {
 					count1 = 1;
 					count2 = 1;
 					first = true;
-					for (BigInteger tern : expression3.getIntegers()) {
+					for (BigDecimal tern : expression3.getIntegers()) {
 						if (first) {
 							if (expression1.getIntegers().contains(tern)) {
 								count1++;
@@ -204,7 +205,7 @@ public class SurfaceAreaDetectorRightPrism extends CategoryDetector {
 					count1 = 1;
 					count2 = 1;
 					first = true;
-					for (BigInteger tern : expression4.getIntegers()) {
+					for (BigDecimal tern : expression4.getIntegers()) {
 						if (first) {
 							if (expression1.getIntegers().contains(tern)) {
 								count1++;

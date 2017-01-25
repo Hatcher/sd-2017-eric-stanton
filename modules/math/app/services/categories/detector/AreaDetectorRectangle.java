@@ -34,16 +34,16 @@ public class AreaDetectorRectangle extends CategoryDetector {
 	}
 	
 	private BigDecimal getShortest(MathBean mathBean){
-		BigDecimal shortest = new BigDecimal(mathBean.getIntegers().get(0));
+		BigDecimal shortest = mathBean.getIntegers().get(0);
 		if (mathBean.getOperators().get(0).equals(Operators.DIVIDE)){
-			shortest =  BigDecimal.ONE.divide(new BigDecimal(mathBean.getIntegers().get(1)), 2, RoundingMode.HALF_UP);
+			shortest =  BigDecimal.ONE.divide(mathBean.getIntegers().get(1), 2, RoundingMode.HALF_UP);
 		}
 		return shortest;
 	}
 	private BigDecimal getLongest(MathBean mathBean){
-		BigDecimal longest = new BigDecimal(mathBean.getIntegers().get(0));
+		BigDecimal longest = mathBean.getIntegers().get(0);
 		if (!mathBean.getOperators().get(0).equals(Operators.DIVIDE)){
-			longest =  new BigDecimal(mathBean.getIntegers().get(1));
+			longest =  mathBean.getIntegers().get(1);
 		}
 		return longest;
 	}

@@ -4,7 +4,7 @@ var disabledSkills = [];
 var selectedColor = "#88FF88";
 var unselectedColor = "#FF8888";
 var disabledColor = "#BBBBBB";
-var baseUrl = "/math";
+var baseUrl = "/math/demo";
 
 function defineLeafOnclick(id, typeValue) {
   if (!typeValue) {

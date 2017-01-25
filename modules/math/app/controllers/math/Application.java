@@ -1,6 +1,6 @@
 package controllers.math;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,28 +28,14 @@ public class Application extends Controller {
     	return ok( views.html.math.index.render( test ) );
     }
 
-    public Result generateTest() {
-    	
-        
-    	
-    	
-    	TestBean test = new TestBean();
-    	test.getMathBeans().addAll(equationGenerator.generateQuestions(30, getQuestionTypes()));
-    	return ok( views.html.math.generatetest.render( test ) );
-    }
-    
     public Result collectSkills() {
     	return ok( views.html.math.skills.render() );
     }
     
-    public Result chooseSkills() {
-    	return ok( views.html.math.skillselection.render() );
-    }
-    
     public static Result generateRectangle() {
     	MathBean bean = new MathBean();
-    	bean.getIntegers().add(BigInteger.valueOf(2));
-    	bean.getIntegers().add(BigInteger.valueOf(3));
+    	bean.getIntegers().add(BigDecimal.valueOf(2));
+    	bean.getIntegers().add(BigDecimal.valueOf(3));
     	bean.getTypes().add("RECTANGLE_AREA");
     	
     	return ok( views.html.math.question.templates.rectangle.render( bean ) );
@@ -66,5 +52,33 @@ public class Application extends Controller {
         }
     	return enabledSkills;
     }
+
+    
+    public Result demoGetIndex() {
+    	TestBean test = new TestBean();
+    	test.getMathBeans().addAll(equationGenerator.generateQuestions(30, getQuestionTypes()));
+    	return ok( views.html.math.demo.index.render( test ) );
+    }
+    
+    public Result demoGetLogin() {
+    	return ok( views.html.math.demo.login.render() );
+    }
+    public Result demoGetMenu() {
+    	return ok( views.html.math.demo.menu.render() );
+    }
+    
+    public Result demoGetProgress() {
+    	return ok( views.html.math.demo.progress.render() );
+    }
+
+    public Result demoCollectSkills() {
+    	return ok( views.html.math.demo.skills.render() );
+    }
+    
+    public Result demoGetGrade() {
+    	TestBean test = new TestBean();
+    	test.getMathBeans().addAll(equationGenerator.generateQuestions(30, getQuestionTypes()));
+    	return ok( views.html.math.demo.evaluate.render( test ) );
+    }    
     
 }

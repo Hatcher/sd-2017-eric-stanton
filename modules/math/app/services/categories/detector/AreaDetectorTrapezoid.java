@@ -1,5 +1,6 @@
 package services.categories.detector;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import beans.math.MathBean;
@@ -58,7 +59,7 @@ public class AreaDetectorTrapezoid extends CategoryDetector {
 		
 		return false;
 	}
-	private boolean containsIntegerExcluding(BigInteger needle, MathBean mathBean, int ignoreIndex){
+	private boolean containsIntegerExcluding(BigDecimal needle, MathBean mathBean, int ignoreIndex){
 		for (int i = 0; i < mathBean.getIntegers().size(); i++){
 			if (i != ignoreIndex){
 				if (needle.equals(mathBean.getIntegers().get(i))){

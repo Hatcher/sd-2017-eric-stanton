@@ -37,10 +37,10 @@ public class ArithmeticDetector extends CategoryDetector {
 	public void populateQuestion(MathBean mathBean) {
 		String question = "<strong>Solve the following:</strong>";
 		if ((mathBean.getIntegers().size() == 2) && (!mathBean.getOperators().contains(Operators.DIVIDE))){
-			question = "<table cellpadding=0 cellspacing=0 align=\"center\">";
-			question+="<tr><td style=\"border-bottom:none\"></td><td alrign=\"right\" style=\"border-bottom:none\"><strong>"+mathBean.getIntegers().get(0)+"</strong></td></tr>";
-			question+="<tr><td align=\"right\">"+mathBean.getOperators().get(0)+"</td><td alrign=\"right\"><strong>"+mathBean.getIntegers().get(1)+"</strong></td></tr>";
-			question+="</td></tr></table>";
+			question = "<div style=\"width:20px; text-align:right; border-bottom-style:solid; border-bottom-color:#000000; border-bottom-width:1px\">";
+			question+=""+mathBean.getIntegers().get(0);
+			question+="<br/>"+mathBean.getOperators().get(0)+""+mathBean.getIntegers().get(1);
+			question+="</div>";
 		}
 		else{
 			question = mathBean.toString();

@@ -1,6 +1,6 @@
 package services.categories.detector;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 import beans.math.MathBean;
 import services.equation.Operators;
@@ -45,9 +45,9 @@ public class PerimeterDetectorRectangle extends CategoryDetector {
 	}
 
 	private boolean hasDoublesTwice(MathBean mathBean) {
-		BigInteger firstInteger = null;
-		BigInteger secondInteger = null;
-		for (BigInteger comparator : mathBean.getIntegers()) {
+		BigDecimal firstInteger = null;
+		BigDecimal secondInteger = null;
+		for (BigDecimal comparator : mathBean.getIntegers()) {
 			if (firstInteger == null) {
 				firstInteger = comparator;
 			} else if (secondInteger == null) {
@@ -66,9 +66,9 @@ public class PerimeterDetectorRectangle extends CategoryDetector {
 	@Override
 	public void label(MathBean mathBean) {
 		if (containsOnlyAddition(mathBean)) {
-			BigInteger firstInteger = null;
-			BigInteger secondInteger = null;
-			for (BigInteger comparator : mathBean.getIntegers()) {
+			BigDecimal firstInteger = null;
+			BigDecimal secondInteger = null;
+			for (BigDecimal comparator : mathBean.getIntegers()) {
 				if (firstInteger == null) {
 					firstInteger = comparator;
 				} else if (secondInteger == null) {
@@ -86,7 +86,7 @@ public class PerimeterDetectorRectangle extends CategoryDetector {
 			expression1.getIntegers().add(mathBean.getIntegers().get(0));
 			expression1.getIntegers().add(mathBean.getIntegers().get(1));
 
-			if (expression1.getIntegers().get(0).equals(BigInteger.ONE.add(BigInteger.ONE))){
+			if (expression1.getIntegers().get(0).equals(BigDecimal.ONE.add(BigDecimal.ONE))){
 				mathBean.getLabels().put("width", expression1.getIntegers().get(1)+"");
 			}
 			else{
@@ -98,7 +98,7 @@ public class PerimeterDetectorRectangle extends CategoryDetector {
 			expression2.getIntegers().add(mathBean.getIntegers().get(2));
 			expression2.getIntegers().add(mathBean.getIntegers().get(3));
 			
-			if (expression2.getIntegers().get(0).equals(BigInteger.ONE.add(BigInteger.ONE))){
+			if (expression2.getIntegers().get(0).equals(BigDecimal.ONE.add(BigDecimal.ONE))){
 				mathBean.getLabels().put("width", expression2.getIntegers().get(1)+"");
 			}
 			else{

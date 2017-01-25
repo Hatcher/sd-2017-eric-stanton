@@ -71,16 +71,22 @@ public class Categorizer {
 					detector.label(mathBean);
 					detector.populateQuestion(mathBean);
 				}
-				else if(type.toUpperCase().endsWith("RECTANGLE")){ // careful of t
+				else if(type.toUpperCase().endsWith("RECTANGLE")){ 
 					mathBean.setDisplayType("RECTANGLE");
 					detector.label(mathBean);
 					detector.populateQuestion(mathBean);
 				}
-				else if(type.toUpperCase().endsWith("CIRCLE")){ // careful of t
+				else if(type.toUpperCase().endsWith("CIRCLE")){ 
 					mathBean.setDisplayType("CIRCLE");	
 					detector.label(mathBean);
 					detector.populateQuestion(mathBean);
 				}
+				else if(type.toUpperCase().endsWith("RECTANGULARPRISM")){ 
+					mathBean.setDisplayType("CUBE");	
+					detector.label(mathBean);
+					detector.populateQuestion(mathBean);
+				}
+				
 				
 			}
 		}

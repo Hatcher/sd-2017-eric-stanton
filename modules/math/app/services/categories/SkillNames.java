@@ -17,6 +17,7 @@ public class SkillNames {
 	public static final String RIGHT_PRISM = "rightPrism";
 	public static final String SPHERE = "sphere";
 	
+	public static final String RELATION = "relation";
 	
 	// TODO more skill names defined here
 	// slope intercept

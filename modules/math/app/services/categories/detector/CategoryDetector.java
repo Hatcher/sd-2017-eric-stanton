@@ -1,12 +1,15 @@
 package services.categories.detector;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 import beans.math.MathBean;
 import services.equation.Operators;
 
 public abstract class CategoryDetector {
 
+	protected final static BigDecimal TWO = BigDecimal.ONE.add(BigDecimal.ONE);
+	protected final static BigDecimal THREE = TWO.add(BigDecimal.ONE);
+	
 	public abstract boolean isCategory(MathBean mathBean);
 	
 	public abstract void label(MathBean mathBean);
@@ -21,7 +24,7 @@ public abstract class CategoryDetector {
 		for	(int i =0; i < mathBean.getOperators().size(); i++){
 			String operator = mathBean.getOperators().get(i);
 			if (operator.equals(Operators.DIVIDE)){
-				if (mathBean.getIntegers().get(i+1).equals(BigInteger.valueOf(number))){
+				if (mathBean.getIntegers().get(i+1).equals(BigDecimal.valueOf(number))){
 					return i;
 				}
 			}
@@ -32,7 +35,7 @@ public abstract class CategoryDetector {
 	protected int find2(MathBean mathBean){
 		//for (String operator : mathBean.getOperators()){
 		for	(int i =0; i < mathBean.getIntegers().size(); i++){
-			if (mathBean.getIntegers().get(i).equals(BigInteger.valueOf(2))){
+			if (mathBean.getIntegers().get(i).equals(BigDecimal.valueOf(2))){
 				return i;
 			}
 		}

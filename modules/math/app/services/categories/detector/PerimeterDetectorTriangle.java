@@ -1,7 +1,6 @@
 package services.categories.detector;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 import beans.math.MathBean;
 import services.equation.Operators;
@@ -35,9 +34,9 @@ public class PerimeterDetectorTriangle extends CategoryDetector {
 		BigDecimal longestLine = null;
 		for (int i = 0; i < mathBean.getIntegers().size(); i++) {
 			if (longestLine == null) {
-				longestLine = new BigDecimal(mathBean.getIntegers().get(i));
+				longestLine = mathBean.getIntegers().get(i);
 			} else {
-				BigDecimal comparator = new BigDecimal(mathBean.getIntegers().get(i));
+				BigDecimal comparator = mathBean.getIntegers().get(i);
 				if (longestLine.compareTo(comparator) < 0) {
 					longestLine = comparator;
 				}
@@ -52,11 +51,11 @@ public class PerimeterDetectorTriangle extends CategoryDetector {
 		BigDecimal mediumLine = null;
 		for (int i = 0; i < mathBean.getIntegers().size(); i++) {
 			if (longestLine == null) {
-				longestLine = new BigDecimal(mathBean.getIntegers().get(i));
-				shortestLine = new BigDecimal(mathBean.getIntegers().get(i));
-				mediumLine = new BigDecimal(mathBean.getIntegers().get(i));
+				longestLine = mathBean.getIntegers().get(i);
+				shortestLine = mathBean.getIntegers().get(i);
+				mediumLine = mathBean.getIntegers().get(i);
 			} else {
-				BigDecimal comparator = new BigDecimal(mathBean.getIntegers().get(i));
+				BigDecimal comparator = mathBean.getIntegers().get(i);
 				if (longestLine.compareTo(comparator) < 0) {
 					longestLine = comparator;
 				}
@@ -75,9 +74,9 @@ public class PerimeterDetectorTriangle extends CategoryDetector {
 		BigDecimal shortestLine = null;
 		for (int i = 0; i < mathBean.getIntegers().size(); i++) {
 			if (shortestLine == null) {
-				shortestLine = new BigDecimal(mathBean.getIntegers().get(i));
+				shortestLine = mathBean.getIntegers().get(i);
 			} else {
-				BigDecimal comparator = new BigDecimal(mathBean.getIntegers().get(i));
+				BigDecimal comparator = mathBean.getIntegers().get(i);
 				if (shortestLine.compareTo(comparator) > 0) {
 					shortestLine = comparator;
 				}

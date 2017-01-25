@@ -53,7 +53,7 @@ public class AreaDetectorTriangle extends CategoryDetector {
 		for (int i = 0; i < mathBean.getIntegers().size(); i++)
 		{
 			if (longestLine == null){
-				longestLine = new BigDecimal(mathBean.getIntegers().get(i));
+				longestLine = mathBean.getIntegers().get(i);
 			}
 			else{
 				
@@ -66,10 +66,10 @@ public class AreaDetectorTriangle extends CategoryDetector {
 							continue;
 						}
 					}
-					comparator = BigDecimal.ONE.divide(new BigDecimal(mathBean.getIntegers().get(i)), 2, RoundingMode.HALF_UP);
+					comparator = BigDecimal.ONE.divide(mathBean.getIntegers().get(i), 2, RoundingMode.HALF_UP);
 				}
 				else{
-					comparator = new BigDecimal(mathBean.getIntegers().get(i));
+					comparator = mathBean.getIntegers().get(i);
 				}
 				if (longestLine.compareTo(comparator) < 0){
 					longestLine = comparator;
@@ -87,9 +87,9 @@ public class AreaDetectorTriangle extends CategoryDetector {
 		for (int i = 0; i < mathBean.getIntegers().size(); i++)
 		{
 			if (longestLine == null){
-				longestLine = new BigDecimal(mathBean.getIntegers().get(i));
-				shortestLine = new BigDecimal(mathBean.getIntegers().get(i));
-				mediumLine = new BigDecimal(mathBean.getIntegers().get(i));
+				longestLine = mathBean.getIntegers().get(i);
+				shortestLine = mathBean.getIntegers().get(i);
+				mediumLine = mathBean.getIntegers().get(i);
 			}
 			else{
 				BigDecimal comparator;
@@ -100,29 +100,29 @@ public class AreaDetectorTriangle extends CategoryDetector {
 							continue;
 						}
 					}
-					comparator = BigDecimal.ONE.divide(new BigDecimal(mathBean.getIntegers().get(i)), 2, RoundingMode.HALF_UP);
+					comparator = BigDecimal.ONE.divide(mathBean.getIntegers().get(i), 2, RoundingMode.HALF_UP);
 				}
 				else{
-					comparator = new BigDecimal(mathBean.getIntegers().get(i));
+					comparator = mathBean.getIntegers().get(i);
 				}
 				if (longestLine.compareTo(comparator) < 0){
 					longestLine = comparator;
 				}
 				if (mathBean.getOperators().get(i-1).equals(Operators.DIVIDE)){
-					comparator = BigDecimal.ONE.divide(new BigDecimal(mathBean.getIntegers().get(i)), 2, RoundingMode.HALF_UP);
+					comparator = BigDecimal.ONE.divide(mathBean.getIntegers().get(i), 2, RoundingMode.HALF_UP);
 				}
 				else{
-					comparator = new BigDecimal(mathBean.getIntegers().get(i));
+					comparator = mathBean.getIntegers().get(i);
 				}
 				if (shortestLine.compareTo(comparator) > 0){
 					shortestLine = comparator;
 				}
 				
 				if (mathBean.getOperators().get(i-1).equals(Operators.DIVIDE)){
-					comparator = BigDecimal.ONE.divide(new BigDecimal(mathBean.getIntegers().get(i)), 2, RoundingMode.HALF_UP);
+					comparator = BigDecimal.ONE.divide(mathBean.getIntegers().get(i), 2, RoundingMode.HALF_UP);
 				}
 				else{
-					comparator = new BigDecimal(mathBean.getIntegers().get(i));
+					comparator = mathBean.getIntegers().get(i);
 				}
 				if (mediumLine.compareTo(comparator) > 0){
 					mediumLine = comparator;
@@ -139,7 +139,7 @@ public class AreaDetectorTriangle extends CategoryDetector {
 		for (int i = 0; i < mathBean.getIntegers().size(); i++)
 		{
 			if (shortestLine == null){
-				shortestLine = new BigDecimal(mathBean.getIntegers().get(i));
+				shortestLine = mathBean.getIntegers().get(i);
 			}
 			else{
 				BigDecimal comparator;
@@ -151,10 +151,10 @@ public class AreaDetectorTriangle extends CategoryDetector {
 							continue;
 						}
 					}
-					comparator = BigDecimal.ONE.divide(new BigDecimal(mathBean.getIntegers().get(i)), 2, RoundingMode.HALF_UP);
+					comparator = BigDecimal.ONE.divide(mathBean.getIntegers().get(i), 2, RoundingMode.HALF_UP);
 				}
 				else{
-					comparator = new BigDecimal(mathBean.getIntegers().get(i));
+					comparator = mathBean.getIntegers().get(i);
 				}
 				if (shortestLine.compareTo(comparator) > 0){
 					shortestLine = comparator;
