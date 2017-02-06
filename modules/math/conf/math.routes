@@ -6,5 +6,7 @@ GET		/demo/login									@controllers.math.Application.demoGetLogin
 GET		/demo/menu									@controllers.math.Application.demoGetMenu
 POST	/demo/menu									@controllers.math.Application.demoGetMenu
 GET		/demo/skills								@controllers.math.Application.demoCollectSkills
+GET		/demo/skills/edit								@controllers.math.Application.demoEditSkills
 GET		/demo/progress								@controllers.math.Application.demoGetProgress
 GET		/demo/grade								@controllers.math.Application.demoGetGrade
+GET		/demo/create_category								@controllers.math.Application.demoCreateCategory

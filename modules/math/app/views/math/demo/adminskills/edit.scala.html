@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Generated Test</title>
+
+<link rel="stylesheet" href="/assets/treant-js-master/Treant.css" />
+<link rel="stylesheet"
+	href="/assets/treant-js-master/math-skills/skills.css" />
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"/>
+
+</head>
+<body>
+	<h1>Edit Skills:</h1>
+	<ul>
+		<li>Click on a skill group to add a child skill or skill group.</li>
+		<li>Click on a skill to see the current question types or add questions.</li>
+	</ul>
+	<table width="100%">
+		<tr>
+			<td width="100%" height="100%"><div class="chart" id="collapsable-all"
+					style="position: relative"></div></td>
+		</tr>
+	</table>
+
+	<script src="/assets/treant-js-master/vendor/raphael.js"></script>
+	<script src="/assets/treant-js-master/Treant.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script src="/assets/treant-js-master/vendor/jquery.easing.js"></script>
+
+	<script src="/assets/treant-js-master/math-skills/skills-globals-demo.js"></script>
+	<script src="/assets/treant-js-master/math-skills/chart-config-all-skills-expanded.js"></script>
+	<script src="/assets/treant-js-master/math-skills/js/skill_edit/edit-skills-all.js"></script>
+	<script src="/assets/treant-js-master/math-skills/skills.js"></script>
+	<script>
+	tree_all = new Treant(chart_config_all);
+   </script>
+
+	
+	
+	
+	
+	
+
+
+<button id="callConfirm">Confirm!</button>
+
+
+<a id="next" href="/math/demo/">Generate Questions</a>
+
+<!-- Dialogs -->
+	<!-- Create Skill Group Dialog -->
+		
+		<div id="clicked-skill-group-dialog" class="ui-dialog" title="Create Skill or Skill Group" ></div>
+		
+		<div id="create-skill-group-dialog" class="ui-dialog" title="Create Skill Group">
+
+			<form method="POST" action="/math/demo/menu">
+				<table style="width:500px">
+					<tr>
+						<td width="50%">Question Type Name</td>
+						<td width="50%"><input type="text" name="name"/></td>
+						
+					</tr>
+					<tr>
+						<td>Image</td>
+						<td><input type="submit" value="upload image"/></td>
+					</tr>
+				</table>
+			</form>
+
+		</div>
+
+
+		<div id="create-skill-dialog" style="all: initial" title="Create Skill Group">
+			<form method="POST" action="/math/demo/menu">
+				<table style="width:500px">
+					<tr>
+						<td width="50%">Skill Name</td>
+						<td width="50%"><input type="text" name="name"/></td>
+						
+					</tr>
+					<tr>
+						<td>Image</td>
+						<td><input type="submit" value="upload image"/></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+
+		<div id="create-question-dialog" style="all: initial" title="Create Question">
+			<form method="POST" action="/math/demo/menu">
+				<table style="width:500px">
+					<tr>
+						<td width="50%">Question Name</td>
+						<td width="50%"><input type="text" name="name"/></td>
+					</tr>
+					<tr>
+						<td>Equation</td>
+						<td><input type="text" name="equation"/></td>
+					</tr>
+					<tr>
+						<td>Question Text</td>
+						<td><input type="text" value="question"/></td>
+					</tr>
+					<tr>
+						<td>Image</td>
+						<td><input type="submit" value="upload image"/></td>
+					</tr>
+					<tr>
+						<td>Add Labels to Image</td>
+						<td><input type="submit" value="label image"/>open dialog to add labels to image (add, drag and drop)</td>
+					</tr>
+					<tr>
+						<td>Add rules</td>
+						<td><input type="text"/> </td>
+						
+					</tr>
+				</table>
+			</form>
+		</div>
+
+</body>
+</html>

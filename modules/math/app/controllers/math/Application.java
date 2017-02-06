@@ -75,10 +75,17 @@ public class Application extends Controller {
     	return ok( views.html.math.demo.skills.render() );
     }
     
+    public Result demoEditSkills() {
+    	return ok( views.html.math.demo.adminskills.edit.render() );
+    }
+    
     public Result demoGetGrade() {
     	TestBean test = new TestBean();
     	test.getMathBeans().addAll(equationGenerator.generateQuestions(30, getQuestionTypes()));
     	return ok( views.html.math.demo.evaluate.render( test ) );
-    }    
+    }
     
+    public Result demoCreateCategory() {
+    	return ok(views.html.math.demo.create_category.render());
+    }    
 }
