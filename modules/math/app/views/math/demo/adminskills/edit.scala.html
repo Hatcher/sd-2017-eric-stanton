@@ -1,3 +1,4 @@
+@main("main"){
 <!DOCTYPE html>
 
 <html>
@@ -8,59 +9,98 @@
 <link rel="stylesheet"
 	href="/assets/treant-js-master/math-skills/skills.css" />
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"/>
-
-</head>
-<body>
-	<h1>Edit Skills:</h1>
-	<ul>
-		<li>Click on a skill group to add a child skill or skill group.</li>
-		<li>Click on a skill to see the current question types or add questions.</li>
-	</ul>
-	<table width="100%">
-		<tr>
-			<td width="100%" height="100%"><div class="chart" id="collapsable-all"
-					style="position: relative"></div></td>
-		</tr>
-	</table>
-
+	<style>
+	#unmappedGroups{
+	background-color: #DDDDDD;
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: move;
+    }
+    
+    #unmappedSkills{
+	background-color: #DDDDDD;
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: move;
+    }
+    
+    .hovered{
+    	background: #33DD33 !important;
+    }
+    
+	</style>
+	
 	<script src="/assets/treant-js-master/vendor/raphael.js"></script>
 	<script src="/assets/treant-js-master/Treant.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<script src="/assets/treant-js-master/vendor/jquery.easing.js"></script>
-
 	<script src="/assets/treant-js-master/math-skills/skills-globals-demo.js"></script>
 	<script src="/assets/treant-js-master/math-skills/chart-config-all-skills-expanded.js"></script>
 	<script src="/assets/treant-js-master/math-skills/js/skill_edit/edit-skills-all.js"></script>
 	<script src="/assets/treant-js-master/math-skills/skills.js"></script>
-	<script>
+</head>
+<body>
+	<h1>Map Skills:</h1><br/>
+	
+		<button id="create-skill-group" class="button">Create Skill Group</button>
+		<button id="create-skill" class="button">Create Skill</button>
+
+<table>
+<tr>
+<td width="20%" style="vertical-align:top">
+	<h2>Skill Groups</h2>
+	<p>Drag skill group onto skill groups in the tree map</p>
+			<div id="unmappedGroups"></div>
+			<br/>
+	<h2>Skills</h2>
+	<p>Drag skill onto skill groups in the tree map</p>		
+			<div id="unmappedSkills"></div>
+</td>
+
+
+   <td style="text-align:center" width="80%">
+   <h2>Skill Map</h2>
+   <div class="chart" id="collapsable-all" style="position: relative"></div>
+
+   	<script>
 	tree_all = new Treant(chart_config_all);
    </script>
 
+   </td>
+   </tr>
+</table>
 	
-	
-	
-	
-	
+<button id="saveTree" class="button">Save Skill Tree</button>
+<button id="publishTree" class="button">Publish Skill Tree</button>
 
-
-<button id="callConfirm">Confirm!</button>
-
-
-<a id="next" href="/math/demo/">Generate Questions</a>
 
 <!-- Dialogs -->
 	<!-- Create Skill Group Dialog -->
+		
+		
 		
 		<div id="clicked-skill-group-dialog" class="ui-dialog" title="Create Skill or Skill Group" ></div>
 		
 		<div id="create-skill-group-dialog" class="ui-dialog" title="Create Skill Group">
 
-			<form method="POST" action="/math/demo/menu">
+
 				<table style="width:500px">
 					<tr>
-						<td width="50%">Question Type Name</td>
-						<td width="50%"><input type="text" name="name"/></td>
+						<td width="50%">Skill Group Name</td>
+						<td width="50%"><input type="text" name="skill-group-name" id ="skill-group-name"/></td>
 						
 					</tr>
 					<tr>
@@ -68,17 +108,15 @@
 						<td><input type="submit" value="upload image"/></td>
 					</tr>
 				</table>
-			</form>
 
 		</div>
 
 
-		<div id="create-skill-dialog" style="all: initial" title="Create Skill Group">
-			<form method="POST" action="/math/demo/menu">
+		<div id="create-skill-dialog" style="all: initial" title="Create Skill">
 				<table style="width:500px">
 					<tr>
 						<td width="50%">Skill Name</td>
-						<td width="50%"><input type="text" name="name"/></td>
+						<td width="50%"><input type="text" name="skill-name" id="skill-name"/></td>
 						
 					</tr>
 					<tr>
@@ -86,11 +124,9 @@
 						<td><input type="submit" value="upload image"/></td>
 					</tr>
 				</table>
-			</form>
 		</div>
 
 		<div id="create-question-dialog" style="all: initial" title="Create Question">
-			<form method="POST" action="/math/demo/menu">
 				<table style="width:500px">
 					<tr>
 						<td width="50%">Question Name</td>
@@ -118,8 +154,8 @@
 						
 					</tr>
 				</table>
-			</form>
 		</div>
 
 </body>
 </html>
+}

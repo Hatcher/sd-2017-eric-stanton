@@ -1,10 +1,15 @@
 var skills = {}
 var disabledSkills = [];
 
+var unmappedSkillGroups = [];
+var unmappedSkills = [];
+
 var selectedColor = "#88FF88";
 var unselectedColor = "#FF8888";
 var disabledColor = "#BBBBBB";
 var baseUrl = "/math/demo";
+
+
 
 function defineLeafOnclick(id, typeValue) {
   if (!typeValue) {

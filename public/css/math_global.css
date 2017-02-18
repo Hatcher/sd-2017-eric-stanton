@@ -1,0 +1,46 @@
+.topmenu button, .topmenu .button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: normal;
+    line-height: normal;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    padding: 0.6em 1rem 0.6rem 1rem;
+    font-size: 0.8rem;
+    color: white;
+    transition: background-color 300ms ease-out;
+    margin: 0;
+}
+body {
+    font-family: 'Helvetica', 'sans-serif';
+    color: #656C70;
+    background-color: #ebeff2;
+    font-size: 0.85rem;
+}
+div {
+    line-height: 1.2rem;
+}
+#dashboard {
+    padding: 10px;
+}
+
+.unmapped {
+    display: inline-block;
+    text-align: center;
+    line-height: 1;
+    cursor: pointer;
+    -webkit-appearance: none;
+    transition: background-color .25s ease-out,color .25s ease-out;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    padding: .85em 1em;
+    margin: 5px;
+    font-size: .9rem;
+    background-color: #FFFFFF;
+    color: #000000;
+}

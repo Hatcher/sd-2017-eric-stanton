@@ -8,7 +8,7 @@ var chart_config_all =
   nodeAlign : "TOP",
   nodeStructure :
   {
-    HTMLid : "countingGroup",
+    HTMLid : "group_counting",
     text :
     {
       name : "CORE SKILLS"
@@ -23,12 +23,12 @@ var chart_config_all =
       }
     },
       {
-      HTMLid : "arithmeticGroup",
+      HTMLid : "skipTo_arithmetic",
       pseudo : true,
       children : [
         {
   
-        HTMLid : "arithmetic",
+        HTMLid : "group_arithmetic",
         text :
         {
           name : "ARITHMETIC"
@@ -50,7 +50,7 @@ var chart_config_all =
           pseudo : true,
           children : [
           {
-            HTMLid : "geometry",
+            HTMLid : "group_geometry",
             text :
             {
               name : "GEOMETRY"
@@ -66,7 +66,7 @@ var chart_config_all =
               pseudo : true,
               children : [
               {
-                HTMLid : "3dgeometry",
+                HTMLid : "group_3dgeometry",
                 text :
                 {
                   name : "3DGEOMETRY"
