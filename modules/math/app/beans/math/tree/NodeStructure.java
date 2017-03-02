@@ -2,15 +2,20 @@ package beans.math.tree;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class NodeStructure {
 	private String HTMLid;
 	private boolean pseudo;
 	private List<NodeStructure> children;
 	private String image;
 	private TextNode text;
+	
+	@JsonProperty("HTMLid")
 	public String getHTMLid() {
 		return HTMLid;
 	}
+	@JsonProperty("HTMLid")
 	public void setHTMLid(String hTMLid) {
 		HTMLid = hTMLid;
 	}
