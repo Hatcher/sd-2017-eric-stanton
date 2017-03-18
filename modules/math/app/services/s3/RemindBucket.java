@@ -12,6 +12,8 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,7 +39,7 @@ public class RemindBucket {
 		String bucketName = "remind";
 		String s3PathAndName = "Math/Trees/CaringTree.json";
 
-		s3.putObject(bucketName, s3PathAndName, tmpFile);
+		s3.putObject(new PutObjectRequest(bucketName, s3PathAndName, tmpFile).withCannedAcl(CannedAccessControlList.PublicRead));
 		return success;
 	}
 	private File createTmpFile(RootNode requestBody) throws IOException{
