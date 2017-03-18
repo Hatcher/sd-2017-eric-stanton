@@ -17,6 +17,36 @@ function getDraggableOptions(){
 function initAll(){
   initCreateButtons();
   initTree(chart_config_all.nodeStructure);
+  initSaveButtons();
+}
+
+function initSaveButtons(){
+	$("#saveTree").click(function(){
+		console.log(chart_config_all.nodeStructure);
+		nodeStructure = {"nodeStructure": chart_config_all.nodeStructure };
+		
+		$.ajax({
+			 headers: { 
+			        'Accept': 'application/json',
+			        'Content-Type': 'application/json' 
+			},
+		    url : "/math/demo/tree",
+		    type: "post",
+		    dataType: "json",
+		    data : JSON.stringify(nodeStructure),
+		    success: function(data, textStatus, jqXHR)
+		    {
+		    	alert("SUCCESS! tree saved to s3: "+data);
+		        // raise success dialog
+		    },
+		    error: function (jqXHR, textStatus, errorThrown)
+		    {
+		    	alert("FAILURE! tree not saved anywhere: "+errorThrown);
+		    	// raise error dialog
+		    }
+		});
+	});
+	
 }
 
 function initCreateButtons(){
@@ -50,7 +80,8 @@ function initUnmappedSkills(){
 function initTree(item){
   if (typeof item.children != 'undefined'){
     for (child of item.children){
-// need way to identify which one was clicked so I can auto move skill or group here
+// need way to identify which one was clicked so I can auto move skill or group
+// here
       $("#"+item.HTMLid).click(function(){
         $("#clicked-skill-group-dialog").dialog("open");
       });

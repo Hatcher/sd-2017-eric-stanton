@@ -3,7 +3,6 @@ function initAll(){
   
   initItem(chart_config_all.nodeStructure);
   
-  console.log("complete!");
 }
 function initItem(item){
   console.log(item);
@@ -26,5 +25,6 @@ function initItem(item){
     updateLink(baseUrl);
     });
   }
-  
 }
+
+

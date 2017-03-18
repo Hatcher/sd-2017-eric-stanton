@@ -32,13 +32,14 @@ public class Tree extends Controller {
 	
 	@BodyParser.Of(Json.class)
 	public Result update() {
+		System.out.println("ATTEMPTED AT LEAST");
 		JsonNode json = request().body().asJson();
 		
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(Include.NON_NULL);
 		RootNode node = null;
 		try{
-			node = mapper.readValue(request().body().asJson().toString(), RootNode.class);
+			node = mapper.readValue(json.toString(), RootNode.class);
 			return ok(mapper.writeValueAsString(node));
 		}
 		catch (Exception e){
@@ -46,9 +47,7 @@ public class Tree extends Controller {
 			System.out.println("method: "+request().body().asJson());
 			System.out.println("input: "+request().body().asJson().toString());
 			e.printStackTrace();
-			// return exception status 500
+			return badRequest(e.getMessage());
 		}
-		return ok();
-
     }    
 }

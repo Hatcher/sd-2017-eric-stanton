@@ -32,14 +32,6 @@ public class Application extends Controller {
     	return ok( views.html.math.skills.render() );
     }
     
-    public static Result generateRectangle() {
-    	MathBean bean = new MathBean();
-    	bean.getIntegers().add(BigDecimal.valueOf(2));
-    	bean.getIntegers().add(BigDecimal.valueOf(3));
-    	bean.getTypes().add("RECTANGLE_AREA");
-    	
-    	return ok( views.html.math.question.templates.rectangle.render( bean ) );
-    }
     private List<String> getQuestionTypes(){
     	List<String> enabledSkills = new ArrayList<String>();
     	final Set<Map.Entry<String,String[]>> entries = request().queryString().entrySet();
