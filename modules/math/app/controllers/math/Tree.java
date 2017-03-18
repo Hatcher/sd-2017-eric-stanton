@@ -40,7 +40,7 @@ public class Tree extends Controller {
 		RootNode node = null;
 		try{
 			node = mapper.readValue(json.toString(), RootNode.class);
-			return ok(mapper.writeValueAsString(node));
+			return ok("{\"success\": \""+remindBucket.saveToS3(node)+"\"}");
 		}
 		catch (Exception e){
 			System.out.println("method: "+request().method());

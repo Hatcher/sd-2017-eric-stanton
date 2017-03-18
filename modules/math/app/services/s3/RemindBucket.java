@@ -1,5 +1,8 @@
 package services.s3;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.UUID;
 
 import com.amazonaws.AmazonClientException;
@@ -9,27 +12,46 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import beans.math.tree.RootNode;
 
 public class RemindBucket {
-	public void saveToS3(RootNode requestBody){
-		AWSCredentials credentials = null;
-        try {
-            credentials = new ProfileCredentialsProvider("default").getCredentials();
-        } catch (Exception e) {
-            throw new AmazonClientException(
-                    "Cannot load the credentials from the credential profiles file. " +
-                    "Please make sure that your credentials file is at the correct " +
-                    "location (C:\\Users\\stant\\.aws\\credentials), and is in valid format.",
-                    e);
-        }
+	public boolean saveToS3(RootNode requestBody) {
+		boolean success = true;
+		
+		AmazonS3 s3 = new AmazonS3Client();
+		Region usEast1 = Region.getRegion(Regions.US_EAST_1);
+		s3.setRegion(usEast1);
+		
+		File tmpFile;
+		try {
+			tmpFile = createTmpFile(requestBody);
+		} catch (IOException e) {
+			e.printStackTrace();
+			success = false;
+			return false;
+		}
+		String bucketName = "remind";
+		String s3PathAndName = "Math/Trees/CaringTree.json";
 
-        AmazonS3 s3 = new AmazonS3Client(credentials);
-        Region usEast1 = Region.getRegion(Regions.US_EAST_1);
-        s3.setRegion(usEast1);
+		s3.putObject(bucketName, s3PathAndName, tmpFile);
+		return success;
+	}
+	private File createTmpFile(RootNode requestBody) throws IOException{
+		
+		
+	
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setSerializationInclusion(Include.NON_NULL);
 
-        String bucketName = "my-first-s3-bucket-" + UUID.randomUUID();
-        String key = "MyObjectKey";
+			File tempFile = File.createTempFile("prefix", "suffix");
+			FileWriter writer = new FileWriter(tempFile);
+			writer.write(mapper.writeValueAsString(requestBody));
+			writer.close();
+	
+		return tempFile;
 	}
 }

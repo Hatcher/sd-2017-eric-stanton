@@ -15,9 +15,25 @@ function getDraggableOptions(){
 
 // init methods
 function initAll(){
-  initCreateButtons();
-  initTree(chart_config_all.nodeStructure);
-  initSaveButtons();
+	console.log("before ajax");
+	console.log(chart_config_all);
+  $.getJSON("https://s3.amazonaws.com/remind/Math/Trees/CaringTree.json").success(function(data){
+	  console.log("inside method");
+	  console.log(chart_config_all);
+	  chart_config_all["nodeStructure"] = data["nodeStructure"];
+	  
+	  // redraw the tree
+	  tree_all = new Treant(chart_config_all);
+	  console.log("after data");
+	  console.log(chart_config_all);
+	  initCreateButtons();
+	  initTree(chart_config_all.nodeStructure);
+	  initSaveButtons();
+	  
+	  // redraw the tree
+	  
+  });
+
 }
 
 function initSaveButtons(){
