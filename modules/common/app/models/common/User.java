@@ -8,6 +8,7 @@ import com.avaje.ebean.annotation.CreatedTimestamp;
 import com.avaje.ebean.annotation.UpdatedTimestamp;
 import com.google.common.base.CharMatcher;
 import forms.common.UserForm;
+
 import org.apache.commons.lang3.text.WordUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,9 +22,13 @@ import javax.imageio.ImageIO;
 import javax.persistence.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Timestamp;
@@ -415,13 +420,43 @@ public class User extends Model {
 	//////////////////////////////
 	// TEST
 	/////////////////////////////
+	private static String getStringFromInputStream(InputStream is) {
+
+		BufferedReader br = null;
+		StringBuilder sb = new StringBuilder();
+
+		String line;
+		try {
+
+			br = new BufferedReader(new InputStreamReader(is));
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return sb.toString();
+
+	}
 	public static void createSomeUsers(int numUsers, Role role) {
 		int numGenerated = 0;
 		while (numGenerated < numUsers) {
 			String out = null;
 			try {
-//				URL url = new URL("http://api.randomuser.me/");
-				out = new Scanner(new URL("http://api.randomuser.me/").openStream(), "UTF-8").useDelimiter("\\A").next();
+				URL url = new URL("https://api.randomuser.me/");
+				URLConnection con = url.openConnection();
+				InputStream in = con.getInputStream();
+				out = getStringFromInputStream(in); 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

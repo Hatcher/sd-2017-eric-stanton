@@ -51,6 +51,7 @@
 	<script src="/assets/treant-js-master/math-skills/chart-config-all-skills-expanded.js"></script>
 	<script src="/assets/treant-js-master/math-skills/js/skill_edit/edit-skills-all.js"></script>
 	<script src="/assets/treant-js-master/math-skills/skills.js"></script>
+	<script src="/assets/treant-js-master/math-skills/js/skill_edit/add-question.js"></script>
 </head>
 <body>
 	<h1>Map Skills:</h1><br/>
@@ -134,15 +135,15 @@
 				<table style="width:500px">
 					<tr>
 						<td width="50%">Question Name</td>
-						<td width="50%"><input type="text" name="name"/></td>
+						<td width="50%"><input id="question-name" type="text" name="question-name"/></td>
 					</tr>
 					<tr>
 						<td>Equation</td>
-						<td><input type="text" name="equation"/></td>
+						<td><input id="equation" type="text" name="equation"/></td>
 					</tr>
 					<tr>
 						<td>Question Text</td>
-						<td><input type="text" value="question"/></td>
+						<td><input id="question-text" type="text" value="question"/></td>
 					</tr>
 					<tr>
 						<td>Image</td>
@@ -153,9 +154,15 @@
 						<td><input type="submit" value="label image"/>open dialog to add labels to image (add, drag and drop)</td>
 					</tr>
 					<tr>
+					
 						<td>Add rules</td>
-						<td><input type="text"/> </td>
-						
+						<td align="center">
+						<div id="rules-row">
+						<input id="rule1" type="text"/>
+						</div>
+						<i id="add-rule" class="fa fa-plus-circle" aria-hidden="true" alt="add another rule"></i>
+						</td>
+					
 					</tr>
 				</table>
 		</div>

@@ -15,32 +15,21 @@ function getDraggableOptions(){
 
 // init methods
 function initAll(){
-	console.log("before ajax");
-	console.log(chart_config_all);
   $.getJSON("https://s3.amazonaws.com/remind/Math/Trees/CaringTree.json").success(function(data){
-	  console.log("inside method");
-	  console.log(chart_config_all);
 	  chart_config_all["nodeStructure"] = data["nodeStructure"];
-	  
 	  // redraw the tree
 	  tree_all = new Treant(chart_config_all);
-	  console.log("after data");
-	  console.log(chart_config_all);
 	  initCreateButtons();
 	  initTree(chart_config_all.nodeStructure);
 	  initSaveButtons();
-	  
-	  // redraw the tree
-	  
+	  initAddRuleButton();
   });
 
 }
 
 function initSaveButtons(){
 	$("#saveTree").click(function(){
-		console.log(chart_config_all.nodeStructure);
 		nodeStructure = {"nodeStructure": chart_config_all.nodeStructure };
-		
 		$.ajax({
 			 headers: { 
 			        'Accept': 'application/json',
@@ -110,6 +99,7 @@ function initTree(item){
   }
   else{
     $("#"+item.HTMLid).click(function(){
+    	lastClickedSkill=item.HTMLid;
       $("#create-question-dialog").dialog("open");
     });
   }
@@ -284,7 +274,7 @@ $(function() {
       width: "550px",
       buttons : {
            "Confirm" : function() {
-               alert("You have confirmed!");            
+        	   submitQuestion();            
            },
            "Cancel" : function() {
              $(this).dialog("close");

@@ -9,6 +9,7 @@ var unselectedColor = "#FF8888";
 var disabledColor = "#BBBBBB";
 var baseUrl = "/math/demo";
 
+var lastClickedSkill ="";
 
 
 function defineLeafOnclick(id, typeValue) {
