@@ -38,7 +38,7 @@ public class QuestionController extends Controller {
 			List<String> errors = validator.validate(node);
 			if (errors.isEmpty()){
 				// save to database
-				return ok("{\"response\":{\"success\": \""+service.create(node)+"\"}}");
+				return ok("{\"response\":{\"success\": "+service.create(node)+"}}");
 			}
 			else{
 				boolean first = true;
@@ -54,7 +54,7 @@ public class QuestionController extends Controller {
 				}
 				errorsString +="]";
 				
-				return ok("{\"response\":{\"success\": \"false\","
+				return ok("{\"response\":{\"success\": "+false+","
 						+ errorsString
 						+ "}}");
 				

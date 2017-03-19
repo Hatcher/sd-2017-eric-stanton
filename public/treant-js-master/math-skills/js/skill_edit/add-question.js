@@ -69,6 +69,7 @@ function submitQuestion(){
 	    	console.log(data);
 	    	if (data.response.success==true){
 	    		alert("Question added to skill");
+	    		$(this).dialog("close");
 	    	}
 	    	else{
 	    		alert("Question Not Added.  Validation Errors: "+data.response.errors);
