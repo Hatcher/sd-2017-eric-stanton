@@ -1,19 +1,36 @@
 var numRules = 1;
+var numVariables = 0;
+function initQuestionUi(){
+	initAddRuleButton();
+	initAddVariableButton();
+}
+
 function initAddRuleButton() {
 	$("#add-rule").click(function() {
 		numRules = numRules + 1;
 		var rule1 = $("#rule-item-no1").clone();
-		console.log(rule1);
-		
 		var rules = $("#rules-row");
+		rule1.prop("id", "rule-item-no"+numRules);
+		rules.append(rule1);
+	});
+}
+
+function initAddVariableButton(){
+	$("#add-variable").click(function() {
+		
+		var variable = "${"+String.fromCharCode(97 + numVariables)+"}";
+		numVariables = numVariables + 1;
+		$('#equation').val($('#equation').val() + ""+variable);
 		
 		rule1.prop("id", "rule-item-no"+numRules);
 		rules.append(rule1);
-		
-		
-		
 	});
 }
+
+
+
+
+
 function submitQuestion(){
 	// ajax 1: post tree
 	saveTree();
@@ -32,8 +49,6 @@ function submitQuestion(){
 		var tmpRule = {"rule": $(element).val()}
 		questionJson.rules.push(tmpRule);
 	});
-	// for each rule, push to json
-	//questionJson.rules.push();
 	
 //TODO images, labels not yet implemented
 //	questionJson.imageUrl = $("#image-url").val();

@@ -22,7 +22,7 @@ function initAll(){
 	  initCreateButtons();
 	  initTree(chart_config_all.nodeStructure);
 	  initSaveButtons();
-	  initAddRuleButton();
+	  initQuestionUi();
   });
 
 }
