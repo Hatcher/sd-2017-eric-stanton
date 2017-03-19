@@ -2,6 +2,8 @@ package services.question;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import beans.math.question.MathQuestionBean;
 import beans.math.question.QuestionRootNode;
@@ -19,29 +21,51 @@ public class QuestionValidator extends Controller {
 			return errors;
 		} else {
 			MathQuestionBean question = questionNode.getQuestion();
-			Evaluator eval = new Evaluator();
-			try {
-				String evaluableEquation = question.getEquation().replaceAll("\\$\\{[a-zA-Z]+\\}", "1");
-				System.out.println("evaluable: " + evaluableEquation);
-				eval.evaluate(evaluableEquation);
-			} catch (EvaluationException e) {
+			
+			if (!isValidEquation(question.getEquation())){
 				errors.add("equation is not solveable");
 			}
 
 			for (Rule rule : question.getRules()) {
 				if ((rule.getRule() != null) && !"".equals(rule.getRule())) {
-					try {
-						eval.evaluate(rule.getRule());
-					} catch (EvaluationException e) {
-						errors.add("rule is not solveable");
+					if (!isValidEquation(rule.getRule())){
+						errors.add("equation is not solveable");
 					}
 				}
 			}
+			if (!ruleVariablesInEquation(question)){
+				errors.add("rule contains variable not found in equation");
+			}
 		}
-
 		return errors;
 	}
 
+	private boolean ruleVariablesInEquation(MathQuestionBean question){
+		Pattern pattern = Pattern.compile("\\$\\{[a-zA-Z]+\\}");
+		
+		for (Rule rule : question.getRules()){
+			Matcher matcher = pattern.matcher(rule.getRule());
+			while(matcher.find()) {
+				if (!question.getEquation().contains(matcher.group())){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	private boolean isValidEquation(String equation){
+		Evaluator eval = new Evaluator();
+		try {
+			String evaluableEquation = equation.replaceAll("\\$\\{[a-zA-Z]+\\}", "1");
+			System.out.println("evaluable: " + evaluableEquation);
+			String result = eval.evaluate(evaluableEquation);
+			return true;
+		} catch (EvaluationException e) {
+			return false;
+		}
+	}
+	
 	private List<String> validateRequiredFields(QuestionRootNode questionNode, List<String> errors) {
 		if (questionNode == null) {
 			errors.add("question cannot be empty");
