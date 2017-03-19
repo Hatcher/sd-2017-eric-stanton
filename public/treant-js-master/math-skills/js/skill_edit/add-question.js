@@ -2,12 +2,12 @@ var numRules = 1;
 function initAddRuleButton() {
 	$("#add-rule").click(function() {
 		numRules = numRules + 1;
-		var rule1 = $("#rule1").clone();
+		var rule1 = $("#rule-item-no1").clone();
 		console.log(rule1);
 		
 		var rules = $("#rules-row");
 		
-		rule1.prop("id", "rule"+numRules);
+		rule1.prop("id", "rule-item-no"+numRules);
 		
 		rules.append(rule1);
 		
@@ -27,15 +27,18 @@ function submitQuestion(){
 	questionJson.questionText = $("#question-text").val();
 	questionJson.equation = $("#equation").val();
 	questionJson.skillId = lastClickedSkill;
+	questionJson.rules = [];
 	
-	console.log("questionName: "+questionJson.questionName);
+	$("[id^=rule-item-no]").each(function(index, element){
+		var tmpRule = {"rule": $(element).val()}
+		questionJson.rules.push(tmpRule);
+	});
+	// for each rule, push to json
+	//questionJson.rules.push();
 	
-	//TODO images, labels and rules not yet implemented
+//TODO images, labels not yet implemented
 //	questionJson.imageUrl = $("#image-url").val();
-//	questionJson.rules = [];
 //	questionJson.labels = [];
-	
-	// post to backend
 	
 	var questionRequestBody = {"question": questionJson };
 	$.ajax({

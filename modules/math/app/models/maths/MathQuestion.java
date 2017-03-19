@@ -18,6 +18,9 @@ public class MathQuestion extends Model {
 	public Date createdDate;
 	public String userId;
 	public String skillId;
+	@OneToMany(cascade=CascadeType.ALL)
+	public List<RuleEntity> rules;
+	
 	
 	public static Finder<String, MathQuestion> finder = new Finder<String,MathQuestion>(MathQuestion.class);
 	public static Find<String,MathQuestion> find = new Find<String,MathQuestion>(){};
