@@ -8,7 +8,6 @@ function initAddRuleButton() {
 		var rules = $("#rules-row");
 		
 		rule1.prop("id", "rule-item-no"+numRules);
-		
 		rules.append(rule1);
 		
 		
@@ -52,7 +51,13 @@ function submitQuestion(){
 	    data : JSON.stringify(questionRequestBody),
 	    success: function(data, textStatus, jqXHR)
 	    {
-	        alert("Question added to skill");
+	    	console.log(data);
+	    	if (data.response.success==true){
+	    		alert("Question added to skill");
+	    	}
+	    	else{
+	    		alert("Question Not Added.  Validation Errors: "+data.response.errors);
+	    	}
 	    },
 	    error: function (jqXHR, textStatus, errorThrown)
 	    {
@@ -60,7 +65,6 @@ function submitQuestion(){
 	    	// raise error dialog
 	    }
 	});
-	
 }
 function saveTree(){
 	nodeStructure = {"nodeStructure": chart_config_all.nodeStructure };
