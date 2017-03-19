@@ -23,7 +23,6 @@ import play.mvc.BodyParser;
 import play.mvc.BodyParser.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import services.categories.Categorizer;
 import services.equation.EquationGenerator;
 import services.s3.RemindBucket;
 

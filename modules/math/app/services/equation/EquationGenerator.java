@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import beans.math.MathBean;
-import services.categories.Categorizer;
+import models.maths.MathQuestion;
 
 public class EquationGenerator {
 	private Random random = new Random();
@@ -20,6 +20,7 @@ public class EquationGenerator {
 		List<MathBean> questions = new ArrayList<MathBean>();
 		int num = 0;
 		while (numQuestions > questions.size()) {
+			System.out.println("generate question: ");
 			MathBean question = generateQuestion(questionTypes);
 			if (question.getTypes().size() > 0) {
 				question.setId(++num+"");
@@ -29,14 +30,14 @@ public class EquationGenerator {
 		return questions;
 	}
 
-	private MathBean generateQuestion(List<String> questionTypes) {
+	private MathBean generateQuestion(List<String> skillIds) {
 		MathBean mathBean = new MathBean();
 		int clauses = random.nextInt(MAX_OPERATORS) + MIN_OPERATORS; // 1-3
 																		// operators
 		String basicOperator = getRandomOperation();
 
 		int iterations = clauses;
-
+		System.out.println("generating question inside method");
 		boolean firstIteration = true;
 		for (int i = 0; i < iterations; i++) {
 			BigDecimal number = getRandomNumber();
@@ -56,9 +57,12 @@ public class EquationGenerator {
 			mathBean.getOperators().add(basicOperator);
 		}
 
-		Categorizer categorizer = new Categorizer(questionTypes);
-		categorizer.populateCategories(mathBean);
+		List<MathQuestion> questionTypes = new ArrayList<MathQuestion>();
+		questionTypes = MathQuestion.find("", skillIds, mathBean.toString());
 
+		for (MathQuestion question : questionTypes){
+			mathBean.getTypes().add(question.skillId);
+		}
 		return mathBean;
 	}
 

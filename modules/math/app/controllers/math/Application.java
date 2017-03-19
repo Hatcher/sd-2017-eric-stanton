@@ -14,7 +14,6 @@ import models.math.Test;
 import beans.math.TestBean;
 import play.mvc.Controller;
 import play.mvc.Result;
-import services.categories.Categorizer;
 import services.equation.EquationGenerator;
 
 
@@ -23,6 +22,7 @@ public class Application extends Controller {
 	private EquationGenerator equationGenerator = new EquationGenerator();
 	
     public Result getIndex() {
+    	System.out.println("this one?");
     	TestBean test = new TestBean();
     	test.getMathBeans().addAll(equationGenerator.generateQuestions(30, getQuestionTypes()));
     	return ok( views.html.math.index.render( test ) );
@@ -47,8 +47,11 @@ public class Application extends Controller {
 
     
     public Result demoGetIndex() {
+    	// generates questions
+    	System.out.println("entering demo");
     	TestBean test = new TestBean();
     	test.getMathBeans().addAll(equationGenerator.generateQuestions(30, getQuestionTypes()));
+    	
     	return ok( views.html.math.demo.index.render( test ) );
     }
     

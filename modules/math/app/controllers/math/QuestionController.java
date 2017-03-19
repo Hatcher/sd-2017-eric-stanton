@@ -13,7 +13,6 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import services.question.QuestionService;
 import services.question.QuestionValidator;
-import services.s3.RemindBucket;
 
 public class QuestionController extends Controller {
 	QuestionService service = new QuestionService();

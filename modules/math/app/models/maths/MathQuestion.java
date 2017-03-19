@@ -2,12 +2,19 @@ package models.maths;
 
 import com.avaje.ebean.Model;
 
+import beans.math.question.MathQuestionBean;
+import beans.math.question.Rule;
+import net.sourceforge.jeval.EvaluationException;
+import net.sourceforge.jeval.Evaluator;
+
 import javax.persistence.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Entity
 public class MathQuestion extends Model {
-	
+
 	@Id
 	@GeneratedValue
 	public Long questionId;
@@ -18,17 +25,84 @@ public class MathQuestion extends Model {
 	public Date createdDate;
 	public String userId;
 	public String skillId;
-	@OneToMany(cascade=CascadeType.ALL)
+	public String treeId;
+	@OneToMany(cascade = CascadeType.ALL)
 	public List<RuleEntity> rules;
-	
-	
-	public static Finder<String, MathQuestion> finder = new Finder<String,MathQuestion>(MathQuestion.class);
-	public static Find<String,MathQuestion> find = new Find<String,MathQuestion>(){};
+
+	public static Finder<String, MathQuestion> finder = new Finder<String, MathQuestion>(MathQuestion.class);
+	public static Find<String, MathQuestion> find = new Find<String, MathQuestion>() {
+	};
 
 	public static MathQuestion create(MathQuestion mathQuestion) {
 		mathQuestion.save();
 		return mathQuestion;
 	}
-	
+
+	public static List<MathQuestion> find(String treeId, List<String> skillIds, String randomEquation) {
+		List<MathQuestion> tmpResults = find.where().eq("treeId", treeId).in("skillId", skillIds).findList();
+
+		// remove where rules are violated
+		List<MathQuestion> finalResults = new ArrayList<MathQuestion>();
+		for (MathQuestion question : tmpResults) {
+			Map<String, String> variables = getVariables(randomEquation, question.equation);
+			if (followsRules(variables, question.rules)) {
+				finalResults.add(question);
+			}
+		}
+
+		return finalResults;
+	}
+
+	private static Map<String, String> getVariables(String randomEquation, String equation) {
+		Map<String, String> variables = new HashMap<String, String>();
+		Pattern variablePattern = Pattern.compile("\\$\\{[a-zA-Z]+\\}");
+		Pattern numbersPattern = Pattern.compile("^[-+]?\\d+(\\.\\d+)?$");
+
+		List<String> variableNames = new ArrayList<String>();
+		List<String> variableValues = new ArrayList<String>();
+
+		Matcher variablesMatcher = variablePattern.matcher(equation);
+		Matcher numbersMatcher = numbersPattern.matcher(randomEquation);
+
+		while (variablesMatcher.find()) {
+			variableNames.add(variablesMatcher.group());
+		}
+
+		while (numbersMatcher.find()) {
+			variableValues.add(numbersMatcher.group());
+		}
+
+		for (int i = 0; i < variableNames.size(); i++) {
+			variables.put(variableNames.get(i), variableValues.get(i));
+		}
+		return variables;
+	}
+
+	private static boolean followsRules(Map<String, String> variables, List<RuleEntity> rules) {
+		Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
+
+		// for each rule, see if the variable fits the rule
+		for (RuleEntity rule : rules) {
+			while (it.hasNext()) {
+				Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();
+				String variableName = pair.getKey();
+				String variableValue = pair.getValue();
+
+				String evaluate = rule.ruleText;
+				evaluate.replaceAll(variableName, variableValue);
+				
+				Evaluator eval = new Evaluator();
+				try {
+					if (!"1.0".equals(eval.evaluate(evaluate))){
+						
+					}
+				} catch (EvaluationException e) {
+					return false;
+				}
+
+			}
+		}
+		return true;
+	}
+
 }
-	
