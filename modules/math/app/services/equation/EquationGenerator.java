@@ -2,8 +2,12 @@ package services.equation;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.regex.Pattern;
+
 import beans.math.MathBean;
 import models.maths.MathQuestion;
 
@@ -22,8 +26,8 @@ public class EquationGenerator {
 		while (numQuestions > questions.size()) {
 			System.out.println("generate question: ");
 			MathBean question = generateQuestion(questionTypes);
-			if (question.getTypes().size() > 0) {
-				question.setId(++num+"");
+			if ((question.getType() != null) && !"".equals(question.getType())) {
+				question.setId(++num + "");
 				questions.add(question);
 			}
 		}
@@ -42,7 +46,7 @@ public class EquationGenerator {
 		for (int i = 0; i < iterations; i++) {
 			BigDecimal number = getRandomNumber();
 			basicOperator = getRandomOperation();
-			
+
 			if (firstIteration) {
 				mathBean.getIntegers().add(number);
 				number = getRandomNumber();
@@ -52,16 +56,24 @@ public class EquationGenerator {
 				// only divide by 2 or 3
 				number = BigDecimal.valueOf(random.nextInt(2) + 2);
 			}
-			
+
 			mathBean.getIntegers().add(number);
 			mathBean.getOperators().add(basicOperator);
 		}
 
-		List<MathQuestion> questionTypes = new ArrayList<MathQuestion>();
-		questionTypes = MathQuestion.find("", skillIds, mathBean.toString());
+		MathQuestion question = MathQuestion.find("", skillIds, mathBean.toString());
+		if (question != null) {
+			mathBean.setType(question.questionId + "");
 
-		for (MathQuestion question : questionTypes){
-			mathBean.getTypes().add(question.skillId);
+			Map<String, String> variables = MathQuestion.getVariables(mathBean.toString(), question.equation);
+			String updatedQuestionText = question.questionText;
+			Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();
+				updatedQuestionText = updatedQuestionText.replaceAll(Pattern.quote(pair.getKey()), pair.getValue());
+			}
+
+			mathBean.setQuestion(updatedQuestionText);
 		}
 		return mathBean;
 	}

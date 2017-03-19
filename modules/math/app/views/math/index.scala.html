@@ -41,18 +41,18 @@ td {
 
 			<td width="200px">
 				<ul>
-					@for(category <- mathBean.getTypes){
-					<li>@category</li> }
+					
+					<li>@mathBean.getType</li> 
 
 				</ul>
 			</td>
-			<td width="300px">Display type: @mathBean.getDisplayType() <!--  question here -->
-				@if(mathBean.getDisplayType().equals("ARITHMETIC")){
+			<td width="300px">Display type: @mathBean.getType() <!--  question here -->
+				@if(mathBean.getType().equals("ARITHMETIC")){
 				<p>
 					<strong>@Html(mathBean.getQuestion())</strong>
 				</p> } 
 				
-				@if(mathBean.getDisplayType().equals("RECTANGLE")){
+				@if(mathBean.getType().equals("RECTANGLE")){
 
 				<p>
 					<strong>@mathBean.getQuestion()</strong>
@@ -64,7 +64,7 @@ td {
         		
         		 } 
         		
-        		@if(mathBean.getDisplayType().equals("SQUARE")){
+        		@if(mathBean.getType().equals("SQUARE")){
 				<p>
 					<strong>@mathBean.getQuestion()</strong>
 				</p>
@@ -75,7 +75,7 @@ td {
         		
         		} 
         		
-        		@if(mathBean.getDisplayType().equals("CUBE")){
+        		@if(mathBean.getType().equals("CUBE")){
 				<p>
 					<strong>@mathBean.getQuestion()</strong>
 				</p>
@@ -88,7 +88,7 @@ td {
         		
         		
         		
-        		@if(mathBean.getDisplayType().equals("TRIANGLE")) {
+        		@if(mathBean.getType().equals("TRIANGLE")) {
 				<p>
 					<strong>@mathBean.getQuestion()</strong>
 				</p>
@@ -99,7 +99,7 @@ td {
 				 
 				} 
 				
-				@if(mathBean.getDisplayType().equals("CIRCLE")){  
+				@if(mathBean.getType().equals("CIRCLE")){  
 				<p>
 					<strong>@mathBean.getQuestion()</strong>
 				</p>

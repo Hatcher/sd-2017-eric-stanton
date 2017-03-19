@@ -1,11 +1,9 @@
 package beans.math;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
 
@@ -15,14 +13,13 @@ import services.equation.Operators;
 
 public class MathBean {
 	private String id="0";
-	private String displayType = "";
+	private String type = "";
 	private String question = "";
 
 
 
 	private List<BigDecimal> integers = new ArrayList<BigDecimal>();
 	private List<String> operators = new ArrayList<String>();
-	private Set<String> types = new HashSet<String>();
 
 	private Map<String, String> labels = new HashMap<String, String>();
 	
@@ -37,12 +34,12 @@ public class MathBean {
 		this.id = id;
 	}
 	
-	public String getDisplayType() {
-		return displayType;
+	public String getType() {
+		return type;
 	}
 
-	public void setDisplayType(String displayType) {
-		this.displayType = displayType;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public List<BigDecimal> getIntegers() {
@@ -51,10 +48,6 @@ public class MathBean {
 
 	public List<String> getOperators() {
 		return operators;
-	}
-
-	public Set<String> getTypes() {
-		return types;
 	}
 
 	public String getAnswer() {

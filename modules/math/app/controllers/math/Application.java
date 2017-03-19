@@ -50,7 +50,7 @@ public class Application extends Controller {
     	// generates questions
     	System.out.println("entering demo");
     	TestBean test = new TestBean();
-    	test.getMathBeans().addAll(equationGenerator.generateQuestions(30, getQuestionTypes()));
+    	test.getMathBeans().addAll(equationGenerator.generateQuestions(5, getQuestionTypes()));
     	
     	return ok( views.html.math.demo.index.render( test ) );
     }

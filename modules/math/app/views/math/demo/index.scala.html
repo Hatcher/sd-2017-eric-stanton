@@ -29,47 +29,8 @@ td {
 		@for(mathBean <- test.getMathBeans) {
 		<tr>
 			<td width="300px"><!--  question here -->
-			@mathBean.getId)
-				@if(mathBean.getDisplayType().equals("ARITHMETIC")){
-				<p>
-					<strong>@Html(mathBean.getQuestion())</strong>
-				</p> } @if(mathBean.getDisplayType().equals("RECTANGLE")){
-
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawRectangle(@mathBean.getId(), '@mathBean.getLabels().get("length")', '@mathBean.getLabels().get("width")');
-        		</script> } @if(mathBean.getDisplayType().equals("SQUARE")){
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawSquare(@mathBean.getId(), '@mathBean.getLabels().get("side")');
-        		</script> } @if(mathBean.getDisplayType().equals("CUBE")){
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawCube(@mathBean.getId(), '@mathBean.getLabels().get("height")', '@mathBean.getLabels().get("width")', '@mathBean.getLabels().get("depth")');
-        		</script> } @if(mathBean.getDisplayType().equals("TRIANGLE")) {
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawTriangle(@mathBean.getId(), '@mathBean.getLabels().get("base")','@mathBean.getLabels().get("height")', '@mathBean.getLabels().get("hypoteneuse")');
-        		</script> } @if(mathBean.getDisplayType().equals("CIRCLE")){
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawCircle(@mathBean.getId(), '@mathBean.getLabels().get("radius")', '@mathBean.getLabels().get("diameter")');
-        		</script> } <br /> Choices <br/>
+			@mathBean.getId) - @mathBean.getQuestion
+				<br /> Choices <br/>
 				<form>
 
 					@for(choice <- mathBean.getAnswerChoices){ <input type="radio"

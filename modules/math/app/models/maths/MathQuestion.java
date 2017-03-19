@@ -38,7 +38,7 @@ public class MathQuestion extends Model {
 		return mathQuestion;
 	}
 
-	public static List<MathQuestion> find(String treeId, List<String> skillIds, String randomEquation) {
+	public static MathQuestion find(String treeId, List<String> skillIds, String randomEquation) {
 		List<MathQuestion> tmpResults = find.where().eq("treeId", treeId).in("skillId", skillIds).findList();
 
 		// remove where rules are violated
@@ -48,15 +48,14 @@ public class MathQuestion extends Model {
 			if (matchesEquation(question.equation, randomEquation)){
 				Map<String, String> variables = getVariables(randomEquation, question.equation);
 				if (followsRules(variables, question.rules)) {
-					finalResults.add(question);
+					return question;
 				}
 			}
 		}
-
-		return finalResults;
+		return null;
 	}
 
-	private static Map<String, String> getVariables(String randomEquation, String equation) {
+	public static Map<String, String> getVariables(String randomEquation, String equation) {
 		Map<String, String> variables = new HashMap<String, String>();
 		Pattern variablePattern = Pattern.compile("\\$\\{[a-zA-Z]+\\}");
 		Pattern numbersPattern = Pattern.compile("[0-9]+");
