@@ -96,23 +96,25 @@ public class MathQuestion extends Model {
 		// for each rule, see if the variable fits the rule
 		for (RuleEntity rule : rules) {
 			if (!"".equals(rule.ruleText) && rule.ruleText != null){
+				String evaluate = rule.ruleText;
 				while (it.hasNext()) {
 					Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();
 					String variableName = pair.getKey();
 					String variableValue = pair.getValue();
 
-					String evaluate = rule.ruleText;
-					evaluate.replaceAll(Pattern.quote(variableName), variableValue);
 					
-					Evaluator eval = new Evaluator();
-					try {
-						if (!"1.0".equals(eval.evaluate(evaluate))){
-							
-						}
-					} catch (EvaluationException e) {
+					evaluate = evaluate.replaceAll(Pattern.quote(variableName), variableValue);
+					
+				}
+				Evaluator eval = new Evaluator();
+				try {
+					if (!"1.0".equals(eval.evaluate(evaluate))){
 						return false;
 					}
+				} catch (EvaluationException e) {
+					return false;
 				}
+
 			}
 		}
 		return true;
