@@ -21,9 +21,6 @@ function initAddVariableButton(){
 		var variable = "${"+String.fromCharCode(97 + numVariables)+"}";
 		numVariables = numVariables + 1;
 		$('#equation').val($('#equation').val() + ""+variable);
-		
-		rule1.prop("id", "rule-item-no"+numRules);
-		rules.append(rule1);
 	});
 }
 
@@ -66,10 +63,9 @@ function submitQuestion(){
 	    data : JSON.stringify(questionRequestBody),
 	    success: function(data, textStatus, jqXHR)
 	    {
-	    	console.log(data);
 	    	if (data.response.success==true){
 	    		alert("Question added to skill");
-	    		$(this).dialog("close");
+	    		$("#create-question-dialog").dialog("close");
 	    	}
 	    	else{
 	    		alert("Question Not Added.  Validation Errors: "+data.response.errors);
