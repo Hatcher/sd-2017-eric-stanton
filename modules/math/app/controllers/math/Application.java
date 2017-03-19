@@ -77,7 +77,5 @@ public class Application extends Controller {
     	return ok( views.html.math.demo.evaluate.render( test ) );
     }
     
-    public Result demoCreateCategory() {
-    	return ok(views.html.math.demo.create_category.render());
-    }    
+
 }

@@ -1,8 +1,10 @@
 function initAll(){
-  console.log(chart_config_all);
-  
-  initItem(chart_config_all.nodeStructure);
-  
+	$.getJSON("https://s3.amazonaws.com/remind/Math/Trees/CaringTree.json").success(function(data){
+		  chart_config_all["nodeStructure"] = data["nodeStructure"];
+		  // redraw the tree
+		  tree_all = new Treant(chart_config_all);
+		  initItem(chart_config_all.nodeStructure);
+	  });  
 }
 function initItem(item){
   console.log(item);
