@@ -43,10 +43,13 @@ public class MathQuestion extends Model {
 
 		// remove where rules are violated
 		List<MathQuestion> finalResults = new ArrayList<MathQuestion>();
+		
 		for (MathQuestion question : tmpResults) {
-			Map<String, String> variables = getVariables(randomEquation, question.equation);
-			if (followsRules(variables, question.rules)) {
-				finalResults.add(question);
+			if (matchesEquation(question.equation, randomEquation)){
+				Map<String, String> variables = getVariables(randomEquation, question.equation);
+				if (followsRules(variables, question.rules)) {
+					finalResults.add(question);
+				}
 			}
 		}
 
@@ -56,7 +59,7 @@ public class MathQuestion extends Model {
 	private static Map<String, String> getVariables(String randomEquation, String equation) {
 		Map<String, String> variables = new HashMap<String, String>();
 		Pattern variablePattern = Pattern.compile("\\$\\{[a-zA-Z]+\\}");
-		Pattern numbersPattern = Pattern.compile("^[-+]?\\d+(\\.\\d+)?$");
+		Pattern numbersPattern = Pattern.compile("[0-9]+");
 
 		List<String> variableNames = new ArrayList<String>();
 		List<String> variableValues = new ArrayList<String>();
@@ -78,28 +81,39 @@ public class MathQuestion extends Model {
 		return variables;
 	}
 
+	private static boolean matchesEquation(String equationWithVariables, String randomEquation){
+		String tmpEquationWithVariables = equationWithVariables.replaceAll("\\s","");
+		String tmpRandomEquation = randomEquation.replaceAll("\\s", "");
+		
+		tmpEquationWithVariables = tmpEquationWithVariables.replaceAll("\\$\\{[a-zA-Z]+\\}", "_");
+		tmpRandomEquation = tmpRandomEquation.replaceAll("[0-9]+", "_");
+		
+		return tmpEquationWithVariables.equals(tmpRandomEquation);
+	}
+	
 	private static boolean followsRules(Map<String, String> variables, List<RuleEntity> rules) {
 		Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
 
 		// for each rule, see if the variable fits the rule
 		for (RuleEntity rule : rules) {
-			while (it.hasNext()) {
-				Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();
-				String variableName = pair.getKey();
-				String variableValue = pair.getValue();
+			if (!"".equals(rule.ruleText) && rule.ruleText != null){
+				while (it.hasNext()) {
+					Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();
+					String variableName = pair.getKey();
+					String variableValue = pair.getValue();
 
-				String evaluate = rule.ruleText;
-				evaluate.replaceAll(variableName, variableValue);
-				
-				Evaluator eval = new Evaluator();
-				try {
-					if (!"1.0".equals(eval.evaluate(evaluate))){
-						
+					String evaluate = rule.ruleText;
+					evaluate.replaceAll(Pattern.quote(variableName), variableValue);
+					
+					Evaluator eval = new Evaluator();
+					try {
+						if (!"1.0".equals(eval.evaluate(evaluate))){
+							
+						}
+					} catch (EvaluationException e) {
+						return false;
 					}
-				} catch (EvaluationException e) {
-					return false;
 				}
-
 			}
 		}
 		return true;

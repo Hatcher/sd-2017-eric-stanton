@@ -30,7 +30,9 @@ public class QuestionService extends Controller {
 		entity.questionText = bean.getQuestionText();
 		//bean.getRules();
 		entity.skillId = bean.getSkillId();
+		entity.treeId = "";
 		entity.rules = new ArrayList<RuleEntity>();
+		
 		for (Rule rule : bean.getRules()){
 			RuleEntity ruleEntity = new RuleEntity();
 			ruleEntity.ruleText = rule.getRule();
