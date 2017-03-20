@@ -4,6 +4,7 @@ function initQuestionUi(){
 	initAddRuleButton();
 	initAddVariableButton();
 	initUploadButton();
+	initLabelingDialog();
 }
 
 function initAddRuleButton() {
@@ -18,11 +19,32 @@ function initAddRuleButton() {
 
 function initAddVariableButton(){
 	$("#add-variable").click(function() {
-		
 		var variable = "${"+String.fromCharCode(97 + numVariables)+"}";
 		numVariables = numVariables + 1;
 		$('#equation').val($('#equation').val() + ""+variable);
 	});
+}
+
+function initLabelingDialog(){
+	$("#create-labels-dialog").dialog({
+	    autoOpen: false,
+	    modal: true,
+	    width: "550px",
+	    buttons : {
+	         "Confirm" : function() {
+	             $(this).dialog("close");
+	         },
+	         "Cancel" : function() {
+	           $(this).dialog("close");
+	         }
+	       }
+	     });
+	
+	$("#image-labels-button").click(function(){
+		$("#label-me-image").attr("src", $('img#upload-image').prop("src"));
+    $("#create-labels-dialog").dialog("open");
+  });
+		  
 }
 
 function initUploadButton(){
@@ -114,4 +136,7 @@ function saveTree(){
 	    }
 	});
 }
+
+
+
 	
