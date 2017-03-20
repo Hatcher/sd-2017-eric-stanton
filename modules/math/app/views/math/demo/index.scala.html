@@ -32,7 +32,6 @@ td {
 			@mathBean.getId)  @mathBean.getQuestion
 				<br /> Choices <br/>
 				<form>
-
 					@for(choice <- mathBean.getAnswerChoices){ <input type="radio"
 						name=" @mathBean.getId" /> @choice <br /> }
 

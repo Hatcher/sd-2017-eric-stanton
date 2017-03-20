@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import beans.math.tree.RootNode;
 
 public class RemindBucket {
+	private static final String s3BaseUrl = "https://s3.amazonaws.com/remind/";
 	public boolean saveToS3(RootNode requestBody) {
 		boolean success = true;
 		
@@ -42,10 +43,25 @@ public class RemindBucket {
 		s3.putObject(new PutObjectRequest(bucketName, s3PathAndName, tmpFile).withCannedAcl(CannedAccessControlList.PublicRead));
 		return success;
 	}
-	private File createTmpFile(RootNode requestBody) throws IOException{
-		
-		
 	
+	public String saveToS3(String fileName,File imageFile) {
+		
+		
+		boolean success = true;
+		
+		AmazonS3 s3 = new AmazonS3Client();
+		Region usEast1 = Region.getRegion(Regions.US_EAST_1);
+		s3.setRegion(usEast1);
+		
+		String bucketName = "remind";
+		String s3PathAndName = "Math/Questions/images/"+fileName;
+		
+		s3.putObject(new PutObjectRequest(bucketName, s3PathAndName, imageFile).withCannedAcl(CannedAccessControlList.PublicRead));
+		return s3BaseUrl+s3PathAndName;
+	}
+
+	
+	private File createTmpFile(RootNode requestBody) throws IOException{
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.setSerializationInclusion(Include.NON_NULL);
 

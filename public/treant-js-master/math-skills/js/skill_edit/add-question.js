@@ -3,6 +3,7 @@ var numVariables = 0;
 function initQuestionUi(){
 	initAddRuleButton();
 	initAddVariableButton();
+	initUploadButton();
 }
 
 function initAddRuleButton() {
@@ -24,7 +25,20 @@ function initAddVariableButton(){
 	});
 }
 
+function initUploadButton(){
+	
+	var thumb = $('img#upload-image');        
 
+		  new AjaxUpload('image-upload-input', {
+		    action: $('form#upload-image-form').attr('action'),
+		    name: 'image',
+		    onComplete: function(file, response) {
+		    	sourceString = $.parseHTML( response ),
+		    	  nodeNames = [];
+		    	thumb.attr('src', sourceString[0].textContent);
+		    }
+		  });
+}
 
 
 
