@@ -42,7 +42,23 @@ function initLabelingDialog(){
 	
 	$("#image-labels-button").click(function(){
 		$("#label-me-image").attr("src", $('img#upload-image').prop("src"));
-    $("#create-labels-dialog").dialog("open");
+		
+		// get labels from equation and append as draggables
+		var equationString = $("#equation").val();
+		// break up into variables
+		console.log(equationString);
+		
+		var matchString;
+		matchString = equationString.match(/\${([a-zA-Z]+)}/g);
+		console.log(matchString);	
+		
+		
+		for (var label of matchString){
+			$("#labels-starting-point").append("<br/>"+label)
+		}
+		
+    
+		$("#create-labels-dialog").dialog("open");
   });
 		  
 }
