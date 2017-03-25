@@ -1,10 +1,13 @@
 var numRules = 1;
 var numVariables = 0;
+var questionJson = {};
+
 function initQuestionUi(){
 	initAddRuleButton();
 	initAddVariableButton();
 	initUploadButton();
 	initLabelingDialog();
+	initQuestionJson();
 }
 
 function initAddRuleButton() {
@@ -54,13 +57,22 @@ function initLabelingDialog(){
 		
 		
 		for (var label of matchString){
-			$("#labels-starting-point").append("<br/>"+label)
+			var labelPrefix = "draggable-label-";
+			var labelSuffix = getVariableFromHolder(label);
+			var labelId = labelPrefix + labelSuffix;
+			
+			$("#labels-starting-point").append("<br/><div id =\""+labelId+"\">"+label+"</div>")
+			$("#"+labelId).draggable(getDraggableOptionsForLabeling());
 		}
 		
     
 		$("#create-labels-dialog").dialog("open");
   });
 		  
+}
+
+function getVariableFromHolder(holder){
+	return holder.replace("$", "").replace("{", "").replace("}", "");
 }
 
 function initUploadButton(){
@@ -78,7 +90,10 @@ function initUploadButton(){
 		  });
 }
 
-
+function initQuestionJson(){
+	questionJson = {};
+	questionJson.labels = []
+}
 
 function submitQuestion(){
 	// ajax 1: post tree
@@ -87,12 +102,16 @@ function submitQuestion(){
 	// get values from fields
 	
 	// create json object
-	var questionJson = {};
+
 	questionJson.questionName = $("#question-name").val();
 	questionJson.questionText = $("#question-text").val();
 	questionJson.equation = $("#equation").val();
 	questionJson.skillId = lastClickedSkill;
 	questionJson.rules = [];
+
+	questionJson.image = ""; // image
+	
+	// labels are already populated at drag time
 	
 	$("[id^=rule-item-no]").each(function(index, element){
 		var tmpRule = {"rule": $(element).val()}
@@ -153,6 +172,57 @@ function saveTree(){
 	});
 }
 
-
+function getDraggableOptionsForLabeling(){
+	  var draggableOptions = {};
+	  draggableOptions.revert = false;
+	  draggableOptions.stop = function(){
+		  var offset = $(this).offset();
+		  console.log("from left: "+offset.left);
+		  console.log("from top: "+offset.top);
+		  var imageOffset = $("#label-me-image").offset();
+		  console.log("image from left: "+imageOffset.left);
+		  console.log("image from top: "+imageOffset.top);
+		  
+		  var xOffset = offset.left - imageOffset.left;
+		  var yOffset = offset.top - imageOffset.top;
+		  console.log("labels relative x,y: "+xOffset+","+yOffset);
+		  
+		  // how do I get the label name?
+		  console.log($(this));
+		  console.log($(this)[0].innerHTML);
+		  // if lands on
+		  addOrUpdateLabelToQuestion(getVariableFromHolder($(this)[0].innerHTML),xOffset,yOffset);
+		  console.log(JSON.stringify(questionJson));
+	  }
+	  return draggableOptions;
+	}
+function addOrUpdateLabelToQuestion(name, x, y){
+	var label = newLabel(name, x, y);	
+	console.log(label);
+	var found = false;
+	for (var i = 0; i < questionJson.labels.length; i++){
+		if (questionJson.labels[i] = name){
+			found = true;
+		}
+	}
+	if (!found){
+		questionJson.labels.push(label);
+	}
+}
+function removeOrIgnoreLabelFromQuestion(name, x, y){
+	var label = newLabel(name, x, y);
+	for (var i = 0; i < questionJson.labels.length; i++){
+		if (questionJson.labels[i] = name){
+			questionJson.labels = questionJson.labels.splice(i);
+		}
+	}
+}
+function newLabel(name, x, y){
+	var label = {};
+	label.name=name;
+	label.x = x;
+	label.y = y;
+	return label;
+}
 
 	
