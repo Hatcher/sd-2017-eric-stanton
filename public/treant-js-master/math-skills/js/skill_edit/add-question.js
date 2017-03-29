@@ -91,6 +91,7 @@ function initUploadButton(){
 }
 
 function initQuestionJson(){
+	console.log('INIT');
 	questionJson = {};
 	questionJson.labels = []
 }
@@ -111,7 +112,7 @@ function submitQuestion(){
 
 	questionJson.image = ""; // image
 	
-	// labels are already populated at drag time
+	console.log(questionJson);
 	
 	$("[id^=rule-item-no]").each(function(index, element){
 		var tmpRule = {"rule": $(element).val()}
@@ -120,8 +121,8 @@ function submitQuestion(){
 	
 //TODO images, labels not yet implemented
 //	questionJson.imageUrl = $("#image-url").val();
-//	questionJson.labels = [];
-	
+	console.log("about to request: ");
+	console.log(questionJson);
 	var questionRequestBody = {"question": questionJson };
 	$.ajax({
 		 headers: { 
@@ -177,39 +178,42 @@ function getDraggableOptionsForLabeling(){
 	  draggableOptions.revert = false;
 	  draggableOptions.stop = function(){
 		  var offset = $(this).offset();
-		  console.log("from left: "+offset.left);
-		  console.log("from top: "+offset.top);
+//		  console.log("from left: "+offset.left);
+//		  console.log("from top: "+offset.top);
 		  var imageOffset = $("#label-me-image").offset();
-		  console.log("image from left: "+imageOffset.left);
-		  console.log("image from top: "+imageOffset.top);
+//		  console.log("image from left: "+imageOffset.left);
+//		  console.log("image from top: "+imageOffset.top);
 		  
 		  var xOffset = offset.left - imageOffset.left;
 		  var yOffset = offset.top - imageOffset.top;
-		  console.log("labels relative x,y: "+xOffset+","+yOffset);
+//		  console.log("labels relative x,y: "+xOffset+","+yOffset);
 		  
 		  // how do I get the label name?
-		  console.log($(this));
-		  console.log($(this)[0].innerHTML);
+//		  console.log($(this));
+//		  console.log($(this)[0].innerHTML);
 		  // if lands on
 		  addOrUpdateLabelToQuestion(getVariableFromHolder($(this)[0].innerHTML),xOffset,yOffset);
+		  console.log("added.  question json:");
 		  console.log(JSON.stringify(questionJson));
 	  }
 	  return draggableOptions;
 	}
 function addOrUpdateLabelToQuestion(name, x, y){
 	var label = newLabel(name, x, y);	
-	console.log(label);
 	var found = false;
 	for (var i = 0; i < questionJson.labels.length; i++){
-		if (questionJson.labels[i] = name){
+		if (questionJson.labels[i] == name){
 			found = true;
 		}
 	}
 	if (!found){
 		questionJson.labels.push(label);
 	}
+	console.log("added label: ");
+	console.log(questionJson);
 }
 function removeOrIgnoreLabelFromQuestion(name, x, y){
+	console.log("removing label");
 	var label = newLabel(name, x, y);
 	for (var i = 0; i < questionJson.labels.length; i++){
 		if (questionJson.labels[i] = name){
