@@ -7,7 +7,6 @@ function initQuestionUi(){
 	initAddVariableButton();
 	initUploadButton();
 	initLabelingDialog();
-	initQuestionJson();
 }
 
 function initAddRuleButton() {
@@ -45,16 +44,9 @@ function initLabelingDialog(){
 	
 	$("#image-labels-button").click(function(){
 		$("#label-me-image").attr("src", $('img#upload-image').prop("src"));
-		
-		// get labels from equation and append as draggables
 		var equationString = $("#equation").val();
-		// break up into variables
-		console.log(equationString);
-		
 		var matchString;
 		matchString = equationString.match(/\${([a-zA-Z]+)}/g);
-		console.log(matchString);	
-		
 		
 		for (var label of matchString){
 			var labelPrefix = "draggable-label-";
@@ -86,6 +78,8 @@ function initUploadButton(){
 		    	sourceString = $.parseHTML( response ),
 		    	  nodeNames = [];
 		    	thumb.attr('src', sourceString[0].textContent);
+
+		    	questionJson.imageUrl=sourceString[0].textContent;
 		    }
 		  });
 }
@@ -109,20 +103,12 @@ function submitQuestion(){
 	questionJson.equation = $("#equation").val();
 	questionJson.skillId = lastClickedSkill;
 	questionJson.rules = [];
-
-	questionJson.image = ""; // image
-	
-	console.log(questionJson);
 	
 	$("[id^=rule-item-no]").each(function(index, element){
 		var tmpRule = {"rule": $(element).val()}
 		questionJson.rules.push(tmpRule);
 	});
 	
-//TODO images, labels not yet implemented
-//	questionJson.imageUrl = $("#image-url").val();
-	console.log("about to request: ");
-	console.log(questionJson);
 	var questionRequestBody = {"question": questionJson };
 	$.ajax({
 		 headers: { 
@@ -178,23 +164,13 @@ function getDraggableOptionsForLabeling(){
 	  draggableOptions.revert = false;
 	  draggableOptions.stop = function(){
 		  var offset = $(this).offset();
-//		  console.log("from left: "+offset.left);
-//		  console.log("from top: "+offset.top);
 		  var imageOffset = $("#label-me-image").offset();
-//		  console.log("image from left: "+imageOffset.left);
-//		  console.log("image from top: "+imageOffset.top);
-		  
+	  
 		  var xOffset = offset.left - imageOffset.left;
 		  var yOffset = offset.top - imageOffset.top;
-//		  console.log("labels relative x,y: "+xOffset+","+yOffset);
-		  
-		  // how do I get the label name?
-//		  console.log($(this));
-//		  console.log($(this)[0].innerHTML);
+
 		  // if lands on
 		  addOrUpdateLabelToQuestion(getVariableFromHolder($(this)[0].innerHTML),xOffset,yOffset);
-		  console.log("added.  question json:");
-		  console.log(JSON.stringify(questionJson));
 	  }
 	  return draggableOptions;
 	}
@@ -208,12 +184,10 @@ function addOrUpdateLabelToQuestion(name, x, y){
 	}
 	if (!found){
 		questionJson.labels.push(label);
+		overlayLabels("upload-image",name, name, x, y);
 	}
-	console.log("added label: ");
-	console.log(questionJson);
 }
 function removeOrIgnoreLabelFromQuestion(name, x, y){
-	console.log("removing label");
 	var label = newLabel(name, x, y);
 	for (var i = 0; i < questionJson.labels.length; i++){
 		if (questionJson.labels[i] = name){
@@ -227,6 +201,17 @@ function newLabel(name, x, y){
 	label.x = x;
 	label.y = y;
 	return label;
+}
+
+function overlayLabels(imgId, overlayId, text, relativeX, relativeY){
+var previewImageOffset = $("#"+imgId).offset();
+var fullX = previewImageOffset.top + relativeY;
+var fullY = previewImageOffset.left + relativeX;
+
+$("#create-question-dialog").append("<div id=\""+overlayId+"\">"+text+"</div>");
+$("#"+overlayId).offset({ top: fullX, left: fullY });
+
+
 }
 
 	

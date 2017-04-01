@@ -100,6 +100,7 @@ function initTree(item){
   else{
     $("#"+item.HTMLid).click(function(){
     	lastClickedSkill=item.HTMLid;
+    	initQuestionJson();
       $("#create-question-dialog").dialog("open");
     });
   }
