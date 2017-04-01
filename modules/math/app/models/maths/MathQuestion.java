@@ -91,11 +91,11 @@ public class MathQuestion extends Model {
 	}
 	
 	private static boolean followsRules(Map<String, String> variables, List<RuleEntity> rules) {
-		Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
 
 		// for each rule, see if the variable fits the rule
 		for (RuleEntity rule : rules) {
 			if (!"".equals(rule.ruleText) && rule.ruleText != null){
+				Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
 				String evaluate = rule.ruleText;
 				while (it.hasNext()) {
 					Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();

@@ -31,10 +31,6 @@ public class QuestionController extends Controller {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(Include.NON_NULL);
 		QuestionRootNode node = null;
-
-		
-		
-		
 		
 		try{
 			node = mapper.readValue(json.toString(), QuestionRootNode.class);
@@ -58,13 +54,10 @@ public class QuestionController extends Controller {
 					errorsString+="\""+error+"\"";
 				}
 				errorsString +="]";
-				
 				return ok("{\"response\":{\"success\": "+false+","
 						+ errorsString
 						+ "}}");
-				
 			}
-			
 		}
 		catch (Exception e){
 			e.printStackTrace();
