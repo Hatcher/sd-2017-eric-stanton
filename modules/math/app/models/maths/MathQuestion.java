@@ -27,8 +27,11 @@ public class MathQuestion extends Model {
 	public String skillId;
 	public String treeId;
 	@OneToMany(cascade = CascadeType.ALL)
-	public List<RuleEntity> rules;
+	public List<MathQuestionRule> rules;
 
+	@OneToMany(cascade = CascadeType.ALL)
+	public List<MathQuestionLabel> labels;
+	
 	public static Finder<String, MathQuestion> finder = new Finder<String, MathQuestion>(MathQuestion.class);
 	public static Find<String, MathQuestion> find = new Find<String, MathQuestion>() {
 	};
@@ -90,10 +93,10 @@ public class MathQuestion extends Model {
 		return tmpEquationWithVariables.equals(tmpRandomEquation);
 	}
 	
-	private static boolean followsRules(Map<String, String> variables, List<RuleEntity> rules) {
+	private static boolean followsRules(Map<String, String> variables, List<MathQuestionRule> rules) {
 
 		// for each rule, see if the variable fits the rule
-		for (RuleEntity rule : rules) {
+		for (MathQuestionRule rule : rules) {
 			if (!"".equals(rule.ruleText) && rule.ruleText != null){
 				Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
 				String evaluate = rule.ruleText;

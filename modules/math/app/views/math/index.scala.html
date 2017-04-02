@@ -1,4 +1,4 @@
-@(test: beans.math.TestBean)
+@(test: beans.math.TestBean) @main("main"){
 
 <!DOCTYPE html>
 
@@ -23,109 +23,25 @@ td {
 
 </head>
 <body>
-	<a href="/math/skills">restart</a>
-	<h1>Categories Generated:</h1>
+	<a href="/math/demo/menu">Return to Menu</a>
+	<h1>Math Test:</h1>
 	<table width="800px" style="padding: 5px; margin: 5px">
-		<tr style="border-bottom: 1px solid black">
-			<th style="text-align: left">Originating Equation</th>
-			<th style="text-align: left">Categories</th>
-			<th style="text-align: left">Question</th>
-			<th style="text-align: left">Answer Choices</th>
-		</tr>
 		@for(mathBean <- test.getMathBeans) {
 		<tr>
+			<td width="300px"><!--  question here -->
+			@mathBean.getId)  @mathBean.getQuestion
+				<br /> Choices <br/>
+				<form>
+					@for(choice <- mathBean.getAnswerChoices){ <input type="radio"
+						name=" @mathBean.getId" /> @choice <br /> }
 
-			<td width="200px" style="vertical-align: top">x =
-				@mathBean.toString()</td>
-
-
-			<td width="200px">
-				<ul>
-					
-					<li>@mathBean.getType</li> 
-
-				</ul>
-			</td>
-			<td width="300px">Display type: @mathBean.getType() <!--  question here -->
-				@if(mathBean.getType().equals("ARITHMETIC")){
-				<p>
-					<strong>@Html(mathBean.getQuestion())</strong>
-				</p> } 
-				
-				@if(mathBean.getType().equals("RECTANGLE")){
-
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawRectangle(@mathBean.getId(), '@mathBean.getLabels().get("length")', '@mathBean.getLabels().get("width")');
-        		</script>
-        		
-        		 } 
-        		
-        		@if(mathBean.getType().equals("SQUARE")){
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawSquare(@mathBean.getId(), '@mathBean.getLabels().get("side")');
-        		</script> 
-        		
-        		} 
-        		
-        		@if(mathBean.getType().equals("CUBE")){
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawCube(@mathBean.getId(), '@mathBean.getLabels().get("height")', '@mathBean.getLabels().get("width")', '@mathBean.getLabels().get("depth")');
-        		</script> 
-        		
-        		}
-        		
-        		
-        		
-        		@if(mathBean.getType().equals("TRIANGLE")) {
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawTriangle(@mathBean.getId(), '@mathBean.getLabels().get("base")','@mathBean.getLabels().get("height")', '@mathBean.getLabels().get("hypoteneuse")');
-        		</script>
-				 
-				} 
-				
-				@if(mathBean.getType().equals("CIRCLE")){  
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawCircle(@mathBean.getId(), '@mathBean.getLabels().get("radius")', '@mathBean.getLabels().get("diameter")');
-        		</script>
-				
-				
-
-				}
-
-			</td>
-
-			<td width="200px">
-				<ul>
-					@for(choice <- mathBean.getAnswerChoices){
-					<li>@choice</li> }
-
-				</ul>
+				</form>
 			</td>
 		</tr>
-		</ol>
 		}
 	</table>
-
+<a href="/math/demo/grade?counting=1&add=1&subtract=1&divide=1&multiply=1&circle=1&rectangle=1&triangle=1&cone=1&cylinder=1&pyramid=1&rectangularPrism=1&rightPrism=1&sphere=1" class="button">Submit Test</a>
 
 </body>
 </html>
+}

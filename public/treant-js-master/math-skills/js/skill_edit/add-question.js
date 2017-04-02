@@ -178,7 +178,7 @@ function addOrUpdateLabelToQuestion(name, x, y){
 	var label = newLabel(name, x, y);	
 	var found = false;
 	for (var i = 0; i < questionJson.labels.length; i++){
-		if (questionJson.labels[i] == name){
+		if (questionJson.labels[i].value == name){
 			found = true;
 		}
 	}
@@ -190,14 +190,14 @@ function addOrUpdateLabelToQuestion(name, x, y){
 function removeOrIgnoreLabelFromQuestion(name, x, y){
 	var label = newLabel(name, x, y);
 	for (var i = 0; i < questionJson.labels.length; i++){
-		if (questionJson.labels[i] = name){
+		if (questionJson.labels[i].value == name){
 			questionJson.labels = questionJson.labels.splice(i);
 		}
 	}
 }
 function newLabel(name, x, y){
 	var label = {};
-	label.name=name;
+	label.value=name;
 	label.x = x;
 	label.y = y;
 	return label;

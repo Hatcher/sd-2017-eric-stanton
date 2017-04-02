@@ -1,32 +1,34 @@
 package beans.math.question;
 
+import java.math.BigDecimal;
+
 public class Label {
-	private String name;
-	private String x;
-	private String y;
+	private String value;
+	private BigDecimal x;
+	private BigDecimal y;
 	
 	
-	public String getName() {
-		return name;
+	public String getValue() {
+		return value;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
-	public String getX() {
+	public BigDecimal getX() {
 		return x;
 	}
 
-	public void setX(String x) {
+	public void setX(BigDecimal x) {
 		this.x = x;
 	}
 
-	public String getY() {
+	public BigDecimal getY() {
 		return y;
 	}
 
-	public void setY(String y) {
+	public void setY(BigDecimal y) {
 		this.y = y;
 	}
 	

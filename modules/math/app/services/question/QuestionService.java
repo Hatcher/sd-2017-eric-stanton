@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 import com.avaje.ebean.annotation.Transactional;
 
+import beans.math.question.Label;
 import beans.math.question.MathQuestionBean;
 import beans.math.question.QuestionRootNode;
 import beans.math.question.Rule;
 import models.maths.MathQuestion;
-import models.maths.RuleEntity;
+import models.maths.MathQuestionLabel;
+import models.maths.MathQuestionRule;
 import play.mvc.Controller;
 
 public class QuestionService extends Controller {
@@ -31,13 +33,21 @@ public class QuestionService extends Controller {
 		//bean.getRules();
 		entity.skillId = bean.getSkillId();
 		entity.treeId = "";
-		entity.rules = new ArrayList<RuleEntity>();
+		entity.rules = new ArrayList<MathQuestionRule>();
 		
 		for (Rule rule : bean.getRules()){
-			RuleEntity ruleEntity = new RuleEntity();
+			MathQuestionRule ruleEntity = new MathQuestionRule();
 			ruleEntity.ruleText = rule.getRule();
 			entity.rules.add(ruleEntity);
 		}
+		entity.labels = new ArrayList<MathQuestionLabel>();
+		for (Label label : bean.getLabels()){
+			MathQuestionLabel labelEntity = new MathQuestionLabel();
+			labelEntity.variableName = label.getValue();
+			labelEntity.x = label.getX();
+			labelEntity.y = label.getY();
+		}
+		
 		return entity;
 	}
 }

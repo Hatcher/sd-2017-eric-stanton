@@ -15,14 +15,14 @@ public class MathBean {
 	private String id="0";
 	private String type = "";
 	private String question = "";
-
+	private String imageUrl = "";
+	private List<LabelBean> labels = new ArrayList<LabelBean>();
 
 
 	private List<BigDecimal> integers = new ArrayList<BigDecimal>();
 	private List<String> operators = new ArrayList<String>();
 
-	private Map<String, String> labels = new HashMap<String, String>();
-	
+
 	public MathBean() {
 	}
 
@@ -143,8 +143,16 @@ public class MathBean {
 		return rValue;
 	}
 
-	public Map<String, String> getLabels() {
+	public List<LabelBean> getLabels() {
 		return labels;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 }
