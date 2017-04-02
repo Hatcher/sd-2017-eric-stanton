@@ -70,22 +70,28 @@ public class EquationGenerator {
 			Map<String, String> variables = MathQuestion.getVariables(mathBean.toString(), question.equation);
 			String updatedQuestionText = question.questionText;
 			Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
+			mathBean.getLabels().clear();
+
 			while (it.hasNext()) {
 				Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();
 				updatedQuestionText = updatedQuestionText.replaceAll(Pattern.quote(pair.getKey()), pair.getValue());
+				for (MathQuestionLabel mathQuestionLabel : question.labels) {
+					if (mathQuestionLabel.variableName != null) {
+						String matchableVariable = "${"+mathQuestionLabel.variableName+"}";
+						if (matchableVariable.equals(pair.getKey())) {
+							LabelBean labelBean = new LabelBean();
+							labelBean.setValue(pair.getValue());
+							labelBean.setX(mathQuestionLabel.x);
+							labelBean.setY(mathQuestionLabel.y);
+							mathBean.getLabels().add(labelBean);
+						}
+					}
+				}
 			}
 
 			mathBean.setQuestion(updatedQuestionText);
 			mathBean.setImageUrl(question.imageUrl);
-			mathBean.getLabels().clear();
-			for (MathQuestionLabel mathQuestionLabel : question.labels)
-			{
-				LabelBean labelBean = new LabelBean();
-				labelBean.setName(mathQuestionLabel.variableName);
-				labelBean.setX(mathQuestionLabel.x);
-				labelBean.setY(mathQuestionLabel.y);
-				mathBean.getLabels().add(labelBean);
-			}
+
 		}
 		return mathBean;
 	}

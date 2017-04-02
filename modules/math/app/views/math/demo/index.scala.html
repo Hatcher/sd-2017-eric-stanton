@@ -5,11 +5,12 @@
 <html>
 <head>
 <title>Generated Test</title>
-<script src="/assets/treant-js-master/math-skills/drawing/rectangle.js"></script>
-<script src="/assets/treant-js-master/math-skills/drawing/circle.js"></script>
-<script src="/assets/treant-js-master/math-skills/drawing/triangle.js"></script>
-<script src="/assets/treant-js-master/math-skills/drawing/square.js"></script>
-<script src="/assets/treant-js-master/math-skills/drawing/cube.js"></script>
+<script src="/assets/treant-js-master/math-skills/js/label-image.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	window.onload=overlayLabels();
+ 	});
+</script>
 
 <style>
 th {
@@ -23,18 +24,29 @@ td {
 
 </head>
 <body>
+
 	<a href="/math/demo/menu">Return to Menu</a>
 	<h1>Math Test:</h1>
 	<table width="800px" style="padding: 5px; margin: 5px">
 		@for(mathBean <- test.getMathBeans) {
 		<tr>
 			<td width="300px"><!--  question here -->
-			@mathBean.getId)  @mathBean.getQuestion
+			@mathBean.getId)  @mathBean.getQuestion <br/>
+			<img id="image-to-label-@mathBean.getId" src="@mathBean.getImageUrl" />
+			<script type="text/javascript">
+				i=0;
+			</script>
+			@for(label <- mathBean.getLabels){
+				<script type="text/javascript">
+					queueLabel("image-to-label-@mathBean.getId", "image-to-label-@mathBean.getId-"+i, "@label.getValue", @label.getX, @label.getY);
+					i++;
+				</script>
+			}
+
 				<br /> Choices <br/>
 				<form>
-					@for(choice <- mathBean.getAnswerChoices){ <input type="radio"
-						name=" @mathBean.getId" /> @choice <br /> }
-
+					@for(choice <- mathBean.getAnswerChoices){ 
+					<input type="radio" name=" @mathBean.getId" /> @choice <br /> }
 				</form>
 			</td>
 		</tr>
@@ -42,6 +54,7 @@ td {
 	</table>
 <a href="/math/demo/grade?counting=1&add=1&subtract=1&divide=1&multiply=1&circle=1&rectangle=1&triangle=1&cone=1&cylinder=1&pyramid=1&rectangularPrism=1&rightPrism=1&sphere=1" class="button">Submit Test</a>
 
+<div id ="tmp-space"></div>
 </body>
 </html>
 }
