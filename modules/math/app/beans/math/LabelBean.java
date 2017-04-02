@@ -1,19 +1,19 @@
-package beans.math.question;
+package beans.math;
 
 import java.math.BigDecimal;
 
-public class Label {
-	private String value;
+public class LabelBean {
+	private String name;
 	private BigDecimal x;
 	private BigDecimal y;
 	
 	
-	public String getValue() {
-		return value;
+	public String getName() {
+		return name;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public BigDecimal getX() {

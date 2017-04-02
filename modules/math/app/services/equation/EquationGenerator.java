@@ -8,8 +8,10 @@ import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+import beans.math.LabelBean;
 import beans.math.MathBean;
 import models.maths.MathQuestion;
+import models.maths.MathQuestionLabel;
 
 public class EquationGenerator {
 	private Random random = new Random();
@@ -74,6 +76,16 @@ public class EquationGenerator {
 			}
 
 			mathBean.setQuestion(updatedQuestionText);
+			mathBean.setImageUrl(question.imageUrl);
+			mathBean.getLabels().clear();
+			for (MathQuestionLabel mathQuestionLabel : question.labels)
+			{
+				LabelBean labelBean = new LabelBean();
+				labelBean.setName(mathQuestionLabel.variableName);
+				labelBean.setX(mathQuestionLabel.x);
+				labelBean.setY(mathQuestionLabel.y);
+				mathBean.getLabels().add(labelBean);
+			}
 		}
 		return mathBean;
 	}
