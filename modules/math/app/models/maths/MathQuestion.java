@@ -58,6 +58,10 @@ public class MathQuestion extends Model {
 		return null;
 	}
 
+	public static List<MathQuestion> find(String treeId, List<String> skillIds) {
+		return find.where().eq("treeId", treeId).in("skillId", skillIds).findList();
+	}
+	
 	public static Map<String, String> getVariables(String randomEquation, String equation) {
 		Map<String, String> variables = new HashMap<String, String>();
 		Pattern variablePattern = Pattern.compile("\\$\\{[a-zA-Z]+\\}");
@@ -83,7 +87,7 @@ public class MathQuestion extends Model {
 		return variables;
 	}
 
-	private static boolean matchesEquation(String equationWithVariables, String randomEquation){
+	public static boolean matchesEquation(String equationWithVariables, String randomEquation){
 		String tmpEquationWithVariables = equationWithVariables.replaceAll("\\s","");
 		String tmpRandomEquation = randomEquation.replaceAll("\\s", "");
 		
@@ -93,7 +97,7 @@ public class MathQuestion extends Model {
 		return tmpEquationWithVariables.equals(tmpRandomEquation);
 	}
 	
-	private static boolean followsRules(Map<String, String> variables, List<MathQuestionRule> rules) {
+	public static boolean followsRules(Map<String, String> variables, List<MathQuestionRule> rules) {
 
 		// for each rule, see if the variable fits the rule
 		for (MathQuestionRule rule : rules) {

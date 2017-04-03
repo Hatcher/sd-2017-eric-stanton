@@ -25,9 +25,12 @@ public class EquationGenerator {
 
 		List<MathBean> questions = new ArrayList<MathBean>();
 		int num = 0;
+		List<MathQuestion> questionsOfTypes = MathQuestion.find("", questionTypes);
+
 		while (numQuestions > questions.size()) {
 			System.out.println("generate question: ");
-			MathBean question = generateQuestion(questionTypes);
+			
+			MathBean question = generateQuestion(questionsOfTypes);
 			if ((question.getType() != null) && !"".equals(question.getType())) {
 				question.setId(++num + "");
 				questions.add(question);
@@ -36,7 +39,9 @@ public class EquationGenerator {
 		return questions;
 	}
 
-	private MathBean generateQuestion(List<String> skillIds) {
+	private MathBean generateQuestion(List<MathQuestion> questionsOfTypes) {
+
+		// generate equation
 		MathBean mathBean = new MathBean();
 		int clauses = random.nextInt(MAX_OPERATORS) + MIN_OPERATORS; // 1-3
 																		// operators
@@ -63,37 +68,52 @@ public class EquationGenerator {
 			mathBean.getOperators().add(basicOperator);
 		}
 
-		MathQuestion question = MathQuestion.find("", skillIds, mathBean.toString());
-		if (question != null) {
-			mathBean.setType(question.questionId + "");
-
-			Map<String, String> variables = MathQuestion.getVariables(mathBean.toString(), question.equation);
-			String updatedQuestionText = question.questionText;
-			Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
-			mathBean.getLabels().clear();
-
-			while (it.hasNext()) {
-				Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();
-				updatedQuestionText = updatedQuestionText.replaceAll(Pattern.quote(pair.getKey()), pair.getValue());
-				for (MathQuestionLabel mathQuestionLabel : question.labels) {
-					if (mathQuestionLabel.variableName != null) {
-						String matchableVariable = "${"+mathQuestionLabel.variableName+"}";
-						if (matchableVariable.equals(pair.getKey())) {
-							LabelBean labelBean = new LabelBean();
-							labelBean.setValue(pair.getValue());
-							labelBean.setX(mathQuestionLabel.x);
-							labelBean.setY(mathQuestionLabel.y);
-							mathBean.getLabels().add(labelBean);
+		// categorize equation
+		for  (MathQuestion question : questionsOfTypes){
+			if (question != null) {
+				if (followsRules(question,mathBean.toString())){
+				
+					mathBean.setType(question.questionId + "");
+		
+					Map<String, String> variables = MathQuestion.getVariables(mathBean.toString(), question.equation);
+					String updatedQuestionText = question.questionText;
+					Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
+					mathBean.getLabels().clear();
+		
+					while (it.hasNext()) {
+						Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();
+						updatedQuestionText = updatedQuestionText.replaceAll(Pattern.quote(pair.getKey()), pair.getValue());
+						for (MathQuestionLabel mathQuestionLabel : question.labels) {
+							if (mathQuestionLabel.variableName != null) {
+								String matchableVariable = "${"+mathQuestionLabel.variableName+"}";
+								if (matchableVariable.equals(pair.getKey())) {
+									LabelBean labelBean = new LabelBean();
+									labelBean.setValue(pair.getValue());
+									labelBean.setX(mathQuestionLabel.x);
+									labelBean.setY(mathQuestionLabel.y);
+									mathBean.getLabels().add(labelBean);
+								}
+							}
 						}
 					}
+		
+					mathBean.setQuestion(updatedQuestionText);
+					mathBean.setImageUrl(question.imageUrl);
 				}
 			}
-
-			mathBean.setQuestion(updatedQuestionText);
-			mathBean.setImageUrl(question.imageUrl);
-
 		}
 		return mathBean;
+	}
+	
+	private boolean followsRules(MathQuestion question, String randomEquation){
+			if (MathQuestion.matchesEquation(question.equation, randomEquation)){
+				Map<String, String> variables = MathQuestion.getVariables(randomEquation, question.equation);
+				if (MathQuestion.followsRules(variables, question.rules)) {
+					return true;
+				}
+			}
+			return false;
+
 	}
 
 	private String getRandomOperation() {
