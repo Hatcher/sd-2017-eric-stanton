@@ -2,6 +2,7 @@ package services.equation;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +28,11 @@ public class EquationGenerator {
 		int num = 0;
 		List<MathQuestion> questionsOfTypes = MathQuestion.find("", questionTypes);
 
+		int numRepeats = numQuestions / questionsOfTypes.size() + 1;
+
 		while (numQuestions > questions.size()) {
-			System.out.println("generate question: ");
-			
-			MathBean question = generateQuestion(questionsOfTypes);
+			Collections.shuffle(questionsOfTypes);
+			MathBean question = generateQuestion(questionsOfTypes, numRepeats);
 			if ((question.getType() != null) && !"".equals(question.getType())) {
 				question.setId(++num + "");
 				questions.add(question);
@@ -39,7 +41,7 @@ public class EquationGenerator {
 		return questions;
 	}
 
-	private MathBean generateQuestion(List<MathQuestion> questionsOfTypes) {
+	private MathBean generateQuestion(List<MathQuestion> questionsOfTypes, int numRepeats) {
 
 		// generate equation
 		MathBean mathBean = new MathBean();
@@ -48,7 +50,6 @@ public class EquationGenerator {
 		String basicOperator = getRandomOperation();
 
 		int iterations = clauses;
-		System.out.println("generating question inside method");
 		boolean firstIteration = true;
 		for (int i = 0; i < iterations; i++) {
 			BigDecimal number = getRandomNumber();
@@ -61,7 +62,8 @@ public class EquationGenerator {
 			}
 			if (basicOperator.equals(Operators.DIVIDE)) {
 				// only divide by 2 or 3
-				number = BigDecimal.valueOf(random.nextInt(2) + 2);
+				//number = BigDecimal.valueOf(random.nextInt(2) + 2);
+				number = BigDecimal.valueOf(2);
 			}
 
 			mathBean.getIntegers().add(number);
@@ -71,7 +73,7 @@ public class EquationGenerator {
 		// categorize equation
 		for  (MathQuestion question : questionsOfTypes){
 			if (question != null) {
-				if (followsRules(question,mathBean.toString())){
+				if (followsRules(question,mathBean.toString(), numRepeats)){
 				
 					mathBean.setType(question.questionId + "");
 		
@@ -99,14 +101,16 @@ public class EquationGenerator {
 		
 					mathBean.setQuestion(updatedQuestionText);
 					mathBean.setImageUrl(question.imageUrl);
+					question.used++;
+					break;
 				}
 			}
 		}
 		return mathBean;
 	}
 	
-	private boolean followsRules(MathQuestion question, String randomEquation){
-			if (MathQuestion.matchesEquation(question.equation, randomEquation)){
+	private boolean followsRules(MathQuestion question, String randomEquation, int maxRepeats){
+			if ((question.used < maxRepeats) && MathQuestion.matchesEquation(question.equation, randomEquation)){
 				Map<String, String> variables = MathQuestion.getVariables(randomEquation, question.equation);
 				if (MathQuestion.followsRules(variables, question.rules)) {
 					return true;
@@ -116,6 +120,14 @@ public class EquationGenerator {
 
 	}
 
+	private String getRandomOperation(List<MathQuestion> questions){
+		Random random = new Random();
+		MathQuestion randomQuestion = questions.get(random.nextInt(questions.size()));
+//		randomQuestion.get
+		return "*";
+		
+	}
+	
 	private String getRandomOperation() {
 		Random random = new Random();
 		return Operators.ALL_OPERATORS.get(random.nextInt(Operators.ALL_OPERATORS.size()));

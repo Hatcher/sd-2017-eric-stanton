@@ -32,6 +32,9 @@ public class MathQuestion extends Model {
 	@OneToMany(cascade = CascadeType.ALL)
 	public List<MathQuestionLabel> labels;
 	
+	@Transient
+	public int used = 0;
+	
 	public static Finder<String, MathQuestion> finder = new Finder<String, MathQuestion>(MathQuestion.class);
 	public static Find<String, MathQuestion> find = new Find<String, MathQuestion>() {
 	};
@@ -87,13 +90,34 @@ public class MathQuestion extends Model {
 		return variables;
 	}
 
+	public static List<String> getOperators(String equation) {
+		List<String> variables = new ArrayList<String>();
+		Pattern variablePattern = Pattern.compile("\\$\\{[a-zA-Z]+\\}");
+		Pattern numbersPattern = Pattern.compile("[+*/-]+");
+
+		List<String> variableNames = new ArrayList<String>();
+		List<String> variableValues = new ArrayList<String>();
+
+		Matcher variablesMatcher = variablePattern.matcher(equation);
+
+		while (variablesMatcher.find()) {
+			variableNames.add(variablesMatcher.group());
+		}
+
+
+		for (int i = 0; i < variableNames.size(); i++) {
+			variables.add(variableValues.get(i));
+		}
+		return variables;
+	}
+	
 	public static boolean matchesEquation(String equationWithVariables, String randomEquation){
 		String tmpEquationWithVariables = equationWithVariables.replaceAll("\\s","");
 		String tmpRandomEquation = randomEquation.replaceAll("\\s", "");
 		
 		tmpEquationWithVariables = tmpEquationWithVariables.replaceAll("\\$\\{[a-zA-Z]+\\}", "_");
 		tmpRandomEquation = tmpRandomEquation.replaceAll("[0-9]+", "_");
-		
+		// TODO ignore the constants
 		return tmpEquationWithVariables.equals(tmpRandomEquation);
 	}
 	
