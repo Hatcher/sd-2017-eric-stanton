@@ -15,7 +15,7 @@ function overlayLabels(){
 		var previewImageOffset = $("#"+labelsQueue[i].imgId).offset();
 		var fullX = previewImageOffset.top + labelsQueue[i].relativeY;
 		var fullY = previewImageOffset.left + labelsQueue[i].relativeX;
-		var tmpSpace = $("#tmp-space").append("<div id=\""+labelsQueue[i].overlayId+"\">"+labelsQueue[i].text+"</div>");
+		var tmpSpace = $("#tmp-space").append("<span id=\""+labelsQueue[i].overlayId+"\" style=\"background-color:#FFFFFF; padding:3px\">"+labelsQueue[i].text+"</span>");
 		$("#"+labelsQueue[i].overlayId).offset({ top: fullX, left: fullY });
 	}
 	
