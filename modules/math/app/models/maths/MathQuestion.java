@@ -117,7 +117,7 @@ public class MathQuestion extends Model {
 		
 		tmpEquationWithVariables = tmpEquationWithVariables.replaceAll("\\$\\{[a-zA-Z]+\\}", "_");
 		tmpRandomEquation = tmpRandomEquation.replaceAll("[0-9]+", "_");
-		// TODO ignore the constants
+		
 		return tmpEquationWithVariables.equals(tmpRandomEquation);
 	}
 	

@@ -46,7 +46,7 @@ public class QuestionService extends Controller {
 			labelEntity.variableName = label.getValue();
 			labelEntity.x = label.getX();
 			labelEntity.y = label.getY();
-			entity.labels.add(labelEntity);
+			labels.add(labelEntity);
 		}
 		
 		return entity;

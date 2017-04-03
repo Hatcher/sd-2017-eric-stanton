@@ -2,7 +2,6 @@ package services.equation;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,7 @@ public class EquationGenerator {
 		int numRepeats = numQuestions / questionsOfTypes.size() + 1;
 
 		while (numQuestions > questions.size()) {
-			Collections.shuffle(questionsOfTypes);
+			
 			MathBean question = generateQuestion(questionsOfTypes, numRepeats);
 			if ((question.getType() != null) && !"".equals(question.getType())) {
 				question.setId(++num + "");
