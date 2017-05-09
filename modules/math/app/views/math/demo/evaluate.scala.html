@@ -5,11 +5,14 @@
 <html>
 <head>
 <title>Generated Test</title>
-<script src="/assets/treant-js-master/math-skills/drawing/rectangle.js"></script>
-<script src="/assets/treant-js-master/math-skills/drawing/circle.js"></script>
-<script src="/assets/treant-js-master/math-skills/drawing/triangle.js"></script>
-<script src="/assets/treant-js-master/math-skills/drawing/square.js"></script>
-<script src="/assets/treant-js-master/math-skills/drawing/cube.js"></script>
+<script src="/assets/treant-js-master/math-skills/js/label-image.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	window.onload = function() {
+		overlayLabels()
+	};
+});
+</script>
 
 <style>
 th {
@@ -23,83 +26,69 @@ td {
 
 </head>
 <body>
-	
-	<a href="/math/demo/menu">>Return to Menu</a>
-	<h1>Math Test:</h1>
+
+	<a href="/math/demo/menu">Return to Menu</a>
+	<h1>Math Test: </h1>
+
 	<table width="800px" style="padding: 5px; margin: 5px">
 		@for(mathBean <- test.getMathBeans) {
 		<tr>
-			<td width="300px"><!--  question here -->
-			@mathBean.getId)
-				@if(mathBean.getType().equals("ARITHMETIC")){
-				<p>
-					<strong>@Html(mathBean.getQuestion())</strong>
-				</p> } @if(mathBean.getType().equals("RECTANGLE")){
-
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
+			<td width="600px"><!--  question here -->
+			@mathBean.getId)  @mathBean.getQuestion <br/>
+			<img id="image-to-label-@mathBean.getId" src="@mathBean.getImageUrl" style="margin:25px" />
+			<script type="text/javascript">
+				i=0;
+			</script>
+			@for(label <- mathBean.getLabels){
 				<script type="text/javascript">
-          			drawRectangle(@mathBean.getId(), '@mathBean.getLabels().get(0)', '@mathBean.getLabels().get(0)');
-        		</script> } @if(mathBean.getType().equals("SQUARE")){
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawSquare(@mathBean.getId(), '@mathBean.getLabels().get(0)');
-        		</script> } @if(mathBean.getType().equals("CUBE")){
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawCube(@mathBean.getId(), '@mathBean.getLabels().get(0)', '@mathBean.getLabels().get(0)', '@mathBean.getLabels().get(0)');
-        		</script> } @if(mathBean.getType().equals("TRIANGLE")) {
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawTriangle(@mathBean.getId(), '@mathBean.getLabels().get(0)','@mathBean.getLabels().get(0)', '@mathBean.getLabels().get(0)');
-        		</script> } @if(mathBean.getType().equals("CIRCLE")){
-				<p>
-					<strong>@mathBean.getQuestion()</strong>
-				</p>
-				<canvas id="canvas@mathBean.getId()" width="200" height="200"></canvas>
-				<script type="text/javascript">
-          			drawCircle(@mathBean.getId(), '@mathBean.getLabels().get(0)', '@mathBean.getLabels().get(0)');
-        		</script> } <br /> Choices <br/>
-				<form>
-
-					@for(choice <- mathBean.getAnswerChoices){ <input type="radio"
-						name=" @mathBean.getId" checked="checked" disabled="true"/> @choice <br /> }
-
-				</form>
+					queueLabel("image-to-label-@mathBean.getId", "image-to-label-@mathBean.getId-"+i, "@label.getValue", @label.getX, @label.getY);
+					i++;
+				</script>
+			}
+				<br /> Choices: <br/>
+					@for(choice <- mathBean.getAnswerChoices){ 
+						@if(choice.equals(mathBean.getSelectedAnswer)){
+							<input type="radio" name=" @mathBean.getId" disabled="disabled" checked="checked"/> @choice <br />
+						}else{
+							<input type="radio" name=" @mathBean.getId" disabled="disabled" /> @choice <br />
+						}
+					}
 			</td>
-			
-			<td>
-				<div id="correct_@mathBean.getId"><img src="/assets/treant-js-master/math-skills/img/correct.png"/></div>
-				<br/>
-				-- or --
-				<br/>
-				<div id="incorrect_@mathBean.getId"><img src="/assets/treant-js-master/math-skills/img/incorrect.png"/></div>
-				The correct answer was "a."
-				<br/>
-				<br/>
-				To learn why the answer is "a," click here <a href="#">Link opens dialog with steps to answer question.</a>
-				
-		
-			
-						
-				
-				
+			<td style="text-align:center">
+				@if(mathBean.isCorrect()){
+					<img src="/assets/treant-js-master/math-skills/img/correct.png"/>
+				}else{
+					<img src="/assets/treant-js-master/math-skills/img/incorrect.png"/>
+					<br/>
+					The correct answer was @mathBean.getAnswer()
+				}
 				
 			</td>
 		</tr>
 		}
 	</table>
+	
+	<div id="2"><img src="/assets/treant-js-master/math-skills/img/correct.png"/></div>
+	<br/>
+	-- or --
+	<br/>
+	<div id="1"><img src="/assets/treant-js-master/math-skills/img/incorrect.png"/></div>
+	The correct answer was "a."
+	<br/>
+	<br/>
+	To learn why the answer is "a," click here <a href="#">Link opens dialog with steps to answer question.</a>
+<div id ="tmp-space"></div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
 
 
 </body>

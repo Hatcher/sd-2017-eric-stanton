@@ -29,6 +29,8 @@ td {
 
 	<a href="/math/demo/menu">Return to Menu</a>
 	<h1>Math Test:</h1>
+	<form method="post" action="/math/demo/grade">
+	<input type="hidden" name="testId" value="@test.getTestId" />
 	<table width="800px" style="padding: 5px; margin: 5px">
 		@for(mathBean <- test.getMathBeans) {
 		<tr>
@@ -44,18 +46,15 @@ td {
 					i++;
 				</script>
 			}
-
 				<br /> Choices <br/>
-				<form>
 					@for(choice <- mathBean.getAnswerChoices){ 
-					<input type="radio" name=" @mathBean.getId" /> @choice <br /> }
-				</form>
+					<input type="radio" name="Q_@mathBean.getId" value="@choice" /> @choice <br /> }
 			</td>
 		</tr>
 		}
 	</table>
-<a href="/math/demo/grade?counting=1&add=1&subtract=1&divide=1&multiply=1&circle=1&rectangle=1&triangle=1&cone=1&cylinder=1&pyramid=1&rectangularPrism=1&rightPrism=1&sphere=1" class="button">Submit Test</a>
-
+<input type="submit" value="Submit Test" class="button" />
+</form>
 <div id ="tmp-space"></div>
 </body>
 </html>

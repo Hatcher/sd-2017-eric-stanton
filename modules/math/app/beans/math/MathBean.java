@@ -12,16 +12,19 @@ import net.sourceforge.jeval.Evaluator;
 import services.equation.Operators;
 
 public class MathBean {
-	private String id="0";
+	private String id = "0";
 	private String type = "";
 	private String question = "";
 	private String imageUrl = "";
 	private List<LabelBean> labels = new ArrayList<LabelBean>();
+	// private String answer = null;
 
-
+	private String selectedAnswer = "";
+	private Set<String> answerChoices = new HashSet<String>();
+	
+	
 	private List<BigDecimal> integers = new ArrayList<BigDecimal>();
 	private List<String> operators = new ArrayList<String>();
-
 
 	public MathBean() {
 	}
@@ -33,7 +36,7 @@ public class MathBean {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public String getType() {
 		return type;
 	}
@@ -59,7 +62,32 @@ public class MathBean {
 		}
 	}
 
-	public Set<String> getAnswerChoices() {
+	public boolean isCorrect() {
+		Evaluator eval = new Evaluator();
+		try {
+			return eval.evaluate(selectedAnswer).equals(eval.evaluate(getAnswer()));
+		} catch (EvaluationException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public void setCorrect(boolean doesNothing){
+		// just here to satisfy jackson requirements
+	}
+	
+	public void setAnswer(String neverUsed) {
+
+	}
+
+	public Set<String> getAnswerChoices(){
+		if (answerChoices.isEmpty()){
+			initAnswerChoices();
+		}
+		return answerChoices;
+	}
+	
+	public void initAnswerChoices() {
 
 		// decimal format
 		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
@@ -76,7 +104,7 @@ public class MathBean {
 		try {
 			answer = (BigDecimal) decimalFormat.parse(getAnswer());
 			answer = answer.setScale(2, RoundingMode.HALF_UP);
-			
+
 			answers.add(answer.stripTrailingZeros().toEngineeringString());
 			Evaluator eval = new Evaluator();
 			Random random = new Random();
@@ -101,9 +129,9 @@ public class MathBean {
 
 			}
 		} catch (ParseException e) {
-			return new HashSet<String>();
+			this.answerChoices = new HashSet<String>();
 		}
-		return answers;
+		this.answerChoices= answers;
 
 	}
 
@@ -130,18 +158,6 @@ public class MathBean {
 	public void setQuestion(String question) {
 		this.question = question;
 	}
-	
-	public String toString() {
-		String rValue = "";
-		for (int i = 0; i < getOperators().size(); i++) {
-			if (rValue.equals("")) {
-				rValue += getIntegers().get(i) + " " + getOperators().get(i) + " " + getIntegers().get(i + 1);
-			} else {
-				rValue += getOperators().get(i) + " " + getIntegers().get(i + 1);
-			}
-		}
-		return rValue;
-	}
 
 	public List<LabelBean> getLabels() {
 		return labels;
@@ -155,4 +171,23 @@ public class MathBean {
 		this.imageUrl = imageUrl;
 	}
 
+	public String getSelectedAnswer() {
+		return selectedAnswer;
+	}
+
+	public void setSelectedAnswer(String selectedAnswer) {
+		this.selectedAnswer = selectedAnswer;
+	}
+
+	public String toString() {
+		String rValue = "";
+		for (int i = 0; i < getOperators().size(); i++) {
+			if (rValue.equals("")) {
+				rValue += getIntegers().get(i) + " " + getOperators().get(i) + " " + getIntegers().get(i + 1);
+			} else {
+				rValue += getOperators().get(i) + " " + getIntegers().get(i + 1);
+			}
+		}
+		return rValue;
+	}
 }

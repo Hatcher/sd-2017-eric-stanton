@@ -10,13 +10,14 @@ import beans.math.question.QuestionRootNode;
 import beans.math.question.Rule;
 import net.sourceforge.jeval.EvaluationException;
 import net.sourceforge.jeval.Evaluator;
-import play.mvc.Controller;
 
-public class QuestionValidator extends Controller {
+public class QuestionValidator{
 	public List<String> validate(QuestionRootNode questionNode) {
 		List<String> errors = new ArrayList<String>();
 		errors = validateRequiredFields(questionNode, errors);
-
+		errors = validateNoDecimals(questionNode, errors);
+		errors = validateNoParenthesis(questionNode, errors);
+		
 		if (!errors.isEmpty()) {
 			return errors;
 		} else {
@@ -65,7 +66,18 @@ public class QuestionValidator extends Controller {
 			return false;
 		}
 	}
-	
+	private List<String> validateNoDecimals(QuestionRootNode questionNode, List<String> errors){
+		if (questionNode.getQuestion().getEquation().contains(".")){
+			errors.add("No Decimals Allowed in Question Creation.  Use Fractions instead");
+		}
+		return errors;
+	}
+	private List<String> validateNoParenthesis(QuestionRootNode questionNode, List<String> errors){
+		if (questionNode.getQuestion().getEquation().contains("(") || questionNode.getQuestion().getEquation().contains(")")){
+			errors.add("Parentheses are not supported.  Please restructure the formula to not include parenthesese.");
+		}
+		return errors;
+	}
 	private List<String> validateRequiredFields(QuestionRootNode questionNode, List<String> errors) {
 		if (questionNode == null) {
 			errors.add("question cannot be empty");

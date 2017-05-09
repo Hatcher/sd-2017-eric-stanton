@@ -8,7 +8,7 @@ POST	/demo/menu								@controllers.math.Application.demoGetMenu
 GET		/demo/skills							@controllers.math.Application.demoCollectSkills
 GET		/demo/skills/edit						@controllers.math.Application.demoEditSkills
 GET		/demo/progress							@controllers.math.Application.demoGetProgress
-GET		/demo/grade								@controllers.math.Application.demoGetGrade
+POST	/demo/grade								@controllers.math.Application.demoGetGrade
 
 POST 	/demo/tree								@controllers.math.Tree.update
 POST 	/demo/question							@controllers.math.QuestionController.create
