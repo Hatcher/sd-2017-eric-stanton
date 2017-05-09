@@ -9,9 +9,8 @@ import java.util.Map;
 import java.util.Set;
 
 import beans.math.MathBean;
-import models.math.MathQuestion;
-import models.math.Test;
 import beans.math.TestBean;
+import models.math.MathQuestion;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.equation.EquationGenerator;

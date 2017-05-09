@@ -69,8 +69,8 @@ public class QuestionController extends Controller {
 	    FilePart picture = body.getFile("image");
 	    if (picture != null) {
 	        String fileName = picture.getFilename();
-	        String contentType = picture.getContentType();
-	        File file = picture.getFile();
+//	        String contentType = picture.getContentType();
+	        File file = (File) picture.getFile();
 	        return ok(remindBucket.saveToS3(fileName,file));
 	    } else {
 	        flash("error", "Missing file");

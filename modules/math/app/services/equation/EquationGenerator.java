@@ -2,36 +2,50 @@ package services.equation;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import beans.math.LabelBean;
 import beans.math.MathBean;
-import models.maths.MathQuestion;
-import models.maths.MathQuestionLabel;
+import models.math.MathQuestion;
+import models.math.MathQuestionLabel;
 
 public class EquationGenerator {
 	private Random random = new Random();
-	private static final int MAX_OPERATORS = 2;
-	private static final int MIN_OPERATORS = 1;
 
-	public List<MathBean> generateQuestions(int numQuestions, List<String> questionTypes) {
+	public List<MathBean> generateQuestions(int numQuestionsRequested, List<String> questionTypes) {
 		if (questionTypes.isEmpty()) {
 			return new ArrayList<MathBean>();
 		}
 
 		List<MathBean> questions = new ArrayList<MathBean>();
+		List<MathQuestion> questionsFound = MathQuestion.find("", questionTypes);
+
 		int num = 0;
-		List<MathQuestion> questionsOfTypes = MathQuestion.find("", questionTypes);
+		int numRepeats;
 
-		int numRepeats = numQuestions / questionsOfTypes.size() + 1;
+		if (questionsFound.size() < 1) {
+			return new ArrayList<MathBean>();
+		} else if (numQuestionsRequested < questionsFound.size()) {
+			numRepeats = 1;
+		} else {
+			numRepeats = numQuestionsRequested / questionsFound.size() + 1;
+		}
 
-		while (numQuestions > questions.size()) {
-			
-			MathBean question = generateQuestion(questionsOfTypes, numRepeats);
+		int maxOperators = getMaxOperators(questionsFound);
+		int minOperators = getMinOperators(questionsFound);
+		Set<String> operators = getOperators(questionsFound);
+		Set<BigDecimal> constants = getConstants(questionsFound);
+
+		while (numQuestionsRequested > questions.size()) {
+			int clauses = random.nextInt(maxOperators) + minOperators;
+
+			MathBean question = generateQuestion(questionsFound, numRepeats, clauses, operators, constants);
 			if ((question.getType() != null) && !"".equals(question.getType())) {
 				question.setId(++num + "");
 				questions.add(question);
@@ -40,29 +54,23 @@ public class EquationGenerator {
 		return questions;
 	}
 
-	private MathBean generateQuestion(List<MathQuestion> questionsOfTypes, int numRepeats) {
-
-		// generate equation
+	private MathBean generateQuestion(List<MathQuestion> questionsFound, int numRepeats, int clauses,
+			Set<String> operators, Set<BigDecimal> constants) {
 		MathBean mathBean = new MathBean();
-		int clauses = random.nextInt(MAX_OPERATORS) + MIN_OPERATORS; // 1-3
-																		// operators
-		String basicOperator = getRandomOperation();
+		String basicOperator = null;
 
 		int iterations = clauses;
 		boolean firstIteration = true;
+
+		// TODO mix in possible operators
 		for (int i = 0; i < iterations; i++) {
-			BigDecimal number = getRandomNumber();
-			basicOperator = getRandomOperation();
+			BigDecimal number = getRandomNumber(constants);
+			basicOperator = getRandomOperation(operators);
 
 			if (firstIteration) {
 				mathBean.getIntegers().add(number);
-				number = getRandomNumber();
+				number = getRandomNumber(constants);
 				firstIteration = false;
-			}
-			if (basicOperator.equals(Operators.DIVIDE)) {
-				// only divide by 2 or 3
-				//number = BigDecimal.valueOf(random.nextInt(2) + 2);
-				number = BigDecimal.valueOf(2);
 			}
 
 			mathBean.getIntegers().add(number);
@@ -70,23 +78,24 @@ public class EquationGenerator {
 		}
 
 		// categorize equation
-		for  (MathQuestion question : questionsOfTypes){
+		for (MathQuestion question : questionsFound) {
 			if (question != null) {
-				if (followsRules(question,mathBean.toString(), numRepeats)){
-				
+				if (followsRules(question, mathBean.toString(), numRepeats)) {
+
 					mathBean.setType(question.questionId + "");
-		
+
 					Map<String, String> variables = MathQuestion.getVariables(mathBean.toString(), question.equation);
 					String updatedQuestionText = question.questionText;
 					Iterator<Map.Entry<String, String>> it = variables.entrySet().iterator();
 					mathBean.getLabels().clear();
-		
+
 					while (it.hasNext()) {
 						Map.Entry<String, String> pair = (Map.Entry<String, String>) it.next();
-						updatedQuestionText = updatedQuestionText.replaceAll(Pattern.quote(pair.getKey()), pair.getValue());
+						updatedQuestionText = updatedQuestionText.replaceAll(Pattern.quote(pair.getKey()),
+								pair.getValue());
 						for (MathQuestionLabel mathQuestionLabel : question.labels) {
 							if (mathQuestionLabel.variableName != null) {
-								String matchableVariable = "${"+mathQuestionLabel.variableName+"}";
+								String matchableVariable = "${" + mathQuestionLabel.variableName + "}";
 								if (matchableVariable.equals(pair.getKey())) {
 									LabelBean labelBean = new LabelBean();
 									labelBean.setValue(pair.getValue());
@@ -97,7 +106,7 @@ public class EquationGenerator {
 							}
 						}
 					}
-		
+
 					mathBean.setQuestion(updatedQuestionText);
 					mathBean.setImageUrl(question.imageUrl);
 					question.used++;
@@ -107,38 +116,115 @@ public class EquationGenerator {
 		}
 		return mathBean;
 	}
-	
-	private boolean followsRules(MathQuestion question, String randomEquation, int maxRepeats){
-			if ((question.used < maxRepeats) && MathQuestion.matchesEquation(question.equation, randomEquation)){
-				Map<String, String> variables = MathQuestion.getVariables(randomEquation, question.equation);
-				if (MathQuestion.followsRules(variables, question.rules)) {
-					return true;
+
+	private boolean followsRules(MathQuestion question, String randomEquation, int maxRepeats) {
+		if ((question.used < maxRepeats) && MathQuestion.matchesEquation(question.equation, randomEquation)) {
+			Map<String, String> variables = MathQuestion.getVariables(randomEquation, question.equation);
+			if (MathQuestion.followsRules(variables, question.rules)) {
+				return true;
+			}
+		}
+		return false;
+
+	}
+
+	private String getRandomOperation(Set<String> operators) {
+		if (!operators.isEmpty()) {
+			int index = random.nextInt(operators.size());
+			int i = 0;
+			for (String operator : operators) {
+				if (i >= index) {
+					return operator;
+				}
+				i++;
+			}
+
+		} else {
+			return null;
+		}
+		return null; // should be unreachable
+	}
+
+	private BigDecimal getRandomNumber(Set<BigDecimal> constants) {
+		if (!constants.isEmpty()) {
+			if (random.nextInt(2) > 0) {
+				return BigDecimal.valueOf(random.nextInt(9) + 1);
+			} else {
+				int index = random.nextInt(constants.size());
+				int i = 0;
+				for (BigDecimal constant : constants) {
+					if (i >= index) {
+						return constant;
+					}
+					i++;
 				}
 			}
-			return false;
-
+		} else {
+			return BigDecimal.valueOf(random.nextInt(9) + 1);
+		}
+		return BigDecimal.ONE; // should be unreachable
 	}
 
-	private String getRandomOperation(List<MathQuestion> questions){
-		Random random = new Random();
-		MathQuestion randomQuestion = questions.get(random.nextInt(questions.size()));
-//		randomQuestion.get
-		return "*";
-		
-	}
-	
-	private String getRandomOperation() {
-		Random random = new Random();
-		return Operators.ALL_OPERATORS.get(random.nextInt(Operators.ALL_OPERATORS.size()));
+	private int getMinOperators(List<MathQuestion> questionsFound) {
+		boolean firstClause = true;
+		int minOperators = -1;
+		for (MathQuestion question : questionsFound) {
+			if (firstClause) {
+				minOperators = question.getOperators().size(); // requires
+																// strict
+																// operator
+																// usage (no
+																// parenthesis,
+																// no implied
+																// multiplication)
+				firstClause = false;
+			} else {
+				int possibleMin = question.getOperators().size();
+				if (minOperators > possibleMin) {
+					minOperators = possibleMin;
+				}
+			}
+		}
+		return minOperators;
 	}
 
-	private String getRandomWeightedOperation() {
-		Random random = new Random();
-		return Operators.WEIGHTED_OPERATORS.get(random.nextInt(Operators.WEIGHTED_OPERATORS.size()));
+	private int getMaxOperators(List<MathQuestion> questionsFound) {
+		boolean firstClause = true;
+		int maxOperators = -1;
+		for (MathQuestion question : questionsFound) {
+			if (firstClause) {
+				maxOperators = question.getOperators().size(); // requires
+																// strict
+																// operator
+																// usage (no
+																// parenthesis,
+																// no implied
+																// multiplication)
+				firstClause = false;
+			} else {
+				int possibleMax = question.getOperators().size();
+				if (maxOperators < possibleMax) {
+					maxOperators = possibleMax;
+				}
+			}
+		}
+		return maxOperators;
 	}
 
-	private BigDecimal getRandomNumber() {
-		return BigDecimal.valueOf(random.nextInt(9) + 1);
+	private Set<BigDecimal> getConstants(List<MathQuestion> questionsFound) {
+		Set<BigDecimal> constants = new HashSet<>();
+		for (MathQuestion question : questionsFound) {
+			question.getConstants();
+		}
+
+		return constants;
 	}
 
+	private Set<String> getOperators(List<MathQuestion> questionsFound) {
+		Set<String> operators = new HashSet<>();
+		for (MathQuestion question : questionsFound) {
+			operators.addAll(question.getOperators());
+		}
+		return operators;
+	}
 }
