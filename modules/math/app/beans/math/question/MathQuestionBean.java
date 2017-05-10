@@ -1,7 +1,9 @@
 package beans.math.question;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,51 +27,65 @@ public class MathQuestionBean {
 	public String getQuestionName() {
 		return questionName;
 	}
+
 	public void setQuestionName(String questionName) {
 		this.questionName = questionName;
 	}
+
 	public String getQuestionText() {
 		return questionText;
 	}
+
 	public void setQuestionText(String questionText) {
 		this.questionText = questionText;
 	}
+
 	public String getEquation() {
 		return equation;
 	}
+
 	public void setEquation(String equation) {
 		this.equation = equation;
 	}
+
 	public String getImageUrl() {
 		return imageUrl;
 	}
+
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
+
 	public String getSkillId() {
 		return skillId;
 	}
+
 	public void setSkillId(String skillId) {
 		this.skillId = skillId;
 	}
+
 	public List<Label> getLabels() {
 		return labels;
 	}
+
 	public void setLabels(List<Label> labels) {
 		this.labels = labels;
 	}
+
 	public List<Rule> getRules() {
 		return rules;
 	}
+
 	public void setRules(List<Rule> rules) {
 		this.rules = rules;
 	}
-	
+
 	public MathQuestion toEntity() {
 		// tidy up request for easier usage during question generation
+		replaceIdenticalVariablesAndAddRules();
 		removeConstants();
 		replaceImpliedMultiplication();
-		
+
 		MathQuestion entity = new MathQuestion();
 
 		entity.equation = this.getEquation();
@@ -116,26 +132,76 @@ public class MathQuestionBean {
 
 		char variable = 'a';
 		while (integerMatcher.find()) {
-			while (variables.contains("${"+variable + "}")) {
+			while (variables.contains("${" + variable + "}")) {
 				variable++;
 			}
 			String startingEquation = this.getEquation();
-			String endingEquation = this.getEquation().replaceFirst(ExpressionPatterns.INTEGER_PATTERN, Matcher.quoteReplacement("${"+variable+"}"));
+			String endingEquation = this.getEquation().replaceFirst(ExpressionPatterns.INTEGER_PATTERN,
+					Matcher.quoteReplacement("${" + variable + "}"));
 			if (startingEquation != endingEquation) {
 				this.setEquation(endingEquation);
 				// add constant rule
 				Rule rule = new Rule();
 				rule.setRule("${" + variable + "}==" + integerMatcher.group());
 				this.getRules().add(rule);
-				variables.add("${"+variable + "}");
+				variables.add("${" + variable + "}");
 			} else {
 				// no more constants left in equation
 				break;
 			}
 		}
 	}
-	private void replaceImpliedMultiplication(){
-		this.setEquation(this.getEquation().replaceAll(Matcher.quoteReplacement("}$"), Matcher.quoteReplacement("}*$")));
+
+	private void replaceIdenticalVariablesAndAddRules() {
+		Pattern variablePattern = Pattern.compile(ExpressionPatterns.VARIABLE_PATTERN);
+		Matcher variablesMatcher = variablePattern.matcher(this.getEquation());
+
+		List<String> variablesList = new ArrayList<String>();
+		Set<String> variablesSet = new HashSet<String>();
+
+		while (variablesMatcher.find()) {
+			String variable = variablesMatcher.group();
+			variablesList.add(variable);
+			variablesSet.add(variable);
+		}
+		if (variablesList.size() > variablesSet.size()) {
+			Set<String> iterableSet = new HashSet<String>();
+			iterableSet.addAll(variablesSet);
+			for (String variable : iterableSet) {
+				boolean duplicateFound = false;
+				boolean firstFound = true;
+				while (variablesList.remove(variable)) {
+					if (firstFound) {
+						firstFound = false;
+					}
+					else{
+						duplicateFound = true;
+					}
+				}
+				variablesSet.remove(variable);
+				if (duplicateFound) {
+					String unusedVariable = getUnusedVariable();
+					this.setEquation(this.getEquation().replaceFirst(Pattern.quote(variable),
+							Matcher.quoteReplacement(unusedVariable)));
+					Rule rule = new Rule();
+					rule.setRule(variable + "==" + unusedVariable);
+					this.getRules().add(rule);
+				}
+			}
+			replaceIdenticalVariablesAndAddRules();
+		} 
 	}
-	
+
+	private void replaceImpliedMultiplication() {
+		this.setEquation(
+				this.getEquation().replaceAll(Matcher.quoteReplacement("}$"), Matcher.quoteReplacement("}*$")));
+	}
+
+	private String getUnusedVariable() {
+		char variable = 'a';
+		while (this.getEquation().contains("${" + variable + "}")) {
+			variable++;
+		}
+		return "${" + variable + "}";
+	}
 }
