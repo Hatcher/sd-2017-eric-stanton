@@ -82,8 +82,8 @@ public class QuestionValidator {
 				variableName = variableMatcher.group();
 			}
 				
-			
-			String ruleText = rule.getRule().replaceAll(ExpressionPatterns.CONSTANT_PATTERN, "");
+			String ruleText = rule.getRule().replaceAll("\\s", "");
+			ruleText = ruleText.replaceAll(ExpressionPatterns.CONSTANT_PATTERN, "");
 			if (ruleText.matches(ExpressionPatterns.INTEGER_PATTERN)) {
 				int constant = Integer.parseInt(ruleText);
 				constantsReplaced = constantsReplaced.replaceAll(Pattern.quote(variableName), constant+"");
