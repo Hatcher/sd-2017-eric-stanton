@@ -11,12 +11,12 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import services.s3.RemindBucket;
 
+// restful requests for tree updates
 public class Tree extends Controller {
 	RemindBucket remindBucket = new RemindBucket();
 	
 	@BodyParser.Of(Json.class)
 	public Result update() {
-		System.out.println("ATTEMPTED AT LEAST");
 		JsonNode json = request().body().asJson();
 		
 		ObjectMapper mapper = new ObjectMapper();
@@ -27,9 +27,6 @@ public class Tree extends Controller {
 			return ok("{\"success\": \""+remindBucket.saveToS3(node)+"\"}");
 		}
 		catch (Exception e){
-			System.out.println("method: "+request().method());
-			System.out.println("method: "+request().body().asJson());
-			System.out.println("input: "+request().body().asJson().toString());
 			e.printStackTrace();
 			return badRequest(e.getMessage());
 		}

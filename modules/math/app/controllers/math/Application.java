@@ -17,6 +17,7 @@ import play.mvc.Result;
 import services.equation.EquationGenerator;
 import services.test.MathTestService;
 
+// html web page requests
 public class Application extends Controller {
 
 	private EquationGenerator equationGenerator = new EquationGenerator();

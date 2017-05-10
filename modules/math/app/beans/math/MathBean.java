@@ -7,6 +7,8 @@ import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import net.sourceforge.jeval.EvaluationException;
 import net.sourceforge.jeval.Evaluator;
 import services.equation.Operators;
@@ -61,7 +63,7 @@ public class MathBean {
 			return "";
 		}
 	}
-
+	@JsonIgnore
 	public boolean isCorrect() {
 		Evaluator eval = new Evaluator();
 		try {

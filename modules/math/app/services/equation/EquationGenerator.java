@@ -62,7 +62,6 @@ public class EquationGenerator {
 		int iterations = clauses;
 		boolean firstIteration = true;
 
-		// TODO mix in possible operators
 		for (int i = 0; i < iterations; i++) {
 			BigDecimal number = getRandomNumber(constants);
 			basicOperator = getRandomOperation(operators);
@@ -214,7 +213,7 @@ public class EquationGenerator {
 	private Set<BigDecimal> getConstants(List<MathQuestion> questionsFound) {
 		Set<BigDecimal> constants = new HashSet<>();
 		for (MathQuestion question : questionsFound) {
-			question.getConstants();
+			constants.addAll(question.getConstants());
 		}
 
 		return constants;

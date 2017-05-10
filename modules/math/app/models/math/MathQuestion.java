@@ -108,7 +108,7 @@ public class MathQuestion extends Model {
 		for (MathQuestionRule rule : this.rules) {
 			String ruleText = rule.ruleText;
 			ruleText = ruleText.replaceAll("\\s", "");
-			ruleText.replaceAll(ExpressionPatterns.CONSTANT_PATTERN, "");
+			ruleText = ruleText.replaceAll(ExpressionPatterns.CONSTANT_PATTERN, "");
 			if (ruleText.matches(ExpressionPatterns.INTEGER_PATTERN)) {
 				int constant = Integer.parseInt(ruleText);
 				constants.add(BigDecimal.valueOf(constant));

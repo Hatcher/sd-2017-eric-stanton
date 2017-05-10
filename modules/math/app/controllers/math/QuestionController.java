@@ -19,6 +19,7 @@ import services.question.QuestionService;
 import services.question.QuestionValidator;
 import services.s3.RemindBucket;
 
+// restful requests for creating questions
 public class QuestionController extends Controller {
 	QuestionService service = new QuestionService();
 	QuestionValidator validator = new QuestionValidator();
