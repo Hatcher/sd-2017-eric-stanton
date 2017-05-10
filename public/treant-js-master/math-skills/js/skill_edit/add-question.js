@@ -1,7 +1,7 @@
 var numRules = 1;
 var numVariables = 0;
 var questionJson = {};
-
+var labelIndex = 0;
 function initQuestionUi(){
 	initAddRuleButton();
 	initAddVariableButton();
@@ -51,7 +51,7 @@ function initLabelingDialog(){
 		for (var label of matchString){
 			var labelPrefix = "draggable-label-";
 			var labelSuffix = getVariableFromHolder(label);
-			var labelId = labelPrefix + labelSuffix;
+			var labelId = labelPrefix + labelSuffix+"-"+labelIndex++;
 			
 			$("#labels-starting-point").append("<br/><div id =\""+labelId+"\">"+label+"</div>")
 			$("#"+labelId).draggable(getDraggableOptionsForLabeling());
@@ -170,11 +170,11 @@ function getDraggableOptionsForLabeling(){
 		  var yOffset = offset.top - imageOffset.top;
 
 		  // if lands on
-		  addOrUpdateLabelToQuestion(getVariableFromHolder($(this)[0].innerHTML),xOffset,yOffset);
+		  addOrUpdateLabelToQuestion($(this)[0].id,getVariableFromHolder($(this)[0].innerHTML),xOffset,yOffset);
 	  }
 	  return draggableOptions;
 	}
-function addOrUpdateLabelToQuestion(name, x, y){
+function addOrUpdateLabelToQuestion(id,name, x, y){
 	var label = newLabel(name, x, y);	
 	var found = false;
 	for (var i = 0; i < questionJson.labels.length; i++){
@@ -182,10 +182,10 @@ function addOrUpdateLabelToQuestion(name, x, y){
 			found = true;
 		}
 	}
-	if (!found){
+/*	if (!found){*/
 		questionJson.labels.push(label);
-		overlayLabels("upload-image",name, name, x, y);
-	}
+		overlayLabels("upload-image",id, name, x, y);
+	/*}*/
 }
 function removeOrIgnoreLabelFromQuestion(name, x, y){
 	var label = newLabel(name, x, y);
